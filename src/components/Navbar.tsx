@@ -31,6 +31,7 @@ export const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-10">
             <a href="/#features" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">{t('nav.features')}</a>
             <a href="/#articles" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">{t('nav.library')}</a>
+            <Link to="/target-analysis" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Bảng Đối Tượng</Link>
           </div>
 
           <div className="flex items-center space-x-6">
@@ -47,23 +48,29 @@ export const Navbar: React.FC = () => {
             </div>
 
             {user ? (
-              <>
-                <Link to="/profile" className="flex items-center space-x-2 text-slate-300 hover:text-white transition-colors">
-                  <User size={20} />
-                  <span className="hidden sm:inline font-medium">{user.name}</span>
+              <div className="flex items-center space-x-4">
+                <Link to="/profile" className="flex items-center space-x-2 text-slate-700 hover:text-indigo-600 transition-colors font-medium">
+                  {user.picture ? (
+                    <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full border border-slate-200" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="hidden sm:inline">{user.name}</span>
                 </Link>
                 <button 
                   onClick={handleLogout}
-                  className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                  className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                   title={t('nav.logout')}
                 >
                   <LogOut size={20} />
                 </button>
-              </>
+              </div>
             ) : (
               <Link 
                 to="/auth" 
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm hover:shadow-md"
               >
                 {t('nav.login')}
               </Link>

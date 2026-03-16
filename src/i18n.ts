@@ -31,7 +31,13 @@ const resources = {
       "article.productDetail": "Xem chi tiết nghiên cứu",
       "article.sources": "Nguồn Nghiên Cứu Khoa Học",
       "article.chartTitle": "Biểu đồ Tác động Toàn diện",
-      "article.keyTakeaways": "Điểm cốt lõi"
+      "article.keyTakeaways": "Điểm cốt lõi",
+      "home.searchPlaceholder": "Tìm kiếm bài viết...",
+      "home.noResults": "Không tìm thấy bài viết nào phù hợp.",
+      "home.clearSearch": "Xóa tìm kiếm",
+      "article.tocTitle": "Danh mục",
+      "article.tocSearchPlaceholder": "Tìm mục lục...",
+      "article.tocNoResults": "Không tìm thấy mục nào"
     }
   },
   en: {
@@ -63,7 +69,13 @@ const resources = {
       "article.productDetail": "View Study Details",
       "article.sources": "Scientific Research Sources",
       "article.chartTitle": "Comprehensive Impact Chart",
-      "article.keyTakeaways": "Key Takeaways"
+      "article.keyTakeaways": "Key Takeaways",
+      "home.searchPlaceholder": "Search articles...",
+      "home.noResults": "No articles found matching your search.",
+      "home.clearSearch": "Clear search",
+      "article.tocTitle": "Table of Contents",
+      "article.tocSearchPlaceholder": "Search TOC...",
+      "article.tocNoResults": "No sections found"
     }
   },
   zh: {
@@ -95,7 +107,13 @@ const resources = {
       "article.productDetail": "查看研究详情",
       "article.sources": "科学研究来源",
       "article.chartTitle": "综合影响图表",
-      "article.keyTakeaways": "核心要点"
+      "article.keyTakeaways": "核心要点",
+      "home.searchPlaceholder": "搜索文章...",
+      "home.noResults": "未找到匹配的文章。",
+      "home.clearSearch": "清除搜索",
+      "article.tocTitle": "目录",
+      "article.tocSearchPlaceholder": "搜索目录...",
+      "article.tocNoResults": "未找到相关章节"
     }
   }
 };

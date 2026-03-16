@@ -11,6 +11,7 @@ import { Home } from './pages/Home';
 import { Article } from './pages/Article';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
+import { TargetAnalysis } from './pages/TargetAnalysis';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -29,17 +30,11 @@ export default function App() {
           <Navbar />
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/article/:id" element={<Article />} />
               <Route path="/auth" element={<Auth />} />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } 
-              />
+              <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+              <Route path="/article/:id" element={<ProtectedRoute><Article /></ProtectedRoute>} />
+              <Route path="/target-analysis" element={<ProtectedRoute><TargetAnalysis /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
           </main>
         </div>

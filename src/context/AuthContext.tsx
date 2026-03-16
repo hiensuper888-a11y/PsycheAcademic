@@ -1,93 +1,130 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '../lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 export interface UserProfile {
   id: string;
   name: string;
-  email: string;
-  weight: number;
-  height: number;
-  goal: string;
-  joinedAt: string;
+  email?: string;
+  username?: string;
+  picture?: string;
+  provider: string;
 }
 
 interface AuthContextType {
   user: UserProfile | null;
-  login: (email: string, name: string) => void;
-  register: (email: string, name: string) => void;
-  logout: () => void;
-  updateProfile: (data: Partial<UserProfile>) => void;
+  loading: boolean;
+  loginWithGoogle: () => Promise<void>;
+  loginWithX: () => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
+  registerWithEmail: (email: string, password: string, name: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const mapUser = (supabaseUser: User) => {
+    const identity = supabaseUser.identities?.[0];
+    const provider = identity?.provider || 'email';
+    const metadata = supabaseUser.user_metadata;
+
+    setUser({
+      id: supabaseUser.id,
+      name: metadata?.full_name || metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
+      email: supabaseUser.email,
+      username: metadata?.user_name || metadata?.preferred_username,
+      picture: metadata?.avatar_url || metadata?.picture,
+      provider: provider,
+    });
+  };
 
   useEffect(() => {
-    // Check local storage on mount
-    const storedUser = localStorage.getItem('fitscience_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        mapUser(session.user);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        mapUser(session.user);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = (email: string, name: string) => {
-    // Simulate login by checking if user exists in our mock "DB" (localStorage)
-    // For this prototype, we'll just log them in or create if not exists
-    const existingUsersStr = localStorage.getItem('fitscience_users_db');
-    const existingUsers: UserProfile[] = existingUsersStr ? JSON.parse(existingUsersStr) : [];
-    
-    let foundUser = existingUsers.find(u => u.email === email);
-    
-    if (!foundUser) {
-      // Auto register if not found for prototype ease
-      foundUser = {
-        id: Math.random().toString(36).substring(2, 9),
-        name,
-        email,
-        weight: 70,
-        height: 170,
-        goal: 'Tăng cơ giảm mỡ',
-        joinedAt: new Date().toISOString(),
-      };
-      existingUsers.push(foundUser);
-      localStorage.setItem('fitscience_users_db', JSON.stringify(existingUsers));
+  const loginWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Google login error:', error);
     }
-
-    setUser(foundUser);
-    localStorage.setItem('fitscience_user', JSON.stringify(foundUser));
   };
 
-  const register = (email: string, name: string) => {
-    login(email, name); // Same logic for prototype
+  const loginWithX = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'twitter',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error('X login error:', error);
+    }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('fitscience_user');
+  const loginWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
   };
 
-  const updateProfile = (data: Partial<UserProfile>) => {
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      setUser(updatedUser);
-      localStorage.setItem('fitscience_user', JSON.stringify(updatedUser));
-      
-      // Update in DB
-      const existingUsersStr = localStorage.getItem('fitscience_users_db');
-      if (existingUsersStr) {
-        const existingUsers: UserProfile[] = JSON.parse(existingUsersStr);
-        const index = existingUsers.findIndex(u => u.id === user.id);
-        if (index !== -1) {
-          existingUsers[index] = updatedUser;
-          localStorage.setItem('fitscience_users_db', JSON.stringify(existingUsers));
+  const registerWithEmail = async (email: string, password: string, name: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
         }
       }
+    });
+    if (error) throw error;
+  };
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail, logout }}>
       {children}
     </AuthContext.Provider>
   );

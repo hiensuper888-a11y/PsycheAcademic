@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { psychologyData } from '../data/psychologyData';
-import { motion } from 'motion/react';
-import { ArrowLeft, BookOpen } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +47,136 @@ export const Article: React.FC = () => {
   });
 
   const [scrollProgress, setScrollProgress] = React.useState(0);
+  const [contentSearch, setContentSearch] = React.useState('');
+  const [userProfile, setUserProfile] = React.useState({ gender: '', age: '', job: '', hobbies: '' });
+  const [showAnalysis, setShowAnalysis] = React.useState(false);
+
+  const { scrollY } = useScroll();
+  const backgroundY = useTransform(scrollY, [0, 1000], ['0%', '25%']);
+
+  const filteredSections = sections.filter((section: string) => 
+    section.toLowerCase().includes(contentSearch.toLowerCase())
+  );
+
+  const getPersonalizedAdvice = () => {
+    const age = parseInt(userProfile.age);
+    const gender = userProfile.gender;
+    const job = userProfile.job.toLowerCase();
+    const hobbies = userProfile.hobbies.toLowerCase();
+    let advice = [];
+
+    if (age > 0 && age < 25) {
+      advice.push({
+        vi: "Bạn dễ bị tác động bởi 'Bằng chứng xã hội' và 'FOMO'. Hãy cẩn thận với áp lực đồng lứa.",
+        en: "You are susceptible to 'Social Proof' and 'FOMO'. Be careful with peer pressure.",
+        zh: "你容易受到“社会认同”和“错失恐惧症”的影响。小心同伴压力。"
+      });
+    } else if (age > 50) {
+      advice.push({
+        vi: "Bạn có xu hướng tôn trọng 'Cấp bậc' và 'Uy tín'. Hãy kiểm chứng thông tin từ các nguồn tự xưng là chuyên gia.",
+        en: "You tend to respect 'Authority' and 'Prestige'. Verify info from self-proclaimed experts.",
+        zh: "你倾向于尊重“权威”和“声望”。核实来自自称专家的人的信息。"
+      });
+    }
+
+    if (gender === 'male') {
+      advice.push({
+        vi: "Kẻ thao túng thường đánh vào 'Cái tôi' và 'Sự công nhận' của nam giới.",
+        en: "Manipulators often target male 'Ego' and 'Recognition'.",
+        zh: "操纵者通常针对男性的“自我”和“认可”。"
+      });
+    } else if (gender === 'female') {
+      advice.push({
+        vi: "Phụ nữ thường bị khai thác qua 'Sự đồng cảm' và 'Cảm giác tội lỗi'.",
+        en: "Women are often exploited through 'Empathy' and 'Guilt'.",
+        zh: "女性通常通过“共情”和“内疚”被利用。"
+      });
+    }
+
+    if (job) {
+      const jobMap = [
+        { keys: ['kinh doanh', 'bán hàng', 'sales', 'marketing'], vi: "Với công việc kinh doanh, bạn dễ rơi vào bẫy 'Sự khan hiếm' và 'Sự đáp trả'. Hãy cẩn trọng với những món quà miễn phí." },
+        { keys: ['kỹ thuật', 'it', 'lập trình', 'kỹ sư'], vi: "Người làm kỹ thuật thường tin vào logic. Kẻ thao túng có thể dùng 'Dữ liệu định khung' (chọn lọc số liệu có lợi) để đánh lừa bạn." },
+        { keys: ['giáo dục', 'giáo viên', 'giảng viên'], vi: "Đặc thù nghề giáo khiến bạn có lòng trắc ẩn cao. Hãy cẩn thận với những kẻ lợi dụng sự thấu cảm và trách nhiệm đạo đức của bạn." },
+        { keys: ['y tế', 'bác sĩ', 'điều dưỡng', 'nha sĩ'], vi: "Áp lực thời gian và 'Hội chứng đấng cứu thế' khiến nhân viên y tế dễ bị thao túng bởi những lời cầu xin khẩn thiết giả tạo." },
+        { keys: ['quản lý', 'lãnh đạo', 'giám đốc', 'ceo'], vi: "Ở vị trí quản lý, bạn dễ bị thao túng qua 'Sự nhất quán'. Kẻ xấu có thể ép bạn bảo vệ quyết định sai lầm để giữ thể diện." },
+        { keys: ['nghệ thuật', 'sáng tạo', 'thiết kế', 'họa sĩ'], vi: "Người làm nghệ thuật dễ bị 'Cảm xúc quá tải' và 'Neo tâm lý'. Kẻ thao túng sẽ dùng hình ảnh và cảm xúc mạnh để lấn át lý trí của bạn." },
+        { keys: ['tài chính', 'kế toán', 'ngân hàng', 'kiểm toán'], vi: "Bạn làm việc với con số nên rất nhạy cảm với 'Nỗi sợ mất mát' (Loss Aversion). Hãy cẩn thận với các bẫy mỏ neo tài chính." },
+        { keys: ['nhân sự', 'hr', 'tuyển dụng'], vi: "Làm nhân sự khiến bạn phải lắng nghe nhiều. Kẻ thao túng sẽ dùng 'Sự thấu cảm giả tạo' để khai thác thông tin từ bạn." },
+        { keys: ['luật sư', 'pháp lý', 'công chứng'], vi: "Bạn quen với chi tiết, nhưng kẻ thao túng sẽ dùng 'Chi tiết vụn vặt' (Red Herring) để làm bạn kiệt sức nhận thức và bỏ qua bức tranh lớn." },
+        { keys: ['dịch vụ', 'cskh', 'nhà hàng', 'khách sạn'], vi: "Sự 'Kiệt sức cảm xúc' trong ngành dịch vụ khiến bạn dễ bị khuất phục trước những khách hàng dùng bạo hành tâm lý (Gaslighting)." },
+        { keys: ['xây dựng', 'kiến trúc', 'thầu'], vi: "Ngành xây dựng thường dính đến 'Chi phí chìm' (Sunk Cost Fallacy). Kẻ thao túng sẽ ép bạn tiếp tục dự án tồi tệ vì 'đã lỡ đầu tư quá nhiều'." },
+        { keys: ['nghiên cứu', 'khoa học', 'nhà khoa học'], vi: "Bạn tin vào chuyên môn. Kẻ thao túng sẽ dùng 'Lời kêu gọi từ uy tín' (danh xưng giả, báo cáo giả) để thuyết phục bạn." },
+        { keys: ['hành chính', 'văn phòng', 'thư ký'], vi: "Môi trường văn phòng dễ tạo ra 'Sự vâng lời mù quáng' và 'Hiệu ứng hào quang' từ cấp trên hoặc người có vẻ ngoài chuyên nghiệp." },
+        { keys: ['tự do', 'freelancer', 'mmo'], vi: "Sự bấp bênh của nghề tự do khiến bạn dễ mắc 'Ảo tưởng kiểm soát'. Kẻ thao túng sẽ bán cho bạn những khóa học/cơ hội làm giàu nhanh." },
+        { keys: ['nông nghiệp', 'nông dân', 'chăn nuôi'], vi: "Bạn coi trọng truyền thống và kinh nghiệm. Kẻ thao túng sẽ dùng 'Tâm lý bầy đàn' (hàng xóm đều làm thế) để dụ dỗ bạn." },
+        { keys: ['vận tải', 'lái xe', 'logistics'], vi: "Sự 'Mệt mỏi nhận thức' do làm việc căng thẳng khiến bạn dễ đưa ra các quyết định bốc đồng khi bị hối thúc." },
+        { keys: ['báo chí', 'phóng viên', 'truyền thông'], vi: "Bạn luôn săn tìm tin tức. Kẻ thao túng sẽ dùng 'Tính độc quyền' và 'Thiên kiến giật gân' để mớm cho bạn thông tin sai lệch." },
+        { keys: ['công an', 'quân đội', 'bảo vệ'], vi: "Kỷ luật thép khiến bạn quen với 'Lệnh từ cấp trên'. Kẻ thao túng có thể giả mạo thẩm quyền để ép bạn tuân thủ." },
+        { keys: ['sinh viên', 'thực tập sinh', 'học sinh'], vi: "Bạn khao khát sự công nhận và dễ mắc 'Hội chứng kẻ mạo danh'. Kẻ thao túng sẽ dùng lời khen ngợi giả tạo để bóc lột sức lao động." },
+        { keys: ['nội trợ', 'ở nhà'], vi: "Sự cô lập xã hội nhất định khiến bạn dễ bị thao túng bởi 'FOMO' và những lời đe dọa về sự an toàn của gia đình." }
+      ];
+
+      let jobMatched = false;
+      for (const j of jobMap) {
+        if (j.keys.some(k => job.includes(k))) {
+          advice.push({ vi: j.vi, en: "Job-specific vulnerability detected.", zh: "检测到特定职业的漏洞。" });
+          jobMatched = true;
+          break;
+        }
+      }
+      if (!jobMatched && job.length > 2) {
+        advice.push({ vi: `Công việc "${userProfile.job}" của bạn có thể bị thao túng qua các đòn bẩy về áp lực chuyên môn và định kiến ngành nghề.`, en: "Your job has specific professional pressure points.", zh: "你的工作有特定的专业压力点。" });
+      }
+    }
+
+    if (hobbies) {
+      const hobbyMap = [
+        { keys: ['thể thao', 'gym', 'chạy bộ', 'bóng đá', 'cầu lông'], vi: "Sở thích thể thao cho thấy bạn có tính kỷ luật và cái tôi thể chất. Kẻ thao túng có thể dùng 'Lời khích tướng' để điều khiển bạn." },
+        { keys: ['đọc sách', 'học', 'nghiên cứu', 'cờ vua'], vi: "Bạn thích tư duy sâu. Kẻ thao túng sẽ dùng những lời 'Tôn vinh trí tuệ' để làm bạn kiêu ngạo và mất cảnh giác." },
+        { keys: ['du lịch', 'phượt', 'khám phá'], vi: "Đam mê khám phá khiến bạn dễ bị thu hút bởi 'Sự khan hiếm' và những trải nghiệm được quảng cáo là 'độc bản'." },
+        { keys: ['game', 'trò chơi', 'esport'], vi: "Bạn quen với 'Cơ chế phần thưởng' (Dopamine). Kẻ thao túng sẽ chia nhỏ yêu cầu thành các nhiệm vụ để bạn nghiện việc tuân thủ." },
+        { keys: ['đầu tư', 'chứng khoán', 'crypto', 'coin'], vi: "Quan tâm đến tài chính khiến bạn dễ rơi vào bẫy 'Lòng tham' và 'Nỗi sợ mất mát'. Hãy cẩn thận với các quyết định vội vàng." },
+        { keys: ['nấu ăn', 'ẩm thực', 'làm bánh'], vi: "Bạn nhạy cảm với hương vị và sự tỉ mỉ. Kẻ thao túng có thể dùng 'Kích thích giác quan' để tạo thiện cảm trước khi đưa ra yêu cầu." },
+        { keys: ['nhiếp ảnh', 'quay phim', 'chụp ảnh'], vi: "Bạn có xu hướng theo đuổi 'Chủ nghĩa hoàn hảo'. Kẻ thao túng sẽ lợi dụng điều này để ép bạn đầu tư thêm thời gian/tiền bạc (Chi phí chìm)." },
+        { keys: ['âm nhạc', 'đàn', 'hát', 'ca hát'], vi: "Âm nhạc làm bạn nhạy cảm. Bạn dễ bị thao túng qua 'Cảm xúc lây lan' (Emotional contagion) trong các môi trường đông người." },
+        { keys: ['mua sắm', 'thời trang', 'shopping'], vi: "Bạn dễ mắc 'Hiệu ứng Diderot' (mua một món đồ dẫn đến mua nhiều món khác) và bị thao túng bởi 'Bằng chứng xã hội' (trend)." },
+        { keys: ['sưu tầm', 'đồ cổ', 'tem', 'mô hình'], vi: "Kẻ thao túng sẽ tạo ra 'Sự khan hiếm nhân tạo' để ép bạn mua hoặc đưa ra quyết định phi lý trí nhằm có được món đồ." },
+        { keys: ['tình nguyện', 'từ thiện', 'xã hội'], vi: "Lòng tốt của bạn là điểm yếu. Kẻ thao túng sẽ dùng 'Cảm giác tội lỗi' (Guilt trip) để bóc lột thời gian và tiền bạc của bạn." },
+        { keys: ['thú cưng', 'chó', 'mèo'], vi: "Tình cảm gắn bó với thú cưng rất mạnh mẽ. Kẻ xấu có thể thao túng bạn thông qua những lời đe dọa hoặc hứa hẹn về sự an toàn của chúng." },
+        { keys: ['làm vườn', 'cây cảnh', 'trồng cây'], vi: "Bạn dễ mắc 'Hiệu ứng IKEA' (đánh giá quá cao những gì mình tự làm). Kẻ thao túng sẽ để bạn tự làm một phần việc để bạn không nỡ bỏ cuộc." },
+        { keys: ['xem phim', 'cày phim', 'netflix'], vi: "Việc tiếp nhận thông tin thụ động liên tục gây 'Kiệt sức nhận thức'. Bạn dễ bị ám thị bởi các thông điệp lặp đi lặp lại." },
+        { keys: ['mạng xã hội', 'tiktok', 'facebook', 'lướt web'], vi: "Bạn bị kẹt trong 'Vòng lặp Dopamine' và 'So sánh xã hội'. Kẻ thao túng sẽ dùng FOMO để ép bạn hành động." },
+        { keys: ['thủ công', 'diy', 'đan len', 'handmade'], vi: "Tương tự làm vườn, bạn mắc 'Hiệu ứng IKEA' và 'Tâm lý tiếc của' (Sunk cost) khi đã lỡ dành nhiều thời gian cho một việc." },
+        { keys: ['yoga', 'thiền', 'tâm linh'], vi: "Bạn tìm kiếm sự bình yên nhưng dễ rơi vào 'Sự tin tưởng mù quáng' (Hiệu ứng hào quang) đối với những người tự xưng là Guru/Thầy." },
+        { keys: ['xe cộ', 'độ xe', 'mô tô', 'ô tô'], vi: "Sở thích này gắn liền với 'Cái tôi' và 'Đẳng cấp'. Kẻ thao túng sẽ khích bác hoặc tâng bốc chiếc xe để điều khiển bạn." },
+        { keys: ['công nghệ', 'đồ điện tử', 'gadget'], vi: "Bạn dễ mắc 'Hiệu ứng nâng cấp' (Upgrade fallacy) và luôn sợ bị lỗi thời (FOMO). Kẻ thao túng sẽ liên tục bán cho bạn sự mới mẻ." },
+        { keys: ['chiêm tinh', 'tarot', 'tử vi', 'cung hoàng đạo'], vi: "Bạn rất dễ mắc 'Hiệu ứng Barnum' (tin rằng những lời mô tả chung chung là dành riêng cho mình). Kẻ thao túng sẽ dùng kỹ thuật 'Cold Reading' để lừa bạn." }
+      ];
+
+      let hobbyMatched = false;
+      for (const h of hobbyMap) {
+        if (h.keys.some(k => hobbies.includes(k))) {
+          advice.push({ vi: h.vi, en: "Hobby-specific vulnerability detected.", zh: "检测到特定爱好的漏洞。" });
+          hobbyMatched = true;
+          break;
+        }
+      }
+      if (!hobbyMatched && hobbies.length > 2) {
+        advice.push({ vi: `Sở thích "${userProfile.hobbies}" của bạn có thể bị lợi dụng để tạo 'Sự tương đồng giả tạo' (Mirroring) nhằm lấy lòng tin.`, en: "Your hobby can be used for mirroring.", zh: "你的爱好可以用来进行镜像模仿。" });
+      }
+    }
+
+    if (advice.length === 0) {
+      advice.push({
+        vi: "Vui lòng nhập thêm thông tin để nhận phân tích chi tiết hơn.",
+        en: "Please enter more information to receive a more detailed analysis.",
+        zh: "请输入更多信息以获得更详细的分析。"
+      });
+    }
+
+    return advice;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,11 +201,12 @@ export const Article: React.FC = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative h-[60vh] min-h-[500px] w-full bg-slate-900">
-        <img 
+      <div className="relative h-[60vh] min-h-[500px] w-full bg-slate-900 overflow-hidden">
+        <motion.img 
           src={article.imageUrl} 
           alt={title} 
-          className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
+          style={{ y: backgroundY, scale: 1.1 }}
+          className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay origin-top"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
@@ -112,6 +243,110 @@ export const Article: React.FC = () => {
 
         {/* Markdown Sections */}
         <div className="lg:col-span-3 space-y-8 lg:space-y-12">
+          
+          {/* Personalized Analysis Tool */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-indigo-50 p-8 md:p-10"
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-lg shadow-indigo-200">
+                <Sparkles size={24} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">Phân tích rủi ro cá nhân</h2>
+                <p className="text-slate-500">Nhập thông tin để xem bạn dễ bị thao túng bởi kỹ thuật nào nhất</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-2">Giới tính</label>
+                <select 
+                  value={userProfile.gender}
+                  onChange={(e) => setUserProfile({ ...userProfile, gender: e.target.value })}
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                >
+                  <option value="">Chọn giới tính</option>
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+                  <option value="other">Khác</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-2">Độ tuổi</label>
+                <input 
+                  type="number" 
+                  placeholder="Nhập tuổi..."
+                  value={userProfile.age}
+                  onChange={(e) => setUserProfile({ ...userProfile, age: e.target.value })}
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-2">Công việc</label>
+                <input 
+                  type="text" 
+                  placeholder="Ví dụ: Kinh doanh, Kỹ sư, Giáo viên..."
+                  value={userProfile.job}
+                  onChange={(e) => setUserProfile({ ...userProfile, job: e.target.value })}
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-2">Sở thích</label>
+                <input 
+                  type="text" 
+                  placeholder="Ví dụ: Thể thao, Đọc sách, Du lịch..."
+                  value={userProfile.hobbies}
+                  onChange={(e) => setUserProfile({ ...userProfile, hobbies: e.target.value })}
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                />
+              </div>
+            </div>
+            
+            <AnimatePresence>
+              {(userProfile.gender || userProfile.age || userProfile.job || userProfile.hobbies) && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-6 bg-indigo-50 rounded-3xl border border-indigo-100">
+                    <div className="flex items-center gap-2 mb-4 text-indigo-900 font-bold">
+                      <ShieldAlert size={20} />
+                      Kết quả phân tích:
+                    </div>
+                    <ul className="space-y-4">
+                      {getPersonalizedAdvice().map((advice, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-indigo-800 leading-relaxed">
+                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
+                          {getLocalized(advice)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Content Search Filter */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+              <Search className="h-6 w-6 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+            </div>
+            <input
+              type="text"
+              placeholder="Tìm kiếm nội dung trong bài viết..."
+              value={contentSearch}
+              onChange={(e) => setContentSearch(e.target.value)}
+              className="w-full pl-16 pr-6 py-5 bg-white border-2 border-slate-100 rounded-[2rem] text-lg focus:outline-none focus:border-indigo-500 shadow-xl shadow-slate-200/20 transition-all"
+            />
+          </div>
+
           {/* Key Takeaways */}
           {article.keyTakeaways && (
             <motion.div 
@@ -147,8 +382,11 @@ export const Article: React.FC = () => {
             </motion.div>
           )}
 
-          {sections.map((section: string, index: number) => {
-            const id = tocItems[index].id;
+          {filteredSections.map((section: string, index: number) => {
+            const sectionTitleMatch = section.match(/^##\s+(.*)/m);
+            const sectionTitle = sectionTitleMatch ? sectionTitleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : 'Section';
+            const id = sectionTitle.toLowerCase().replace(/\s+/g, '-');
+            
             return (
               <motion.div 
                 key={`section-${index}`}

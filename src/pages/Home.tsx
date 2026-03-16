@@ -1,34 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { psychologyData } from '../data/psychologyData';
-import { motion } from 'motion/react';
-import { Brain, BookOpen, Lightbulb } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Brain, BookOpen, Lightbulb, Search, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  const filteredArticles = psychologyData.filter(item => {
+    const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+    const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
+    const query = searchQuery.toLowerCase();
+    return title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
+  });
+
+  const suggestions = searchQuery.length >= 2 
+    ? psychologyData.filter(item => {
+        const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+        return title.toLowerCase().includes(searchQuery.toLowerCase());
+      }).slice(0, 5)
+    : [];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 overflow-hidden border-b border-slate-100">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        <div className="max-w-7xl mx-auto px-4 relative">
+      <section className="relative py-24 lg:py-32 overflow-hidden border-b border-slate-100 bg-slate-900">
+        <div className="absolute inset-0 z-0 opacity-30">
+          <img 
+            src="https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=2000&auto=format&fit=crop" 
+            alt="Brain and Psychology" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/80 to-slate-900"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="text-center">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-slate-900 mb-8"
+              className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-white mb-8"
             >
               {t('hero.title1')} <br className="hidden md:block" />
-              <span className="text-indigo-600 italic">{t('hero.title2')}</span>
+              <span className="text-indigo-400 italic">{t('hero.title2')}</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 leading-relaxed"
+              className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed"
             >
               {t('hero.subtitle')}
             </motion.p>
@@ -38,10 +74,10 @@ export const Home: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="flex flex-col sm:flex-row justify-center gap-6"
             >
-              <a href="#articles" className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg shadow-indigo-200 transition-all hover:-translate-y-1">
+              <a href="#articles" className="bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all hover:-translate-y-1">
                 {t('hero.btn.explore')}
               </a>
-              <a href="#features" className="bg-white hover:bg-slate-50 text-slate-900 border-2 border-slate-200 px-10 py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1">
+              <a href="#features" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 px-10 py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1">
                 {t('hero.btn.learnMore')}
               </a>
             </motion.div>
@@ -82,46 +118,111 @@ export const Home: React.FC = () => {
       <section id="articles" className="py-32 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-6">{t('home.libraryTitle')}</h2>
-          <div className="w-24 h-1 bg-indigo-600 mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-indigo-600 mx-auto rounded-full mb-12"></div>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto relative group" ref={searchRef}>
+            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+              <Search className="h-6 w-6 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+            </div>
+            <input
+              type="text"
+              placeholder={t('home.searchPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              className="w-full pl-16 pr-6 py-5 bg-white border-2 border-slate-100 rounded-[2rem] text-lg focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-xl shadow-slate-200/40 transition-all"
+            />
+
+            {/* Suggestions Dropdown */}
+            <AnimatePresence>
+              {isFocused && suggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 right-0 mt-4 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50 p-2"
+                >
+                  {suggestions.map((item) => {
+                    const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          navigate(`/article/${item.id}`);
+                          setIsFocused(false);
+                          setSearchQuery('');
+                        }}
+                        className="w-full flex items-center justify-between px-6 py-4 hover:bg-indigo-50 rounded-2xl transition-colors text-left group/item"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover/item:bg-indigo-100 group-hover/item:text-indigo-600 transition-colors">
+                            <BookOpen size={20} />
+                          </div>
+                          <span className="font-bold text-slate-700 group-hover/item:text-indigo-600 transition-colors">
+                            {title}
+                          </span>
+                        </div>
+                        <ArrowRight size={18} className="text-slate-300 group-hover/item:text-indigo-400 group-hover/item:translate-x-1 transition-all" />
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {psychologyData.map((item, index) => {
-            // Use localized strings if available, fallback to vi
-            const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
-            const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
-            
-            return (
-              <motion.div 
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col"
-              >
-                <div className="h-64 overflow-hidden relative">
-                  <div className="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                  <img 
-                    src={item.imageUrl} 
-                    alt={title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="p-10 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-indigo-600 transition-colors">{title}</h3>
-                  <p className="text-slate-600 mb-8 flex-grow leading-relaxed text-lg">{shortDesc}</p>
-                  <Link 
-                    to={`/article/${item.id}`}
-                    className="inline-flex items-center justify-center w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-slate-200 hover:shadow-indigo-200"
-                  >
-                    {t('home.readMore')}
-                  </Link>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+        
+        {filteredArticles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredArticles.map((item, index) => {
+              // Use localized strings if available, fallback to vi
+              const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+              const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
+              
+              return (
+                <motion.div 
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col"
+                >
+                  <div className="h-64 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                    <img 
+                      src={item.imageUrl} 
+                      alt={title} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  <div className="p-10 flex flex-col flex-grow">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-indigo-600 transition-colors">{title}</h3>
+                    <p className="text-slate-600 mb-8 flex-grow leading-relaxed text-lg">{shortDesc}</p>
+                    <Link 
+                      to={`/article/${item.id}`}
+                      className="inline-flex items-center justify-center w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-slate-200 hover:shadow-indigo-200"
+                    >
+                      {t('home.readMore')}
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-2xl text-slate-500 font-medium">{t('home.noResults')}</p>
+            <button 
+              onClick={() => setSearchQuery('')}
+              className="mt-6 text-indigo-600 font-bold hover:underline"
+            >
+              {t('home.clearSearch')}
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
