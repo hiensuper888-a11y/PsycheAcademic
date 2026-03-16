@@ -7,7 +7,7 @@ import { User, LogOut, Globe, Moon, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const Navbar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -57,7 +57,9 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {user ? (
+            {loading ? (
+              <div className="w-20 h-10 animate-pulse bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
+            ) : user ? (
               <div className="flex items-center space-x-4">
                 <Link to="/profile" className="flex items-center space-x-2 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium">
                   {user.picture ? (
