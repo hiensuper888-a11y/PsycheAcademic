@@ -4,6 +4,7 @@ import { psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { INFLUENCE_PRINCIPLES } from '../constants';
 
 export const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -14,6 +15,7 @@ export const Home: React.FC = () => {
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [selectedTopic, setSelectedTopic] = useState('all');
   const [selectedDate, setSelectedDate] = useState('all');
+  const [selectedPrinciple, setSelectedPrinciple] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -35,8 +37,9 @@ export const Home: React.FC = () => {
     const matchesAuthor = selectedAuthor === 'all' || item.author === selectedAuthor;
     const matchesTopic = selectedTopic === 'all' || category === selectedTopic;
     const matchesDate = selectedDate === 'all' || item.date.startsWith(selectedDate);
+    const matchesPrinciple = selectedPrinciple === 'all' || (item.principles?.includes(selectedPrinciple) || false);
 
-    return matchesSearch && matchesAuthor && matchesTopic && matchesDate;
+    return matchesSearch && matchesAuthor && matchesTopic && matchesDate && matchesPrinciple;
   });
 
   const suggestions = searchQuery.length >= 2 
@@ -204,19 +207,20 @@ export const Home: React.FC = () => {
               >
                 <Filter size={18} />
                 {t('home.filters.title')}
-                {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all') && (
+                {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all' || selectedPrinciple !== 'all') && (
                   <span className="ml-1 w-5 h-5 bg-white text-indigo-600 rounded-full text-xs flex items-center justify-center font-bold">
-                    {[selectedAuthor, selectedTopic, selectedDate].filter(f => f !== 'all').length}
+                    {[selectedAuthor, selectedTopic, selectedDate, selectedPrinciple].filter(f => f !== 'all').length}
                   </span>
                 )}
               </button>
 
-              {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all') && (
+              {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all' || selectedPrinciple !== 'all') && (
                 <button
                   onClick={() => {
                     setSelectedAuthor('all');
                     setSelectedTopic('all');
                     setSelectedDate('all');
+                    setSelectedPrinciple('all');
                   }}
                   className="flex items-center gap-2 px-6 py-3 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
                 >
@@ -285,6 +289,24 @@ export const Home: React.FC = () => {
                         <option value="all">{t('home.filters.allDates')}</option>
                         {years.map(year => (
                           <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Principle Filter */}
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        <Brain size={16} />
+                        Influence Principles
+                      </label>
+                      <select
+                        value={selectedPrinciple}
+                        onChange={(e) => setSelectedPrinciple(e.target.value)}
+                        className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      >
+                        <option value="all">All Principles</option>
+                        {INFLUENCE_PRINCIPLES.map(principle => (
+                          <option key={principle} value={principle}>{principle}</option>
                         ))}
                       </select>
                     </div>

@@ -10,16 +10,18 @@ interface TargetAudience {
   gender: string;
   profession: string;
   religion: string;
+  politicalSystem: string;
   savedTechniques: string[];
 }
 
 const religions = ['Phật giáo', 'Ấn độ giáo', 'Thiên chúa giáo', 'Không tôn giáo', 'Đạo giáo', 'Do thái giáo', 'Hồi giáo'];
 const genders = ['Nam', 'Nữ', 'Khác'];
 const professions = ['Sales', 'Marketing', 'Customer Service', 'Management', 'Kỹ thuật', 'Giáo dục', 'Y tế', 'Khác'];
+const politicalSystems = ['Xã hội chủ nghĩa', 'Tư bản', 'Quân chủ lập hiến', 'Phiến quân/Loạn lạc'];
 
 export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
-  const [newTarget, setNewTarget] = useState({ name: '', ageGroup: 'All', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo' });
+  const [newTarget, setNewTarget] = useState({ name: '', ageGroup: 'All', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản' });
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
@@ -39,16 +41,27 @@ export const TargetAudience: React.FC = () => {
       savedTechniques: []
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', ageGroup: 'All', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo' });
+    setNewTarget({ name: '', ageGroup: 'All', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
     const techniques = influenceTechniques.filter(t => 
-      t.targetDemographics.professions.includes(target.profession) || t.targetDemographics.professions.includes('All')
+      (t.targetDemographics.professions.includes(target.profession) || t.targetDemographics.professions.includes('All')) &&
+      (t.targetDemographics.religions.includes(target.religion) || t.targetDemographics.religions.includes('All')) &&
+      (t.targetDemographics.politicalSystems.includes(target.politicalSystem) || t.targetDemographics.politicalSystems.includes('All'))
     );
     
+    const getLocalized = (field: any) => {
+      if (typeof field === 'string') return field;
+      if (field && typeof field === 'object') {
+        return field['en'] || field['vi'] || '';
+      }
+      return '';
+    };
+
     const articles = psychologyData.filter(a => 
-      a.category.en.toLowerCase().includes(target.profession.toLowerCase()) || a.title.en.toLowerCase().includes(target.profession.toLowerCase())
+      getLocalized(a.category).toLowerCase().includes(target.profession.toLowerCase()) || 
+      getLocalized(a.title).toLowerCase().includes(target.profession.toLowerCase())
     );
 
     return { techniques, articles };
@@ -71,6 +84,9 @@ export const TargetAudience: React.FC = () => {
           <select className="p-3 rounded-xl border" value={newTarget.religion} onChange={e => setNewTarget({...newTarget, religion: e.target.value})}>
             {religions.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
+          <select className="p-3 rounded-xl border" value={newTarget.politicalSystem} onChange={e => setNewTarget({...newTarget, politicalSystem: e.target.value})}>
+            {politicalSystems.map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
           <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
             <Plus size={20} /> Thêm
           </button>
@@ -86,7 +102,7 @@ export const TargetAudience: React.FC = () => {
                 <h3 className="text-xl font-bold">{target.name}</h3>
                 <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-red-500"><Trash2 size={20} /></button>
               </div>
-              <p className="text-sm text-slate-500 mb-6">{target.gender} | {target.profession} | {target.religion}</p>
+              <p className="text-sm text-slate-500 mb-6">{target.gender} | {target.profession} | {target.religion} | {target.politicalSystem}</p>
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div>

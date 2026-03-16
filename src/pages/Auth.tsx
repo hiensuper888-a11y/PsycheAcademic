@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Stepper } from '../components/Stepper';
 
 export const Auth: React.FC = () => {
   const { user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail } = useAuth();
@@ -70,8 +71,8 @@ export const Auth: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-white dark:bg-slate-900 transition-colors duration-200">
       {/* Left Pane - Branding & Imagery */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-between p-12">
-        <div className="absolute inset-0 z-0 opacity-20">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 bg-gradient-to-br from-indigo-900 via-slate-900 to-emerald-900">
+        <div className="absolute inset-0 z-0 opacity-30">
           <img 
             src="https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=2000&auto=format&fit=crop" 
             alt="Brain and Psychology" 
@@ -83,8 +84,8 @@ export const Auth: React.FC = () => {
 
         <div className="relative z-10">
           <div className="flex items-center space-x-3 text-white">
-            <Brain className="w-10 h-10 text-indigo-400" />
-            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-indigo-400">Academic</span></span>
+            <Brain className="w-10 h-10 text-emerald-400" />
+            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-emerald-400">Academic</span></span>
           </div>
         </div>
 
@@ -110,8 +111,8 @@ export const Auth: React.FC = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto bg-white dark:bg-slate-900">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center justify-center space-x-3 text-slate-900 dark:text-white mb-12">
-            <Brain className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
-            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-indigo-600 dark:text-indigo-400">Academic</span></span>
+            <Brain className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-emerald-600 dark:text-emerald-400">Academic</span></span>
           </div>
 
           <motion.div
@@ -119,23 +120,14 @@ export const Auth: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              {isLogin ? t('auth.loginTitle') : t('auth.registerTitle')}
-            </h2>
-            <p className="text-slate-500 dark:text-slate-400 mb-8">
-              {isLogin 
-                ? t('auth.noAccount') 
-                : t('auth.hasAccount')}{' '}
-              <button 
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError('');
-                }}
-                className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
-              >
-                {isLogin ? t('auth.registerTitle') : t('auth.loginTitle')}
-              </button>
-            </p>
+            <Stepper
+              steps={[t('auth.loginTitle'), t('auth.registerTitle')]}
+              currentStep={isLogin ? 0 : 1}
+              onStepClick={(step) => {
+                setIsLogin(step === 0);
+                setError('');
+              }}
+            />
 
             {error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-sm">
@@ -233,7 +225,7 @@ export const Auth: React.FC = () => {
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <button
                   onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -246,7 +238,7 @@ export const Auth: React.FC = () => {
 
                 <button
                   onClick={handleXLogin}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <svg className="w-5 h-5 mr-2 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -263,7 +255,7 @@ export const Auth: React.FC = () => {
                   setIsLogin(!isLogin);
                   setError('');
                 }}
-                className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
+                className="font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors"
               >
                 {isLogin ? t('auth.registerNow') : t('auth.loginNow')}
               </button>

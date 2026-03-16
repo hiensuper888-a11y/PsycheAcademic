@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap } from 'lucide-react';
+import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { useTranslation } from 'react-i18next';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 import { TableOfContents } from '../components/TableOfContents';
 import { CollapsibleList } from '../components/CollapsibleList';
+import { Tooltip } from '../components/Tooltip';
 import { summarizeArticle } from '../services/geminiService';
 
 export const Article: React.FC = () => {
@@ -267,7 +269,9 @@ export const Article: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.gender')}</label>
+                <Tooltip content={t('article.riskAnalysis.genderTooltip')}>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.gender')}</label>
+                </Tooltip>
                 <select 
                   value={userProfile.gender}
                   onChange={(e) => setUserProfile({ ...userProfile, gender: e.target.value })}
@@ -280,7 +284,9 @@ export const Article: React.FC = () => {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.age')}</label>
+                <Tooltip content={t('article.riskAnalysis.ageTooltip')}>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.age')}</label>
+                </Tooltip>
                 <input 
                   type="number" 
                   placeholder={t('article.riskAnalysis.agePlaceholder')}
@@ -290,7 +296,9 @@ export const Article: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.job')}</label>
+                <Tooltip content={t('article.riskAnalysis.jobTooltip')}>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.job')}</label>
+                </Tooltip>
                 <input 
                   type="text" 
                   placeholder={t('article.riskAnalysis.jobPlaceholder')}
@@ -300,7 +308,9 @@ export const Article: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.hobbies')}</label>
+                <Tooltip content={t('article.riskAnalysis.hobbiesTooltip')}>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.hobbies')}</label>
+                </Tooltip>
                 <input 
                   type="text" 
                   placeholder={t('article.riskAnalysis.hobbiesPlaceholder')}
@@ -412,20 +422,28 @@ export const Article: React.FC = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {article.keyTakeaways.map((takeaway, idx) => (
-                    <motion.div 
-                      key={idx} 
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-lg flex items-start gap-4 group"
-                    >
-                      <div className="p-2 bg-indigo-500/30 rounded-full flex-shrink-0">
-                        <Zap size={20} className="text-indigo-200" />
-                      </div>
-                      <p className="text-indigo-50 text-lg leading-relaxed font-medium">
-                        {getLocalized(takeaway)}
-                      </p>
-                    </motion.div>
-                  ))}
+                  {article.keyTakeaways.map((takeaway, idx) => {
+                    const Icon = [Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck][idx % 6];
+                    return (
+                      <motion.div 
+                        key={idx} 
+                        whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.15)" }}
+                        className="bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/10 shadow-xl flex flex-col gap-4 group transition-all duration-300"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="p-3 bg-indigo-500/20 rounded-2xl flex-shrink-0 group-hover:bg-indigo-500/40 transition-colors">
+                            <Icon size={24} className="text-indigo-200" />
+                          </div>
+                          <span className="text-4xl font-black text-white/10 group-hover:text-white/20 transition-colors">
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                        </div>
+                        <p className="text-indigo-50 text-lg leading-relaxed font-medium">
+                          {getLocalized(takeaway)}
+                        </p>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>
@@ -450,6 +468,7 @@ export const Article: React.FC = () => {
                 <div className="prose prose-slate dark:prose-invert prose-lg md:prose-xl max-w-none prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-relaxed prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4 prose-img:rounded-3xl prose-img:shadow-2xl prose-img:my-12 prose-table:w-full prose-table:border-collapse prose-table:my-10 prose-table:text-base prose-th:bg-slate-50 dark:prose-th:bg-slate-800/50 prose-th:p-5 prose-th:text-left prose-th:border-b-2 prose-th:border-slate-200 dark:prose-th:border-slate-700 prose-th:font-bold prose-th:text-slate-800 dark:prose-th:text-slate-200 prose-td:p-5 prose-td:border-b prose-td:border-slate-100 dark:prose-td:border-slate-700 hover:prose-tr:bg-slate-50/50 dark:hover:prose-tr:bg-slate-800/30 prose-hr:hidden transition-colors">
                   <Markdown
                     remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
                     components={{
                       h2: ({node, children, ...props}) => {
                         const text = React.Children.toArray(children).join('');
@@ -527,7 +546,7 @@ export const Article: React.FC = () => {
                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} className="dark:text-slate-300" />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8' }} className="dark:text-slate-500" />
                     <Radar name={title} dataKey="A" stroke="#4f46e5" strokeWidth={3} fill="#4f46e5" fillOpacity={0.4} />
-                    <Tooltip 
+                    <RechartsTooltip 
                       contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', padding: '12px 20px', backgroundColor: 'var(--color-bg-card)' }}
                       itemStyle={{ color: 'var(--color-text-main)', fontWeight: 'bold', fontSize: '16px' }}
                     />

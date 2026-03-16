@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Tooltip } from '../components/Tooltip';
 
 interface TargetProfile {
   id: string;
@@ -192,60 +193,70 @@ export const TargetAnalysis: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.gender')}</label>
-                  <select 
-                    value={currentTarget.gender}
-                    onChange={(e) => setCurrentTarget({...currentTarget, gender: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
-                  >
-                    <option value="">{t('targetAnalysis.selectGender')}</option>
-                    <option value="male">{t('targetAnalysis.male')}</option>
-                    <option value="female">{t('targetAnalysis.female')}</option>
-                  </select>
+                  <Tooltip content={t('targetAnalysis.tooltip.gender')}>
+                    <select 
+                      value={currentTarget.gender}
+                      onChange={(e) => setCurrentTarget({...currentTarget, gender: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
+                    >
+                      <option value="">{t('targetAnalysis.selectGender')}</option>
+                      <option value="male">{t('targetAnalysis.male')}</option>
+                      <option value="female">{t('targetAnalysis.female')}</option>
+                    </select>
+                  </Tooltip>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.age')}</label>
-                  <input 
-                    type="number"
-                    value={currentTarget.age}
-                    onChange={(e) => setCurrentTarget({...currentTarget, age: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                    placeholder={t('targetAnalysis.age')}
-                  />
+                  <Tooltip content={t('targetAnalysis.tooltip.age')}>
+                    <input 
+                      type="number"
+                      value={currentTarget.age}
+                      onChange={(e) => setCurrentTarget({...currentTarget, age: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                      placeholder={t('targetAnalysis.age')}
+                    />
+                  </Tooltip>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.job')}</label>
-                  <input 
-                    type="text"
-                    value={currentTarget.job}
-                    onChange={(e) => setCurrentTarget({...currentTarget, job: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                    placeholder={t('targetAnalysis.jobPlaceholder')}
-                  />
+                  <Tooltip content={t('targetAnalysis.tooltip.job')}>
+                    <input 
+                      type="text"
+                      value={currentTarget.job}
+                      onChange={(e) => setCurrentTarget({...currentTarget, job: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                      placeholder={t('targetAnalysis.jobPlaceholder')}
+                    />
+                  </Tooltip>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.hobbies')}</label>
-                  <input 
-                    type="text"
-                    value={currentTarget.hobbies}
-                    onChange={(e) => setCurrentTarget({...currentTarget, hobbies: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                    placeholder={t('targetAnalysis.hobbiesPlaceholder')}
-                  />
+                  <Tooltip content={t('targetAnalysis.tooltip.hobbies')}>
+                    <input 
+                      type="text"
+                      value={currentTarget.hobbies}
+                      onChange={(e) => setCurrentTarget({...currentTarget, hobbies: e.target.value})}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                      placeholder={t('targetAnalysis.hobbiesPlaceholder')}
+                    />
+                  </Tooltip>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.name')}</label>
-                <input 
-                  type="text"
-                  value={currentTarget.name}
-                  onChange={(e) => setCurrentTarget({...currentTarget, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
-                  placeholder={t('targetAnalysis.namePlaceholder')}
-                />
+                <Tooltip content={t('targetAnalysis.tooltip.name')}>
+                  <input 
+                    type="text"
+                    value={currentTarget.name}
+                    onChange={(e) => setCurrentTarget({...currentTarget, name: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    placeholder={t('targetAnalysis.namePlaceholder')}
+                  />
+                </Tooltip>
               </div>
 
               <button 
