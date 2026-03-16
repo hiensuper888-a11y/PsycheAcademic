@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
+import { syndromes } from '../data/syndromes';
 
 interface TargetProfile {
   id: string;
@@ -12,6 +13,7 @@ interface TargetProfile {
   job: string;
   hobbies: string;
   habits: string;
+  syndrome: string;
 }
 
 export const TargetAnalysis: React.FC = () => {
@@ -24,7 +26,8 @@ export const TargetAnalysis: React.FC = () => {
     gender: '',
     job: '',
     hobbies: '',
-    habits: ''
+    habits: '',
+    syndrome: ''
   });
   const [showPlan, setShowPlan] = useState<string | null>(null);
 
@@ -32,7 +35,7 @@ export const TargetAnalysis: React.FC = () => {
     if (!currentTarget.name) return;
     const newTarget = { ...currentTarget, id: Date.now().toString() };
     setTargets([...targets, newTarget]);
-    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', hobbies: '', habits: '' });
+    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', hobbies: '', habits: '', syndrome: '' });
   };
 
   const handleDeleteTarget = (id: string) => {
@@ -247,6 +250,18 @@ export const TargetAnalysis: React.FC = () => {
               </div>
 
               <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.syndrome')}</label>
+                <select 
+                  value={currentTarget.syndrome}
+                  onChange={(e) => setCurrentTarget({...currentTarget, syndrome: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
+                >
+                  <option value="">{t('targetAnalysis.selectSyndrome')}</option>
+                  {syndromes.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+
+              <div>
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.name')}</label>
                 <Tooltip content={t('targetAnalysis.tooltip.name')}>
                   <input 
@@ -375,6 +390,7 @@ export const TargetAnalysis: React.FC = () => {
                     <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
                     <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
                     <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.syndrome')}: {target.syndrome || 'N/A'}</p>
                   </div>
                   <button 
                     onClick={() => {

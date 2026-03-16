@@ -1,0 +1,22 @@
+export const syndromes = [
+  "Hội chứng kẻ mạo danh (Imposter Syndrome)", "Hiệu ứng Dunning-Kruger", "Hiệu ứng hào quang (Halo Effect)", "Thiên kiến xác nhận (Confirmation Bias)", "Hiệu ứng mỏ neo (Anchoring Effect)",
+  "Thiên kiến sẵn có (Availability Heuristic)", "Hiệu ứng đám đông (Bandwagon Effect)", "Hiệu ứng người quan sát (Observer Effect)", "Hội chứng Stockholm", "Hội chứng Lima",
+  "Hiệu ứng Barnum (Barnum Effect)", "Thiên kiến tự phục vụ (Self-serving Bias)", "Hiệu ứng giả dược (Placebo Effect)", "Hiệu ứng nocebo", "Hội chứng sợ bỏ lỡ (FOMO)",
+  "Hiệu ứng Bystander (Bystander Effect)", "Hiệu ứng Spotlight (Spotlight Effect)", "Thiên kiến lạc quan (Optimism Bias)", "Thiên kiến bi quan (Pessimism Bias)", "Hiệu ứng Framing (Framing Effect)",
+  "Hiệu ứng Anchoring-and-Adjustment", "Thiên kiến hiện tại (Present Bias)", "Thiên kiến tương lai (Future Bias)", "Hiệu ứng IKEA (IKEA Effect)", "Thiên kiến chìm (Sunk Cost Fallacy)",
+  "Hiệu ứng mỏ neo (Anchoring)", "Thiên kiến lựa chọn (Selection Bias)", "Thiên kiến sống sót (Survivorship Bias)", "Hiệu ứng Diderot (Diderot Effect)", "Hiệu ứng Zeigarnik (Zeigarnik Effect)",
+  "Hiệu ứng Pratfall (Pratfall Effect)", "Hội chứng Peter Pan", "Hội chứng Wendy", "Hội chứng Cinderella", "Hội chứng Paris",
+  "Hội chứng Jerusalem", "Hội chứng Stendhal", "Hội chứng Diogenes", "Hội chứng Capgras", "Hội chứng Fregoli",
+  "Hội chứng Cotard", "Hội chứng Alice ở xứ sở thần tiên", "Hội chứng Munchausen", "Hội chứng Munchausen do người khác gây ra", "Hội chứng Alien Hand",
+  "Hội chứng Phantom Limb", "Hội chứng Savant", "Hội chứng Tourette", "Hội chứng Asperger", "Hội chứng Down",
+  "Hội chứng Williams", "Hội chứng Prader-Willi", "Hội chứng Angelman", "Hội chứng Rett", "Hội chứng Fragile X",
+  "Hội chứng Klinefelters", "Hội chứng Turners", "Hội chứng Cri du chat", "Hội chứng Patau", "Hội chứng Edwards",
+  "Hội chứng Marfan", "Hội chứng Ehlers-Danlos", "Hội chứng Huntington", "Hội chứng Parkinson", "Hội chứng Alzheimer",
+  "Hội chứng Korsakoff", "Hội chứng Wernicke", "Hội chứng Kluver-Bucy", "Hội chứng Anton", "Hội chứng Balint",
+  "Hội chứng Gerstmann", "Hội chứng Charles Bonnet", "Hội chứng Othello", "Hội chứng Ekbom", "Hội chứng Lycanthropy",
+  "Hội chứng Vampirism", "Hội chứng Boanthropy", "Hội chứng Zoanthropy", "Hội chứng Wendigo", "Hội chứng Koro",
+  "Hội chứng Latah", "Hội chứng Amok", "Hội chứng Piblokto", "Hội chứng Susto", "Hội chứng Taijin Kyofusho",
+  "Hội chứng Hikikomori", "Hội chứng Karoshi", "Hội chứng Gwang-byung", "Hội chứng Shin-byung", "Hội chứng Hwabyung",
+  "Hội chứng Dhat", "Hội chứng Zar", "Hội chứng Mal de ojo", "Hội chứng Ataque de nervios", "Hội chứng Brain Fag",
+  "Hội chứng Locura", "Hội chứng Ghost Sickness", "Hội chứng Grisi Siknis", "Hội chứng Windigo", "Hội chứng Arctic Hysteria"
+];
