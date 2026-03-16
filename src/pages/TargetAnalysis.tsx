@@ -166,10 +166,10 @@ export const TargetAnalysis: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-black text-slate-900 mb-4"
         >
-          Hệ Thống <span className="text-indigo-600">Phân Tích & Lập Kế Hoạch</span>
+          {t('targetAnalysis.title')}
         </motion.h1>
         <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-          Nhập thông tin để nhận ngay các phương pháp thao túng hữu hiệu nhất dựa trên tâm lý học hành vi.
+          {t('targetAnalysis.desc')}
         </p>
       </div>
 
@@ -185,66 +185,66 @@ export const TargetAnalysis: React.FC = () => {
               <div className="p-2 bg-indigo-100 rounded-xl text-indigo-600">
                 <User size={24} />
               </div>
-              <h2 className="text-xl font-bold text-slate-900">Thông tin đối tượng</h2>
+              <h2 className="text-xl font-bold text-slate-900">{t('targetAnalysis.addNew')}</h2>
             </div>
 
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">Giới tính</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.gender')}</label>
                   <select 
                     value={currentTarget.gender}
                     onChange={(e) => setCurrentTarget({...currentTarget, gender: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
                   >
-                    <option value="">Chọn...</option>
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
+                    <option value="">{t('targetAnalysis.selectGender')}</option>
+                    <option value="male">{t('targetAnalysis.male')}</option>
+                    <option value="female">{t('targetAnalysis.female')}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">Độ tuổi</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.age')}</label>
                   <input 
                     type="number"
                     value={currentTarget.age}
                     onChange={(e) => setCurrentTarget({...currentTarget, age: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
-                    placeholder="Tuổi..."
+                    placeholder={t('targetAnalysis.age')}
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">Công việc</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.job')}</label>
                   <input 
                     type="text"
                     value={currentTarget.job}
                     onChange={(e) => setCurrentTarget({...currentTarget, job: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
-                    placeholder="Nghề nghiệp..."
+                    placeholder={t('targetAnalysis.jobPlaceholder')}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">Sở thích</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.hobbies')}</label>
                   <input 
                     type="text"
                     value={currentTarget.hobbies}
                     onChange={(e) => setCurrentTarget({...currentTarget, hobbies: e.target.value})}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
-                    placeholder="Sở thích..."
+                    placeholder={t('targetAnalysis.hobbiesPlaceholder')}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">Họ tên (Tùy chọn)</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.name')}</label>
                 <input 
                   type="text"
                   value={currentTarget.name}
                   onChange={(e) => setCurrentTarget({...currentTarget, name: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
-                  placeholder="Để lưu vào danh sách..."
+                  placeholder={t('targetAnalysis.namePlaceholder')}
                 />
               </div>
 
@@ -254,7 +254,7 @@ export const TargetAnalysis: React.FC = () => {
                 className="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Save size={20} />
-                Lưu vào danh sách theo dõi
+                {t('targetAnalysis.saveBtn')}
               </button>
             </div>
           </motion.div>
@@ -276,12 +276,12 @@ export const TargetAnalysis: React.FC = () => {
                 <div className="p-2 bg-indigo-600 rounded-xl text-white">
                   <Target size={24} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900">Kết quả phân tích tức thì</h2>
+                <h2 className="text-2xl font-bold text-slate-900">{t('targetAnalysis.analysisResult')}</h2>
               </div>
 
               {(!currentTarget.age && !currentTarget.gender && !currentTarget.job && !currentTarget.hobbies) ? (
                 <div className="py-12 text-center">
-                  <p className="text-slate-400 italic">Vui lòng nhập thông tin để bắt đầu phân tích...</p>
+                  <p className="text-slate-400 italic">{t('targetAnalysis.emptyDesc')}</p>
                 </div>
               ) : (
                 <div className="space-y-8">
@@ -290,17 +290,17 @@ export const TargetAnalysis: React.FC = () => {
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-slate-50">
-                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">Hạng mục</th>
-                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">Đề xuất / Phân tích</th>
+                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">{t('targetAnalysis.category')}</th>
+                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">{t('targetAnalysis.proposal')}</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-t border-slate-100">
-                          <td className="px-6 py-4 font-bold text-slate-700">Điểm yếu</td>
+                          <td className="px-6 py-4 font-bold text-slate-700">{t('targetAnalysis.vulnerability')}</td>
                           <td className="px-6 py-4 text-red-600 font-medium">{liveStrategy.vulnerability}</td>
                         </tr>
                         <tr className="border-t border-slate-100">
-                          <td className="px-6 py-4 font-bold text-slate-700">Phương pháp</td>
+                          <td className="px-6 py-4 font-bold text-slate-700">{t('targetAnalysis.technique')}</td>
                           <td className="px-6 py-4 text-indigo-600 font-bold">{liveStrategy.technique}</td>
                         </tr>
                       </tbody>
@@ -310,7 +310,7 @@ export const TargetAnalysis: React.FC = () => {
                   <div className="bg-indigo-50 rounded-3xl p-8 border border-indigo-100">
                     <h4 className="font-bold text-indigo-900 mb-6 flex items-center gap-2">
                       <ShieldAlert size={20} />
-                      Cách thức triển khai tích hợp:
+                      {t('targetAnalysis.actionPlan')}:
                     </h4>
                     <ul className="space-y-4">
                       {liveStrategy.plan.map((step, idx) => (
@@ -337,7 +337,7 @@ export const TargetAnalysis: React.FC = () => {
       {/* Saved Targets Section */}
       {targets.length > 0 && (
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 px-4">Danh sách đối tượng đã lưu</h2>
+          <h2 className="text-3xl font-bold text-slate-900 mb-8 px-4">{t('targetAnalysis.savedTargets')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {targets.map((target) => (
@@ -361,9 +361,9 @@ export const TargetAnalysis: React.FC = () => {
                     </button>
                   </div>
                   <div className="space-y-2 text-sm text-slate-500 mb-6">
-                    <p>• {target.gender === 'male' ? 'Nam' : 'Nữ'}, {target.age} tuổi</p>
-                    <p>• Việc làm: {target.job || 'N/A'}</p>
-                    <p>• Sở thích: {target.hobbies || 'N/A'}</p>
+                    <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
+                    <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
                   </div>
                   <button 
                     onClick={() => {
@@ -372,7 +372,7 @@ export const TargetAnalysis: React.FC = () => {
                     }}
                     className="w-full py-3 bg-slate-50 hover:bg-indigo-50 text-indigo-600 rounded-xl font-bold transition-colors"
                   >
-                    Xem lại phân tích
+                    {t('targetAnalysis.viewStrategy')}
                   </button>
                 </motion.div>
               ))}

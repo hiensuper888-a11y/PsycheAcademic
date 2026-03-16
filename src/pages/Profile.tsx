@@ -3,9 +3,11 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'motion/react';
 import { User, Mail, Shield, Globe, Edit2, Save, X, Phone, MapPin, Building, Briefcase, Key, Loader2, Camera } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const Profile: React.FC = () => {
   const { user, updateProfile, updatePassword } = useAuth();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,10 +54,10 @@ export const Profile: React.FC = () => {
     setSuccess('');
     try {
       await updateProfile(formData);
-      setSuccess('Cập nhật hồ sơ thành công!');
+      setSuccess(t('profile.updateSuccess'));
       setIsEditing(false);
     } catch (err: any) {
-      setError(err.message || 'Có lỗi xảy ra khi cập nhật hồ sơ.');
+      setError(err.message || t('profile.updateError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -64,11 +66,11 @@ export const Profile: React.FC = () => {
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp.');
+      setError(t('profile.passwordMismatch'));
       return;
     }
     if (passwordData.newPassword.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự.');
+      setError(t('profile.passwordLength'));
       return;
     }
     setIsSubmitting(true);
@@ -76,11 +78,11 @@ export const Profile: React.FC = () => {
     setSuccess('');
     try {
       await updatePassword(passwordData.newPassword);
-      setSuccess('Cập nhật mật khẩu thành công!');
+      setSuccess(t('profile.passwordSuccess'));
       setIsChangingPassword(false);
       setPasswordData({ newPassword: '', confirmPassword: '' });
     } catch (err: any) {
-      setError(err.message || 'Có lỗi xảy ra khi cập nhật mật khẩu.');
+      setError(err.message || t('profile.passwordError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -100,14 +102,14 @@ export const Profile: React.FC = () => {
               {isEditing ? (
                 <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white cursor-pointer z-10">
                   <Camera size={24} className="mb-1" />
-                  <span className="text-xs font-medium">Đổi ảnh</span>
+                  <span className="text-xs font-medium">{t('profile.changeAvatar')}</span>
                   <input 
                     type="url" 
-                    placeholder="Nhập URL ảnh..."
+                    placeholder={t('profile.enterAvatarUrl')}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
-                      const url = window.prompt("Nhập URL ảnh đại diện mới:", formData.picture);
+                      const url = window.prompt(t('profile.enterAvatarUrlPrompt'), formData.picture);
                       if (url !== null) setFormData({...formData, picture: url});
                     }}
                   />
@@ -127,7 +129,7 @@ export const Profile: React.FC = () => {
           {/* Body */}
           <div className="p-8">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Thông tin tài khoản</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{t('profile.title')}</h3>
               {!isEditing && !isChangingPassword && (
                 <div className="flex space-x-3">
                   {user.provider === 'email' && (
@@ -136,7 +138,7 @@ export const Profile: React.FC = () => {
                       className="flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-sm font-medium"
                     >
                       <Key size={16} className="mr-2" />
-                      Đổi mật khẩu
+                      {t('profile.changePassword')}
                     </button>
                   )}
                   <button 
@@ -144,7 +146,7 @@ export const Profile: React.FC = () => {
                     className="flex items-center px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors text-sm font-medium"
                   >
                     <Edit2 size={16} className="mr-2" />
-                    Chỉnh sửa
+                    {t('profile.edit')}
                   </button>
                 </div>
               )}
@@ -164,10 +166,10 @@ export const Profile: React.FC = () => {
 
             {isChangingPassword ? (
               <form onSubmit={handlePasswordSubmit} className="max-w-md mx-auto bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Đổi mật khẩu</h4>
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t('profile.changePassword')}</h4>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mật khẩu mới</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.newPassword')}</label>
                     <input
                       type="password"
                       required
@@ -177,7 +179,7 @@ export const Profile: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Xác nhận mật khẩu</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.confirmPassword')}</label>
                     <input
                       type="password"
                       required
@@ -195,14 +197,14 @@ export const Profile: React.FC = () => {
                       }}
                       className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 font-medium transition-colors"
                     >
-                      Hủy
+                      {t('profile.cancel')}
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       className="flex-1 flex justify-center items-center px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors disabled:opacity-70"
                     >
-                      {isSubmitting ? <Loader2 size={20} className="animate-spin" /> : 'Lưu mật khẩu'}
+                      {isSubmitting ? <Loader2 size={20} className="animate-spin" /> : t('profile.savePassword')}
                     </button>
                   </div>
                 </div>
@@ -211,7 +213,7 @@ export const Profile: React.FC = () => {
               <form onSubmit={handleProfileSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Họ và tên</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.name')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <User size={18} className="text-slate-400" />
@@ -226,7 +228,7 @@ export const Profile: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Số điện thoại</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.phone')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Phone size={18} className="text-slate-400" />
@@ -241,7 +243,7 @@ export const Profile: React.FC = () => {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Địa chỉ</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.address')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <MapPin size={18} className="text-slate-400" />
@@ -256,7 +258,7 @@ export const Profile: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Công ty / Tổ chức</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.company')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Building size={18} className="text-slate-400" />
@@ -271,7 +273,7 @@ export const Profile: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Bộ phận</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.department')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Briefcase size={18} className="text-slate-400" />
@@ -286,7 +288,7 @@ export const Profile: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Chức vụ</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.position')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <User size={18} className="text-slate-400" />
@@ -311,7 +313,7 @@ export const Profile: React.FC = () => {
                     className="flex items-center px-6 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 font-medium transition-colors"
                   >
                     <X size={18} className="mr-2" />
-                    Hủy
+                    {t('profile.cancel')}
                   </button>
                   <button
                     type="submit"
@@ -319,7 +321,7 @@ export const Profile: React.FC = () => {
                     className="flex items-center px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors disabled:opacity-70"
                   >
                     {isSubmitting ? <Loader2 size={18} className="animate-spin mr-2" /> : <Save size={18} className="mr-2" />}
-                    Lưu thay đổi
+                    {t('profile.save')}
                   </button>
                 </div>
               </form>
@@ -328,42 +330,42 @@ export const Profile: React.FC = () => {
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <User size={20} className="mr-2 text-blue-500" />
-                    <span className="font-medium">Họ và tên</span>
+                    <span className="font-medium">{t('profile.name')}</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.name || 'Chưa cập nhật'}</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.name || t('profile.notUpdated')}</p>
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <Phone size={20} className="mr-2 text-green-500" />
-                    <span className="font-medium">Số điện thoại</span>
+                    <span className="font-medium">{t('profile.phone')}</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.phone || 'Chưa cập nhật'}</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.phone || t('profile.notUpdated')}</p>
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 md:col-span-2">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <MapPin size={20} className="mr-2 text-red-500" />
-                    <span className="font-medium">Địa chỉ</span>
+                    <span className="font-medium">{t('profile.address')}</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.address || 'Chưa cập nhật'}</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.address || t('profile.notUpdated')}</p>
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <Building size={20} className="mr-2 text-indigo-500" />
-                    <span className="font-medium">Công ty / Tổ chức</span>
+                    <span className="font-medium">{t('profile.company')}</span>
                   </div>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.company || 'Chưa cập nhật'}</p>
+                  <p className="text-xl font-bold text-slate-900 dark:text-white">{user.company || t('profile.notUpdated')}</p>
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <Briefcase size={20} className="mr-2 text-amber-500" />
-                    <span className="font-medium">Bộ phận & Chức vụ</span>
+                    <span className="font-medium">{t('profile.department')} & {t('profile.position')}</span>
                   </div>
                   <p className="text-xl font-bold text-slate-900 dark:text-white">
-                    {user.department ? `${user.department}` : 'Chưa cập nhật'}
+                    {user.department ? `${user.department}` : t('profile.notUpdated')}
                     {user.position ? ` - ${user.position}` : ''}
                   </p>
                 </div>
@@ -371,7 +373,7 @@ export const Profile: React.FC = () => {
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
                   <div className="flex items-center text-slate-500 dark:text-slate-400 mb-2">
                     <Globe size={20} className="mr-2 text-purple-500" />
-                    <span className="font-medium">Nền tảng đăng nhập</span>
+                    <span className="font-medium">{t('profile.loginPlatform')}</span>
                   </div>
                   <p className="text-xl font-bold text-slate-900 dark:text-white capitalize">{user.provider}</p>
                 </div>
@@ -395,9 +397,9 @@ export const Profile: React.FC = () => {
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400 font-medium flex items-center">
                     <Shield size={16} className="mr-1 text-emerald-500" />
-                    Trạng thái bảo mật
+                    {t('profile.securityStatus')}
                   </p>
-                  <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">Đã xác thực</p>
+                  <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{t('profile.verified')}</p>
                 </div>
               </div>
             </div>

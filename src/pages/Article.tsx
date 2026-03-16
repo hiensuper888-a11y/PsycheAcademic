@@ -190,9 +190,9 @@ export const Article: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-24">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24 transition-colors duration-200">
       {/* Reading Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-slate-200">
+      <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-slate-200 dark:bg-slate-800">
         <motion.div 
           className="h-full bg-indigo-600"
           style={{ width: `${scrollProgress}%` }}
@@ -248,60 +248,60 @@ export const Article: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-indigo-50 p-8 md:p-10"
+            className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl shadow-indigo-100 dark:shadow-none border border-indigo-50 dark:border-slate-700 p-8 md:p-10"
           >
             <div className="flex items-center gap-4 mb-8">
-              <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-lg shadow-indigo-200">
+              <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-lg shadow-indigo-200 dark:shadow-none">
                 <Sparkles size={24} />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Phân tích rủi ro cá nhân</h2>
-                <p className="text-slate-500">Nhập thông tin để xem bạn dễ bị thao túng bởi kỹ thuật nào nhất</p>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('article.riskAnalysis.title')}</h2>
+                <p className="text-slate-500 dark:text-slate-400">{t('article.riskAnalysis.desc')}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-2">Giới tính</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.gender')}</label>
                 <select 
                   value={userProfile.gender}
                   onChange={(e) => setUserProfile({ ...userProfile, gender: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 transition-all text-slate-900 dark:text-white"
                 >
-                  <option value="">Chọn giới tính</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
+                  <option value="">{t('article.riskAnalysis.selectGender')}</option>
+                  <option value="male">{t('article.riskAnalysis.male')}</option>
+                  <option value="female">{t('article.riskAnalysis.female')}</option>
+                  <option value="other">{t('article.riskAnalysis.other')}</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-2">Độ tuổi</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.age')}</label>
                 <input 
                   type="number" 
-                  placeholder="Nhập tuổi..."
+                  placeholder={t('article.riskAnalysis.agePlaceholder')}
                   value={userProfile.age}
                   onChange={(e) => setUserProfile({ ...userProfile, age: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-2">Công việc</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.job')}</label>
                 <input 
                   type="text" 
-                  placeholder="Ví dụ: Kinh doanh, Kỹ sư, Giáo viên..."
+                  placeholder={t('article.riskAnalysis.jobPlaceholder')}
                   value={userProfile.job}
                   onChange={(e) => setUserProfile({ ...userProfile, job: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-2">Sở thích</label>
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2">{t('article.riskAnalysis.hobbies')}</label>
                 <input 
                   type="text" 
-                  placeholder="Ví dụ: Thể thao, Đọc sách, Du lịch..."
+                  placeholder={t('article.riskAnalysis.hobbiesPlaceholder')}
                   value={userProfile.hobbies}
                   onChange={(e) => setUserProfile({ ...userProfile, hobbies: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
             </div>
@@ -314,14 +314,14 @@ export const Article: React.FC = () => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="p-6 bg-indigo-50 rounded-3xl border border-indigo-100">
-                    <div className="flex items-center gap-2 mb-4 text-indigo-900 font-bold">
+                  <div className="p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl border border-indigo-100 dark:border-indigo-800/30">
+                    <div className="flex items-center gap-2 mb-4 text-indigo-900 dark:text-indigo-300 font-bold">
                       <ShieldAlert size={20} />
-                      Kết quả phân tích:
+                      {t('article.riskAnalysis.result')}
                     </div>
                     <ul className="space-y-4">
                       {getPersonalizedAdvice().map((advice, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-indigo-800 leading-relaxed">
+                        <li key={idx} className="flex items-start gap-3 text-indigo-800 dark:text-indigo-200 leading-relaxed">
                           <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
                           {getLocalized(advice)}
                         </li>
@@ -336,14 +336,14 @@ export const Article: React.FC = () => {
           {/* Content Search Filter */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-              <Search className="h-6 w-6 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+              <Search className="h-6 w-6 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-500 transition-colors" />
             </div>
             <input
               type="text"
-              placeholder="Tìm kiếm nội dung trong bài viết..."
+              placeholder={t('article.searchContent')}
               value={contentSearch}
               onChange={(e) => setContentSearch(e.target.value)}
-              className="w-full pl-16 pr-6 py-5 bg-white border-2 border-slate-100 rounded-[2rem] text-lg focus:outline-none focus:border-indigo-500 shadow-xl shadow-slate-200/20 transition-all"
+              className="w-full pl-16 pr-6 py-5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[2rem] text-lg text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 shadow-xl shadow-slate-200/20 dark:shadow-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
           </div>
 
@@ -396,9 +396,9 @@ export const Article: React.FC = () => {
                 whileHover={{ y: -4 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index === 0 ? 0.1 : 0 }}
-                className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 p-8 md:p-12 lg:p-16 overflow-hidden transition-shadow hover:shadow-2xl hover:shadow-slate-200/60"
+                className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700 p-8 md:p-12 lg:p-16 overflow-hidden transition-shadow hover:shadow-2xl hover:shadow-slate-200/60 dark:hover:shadow-none"
               >
-                <div className="prose prose-slate prose-lg md:prose-xl max-w-none prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4 prose-img:rounded-3xl prose-img:shadow-2xl prose-img:my-12 prose-table:w-full prose-table:border-collapse prose-table:my-10 prose-table:text-base prose-th:bg-slate-50 prose-th:p-5 prose-th:text-left prose-th:border-b-2 prose-th:border-slate-200 prose-th:font-bold prose-th:text-slate-800 prose-td:p-5 prose-td:border-b prose-td:border-slate-100 hover:prose-tr:bg-slate-50/50 prose-hr:hidden transition-colors">
+                <div className="prose prose-slate dark:prose-invert prose-lg md:prose-xl max-w-none prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-relaxed prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4 prose-img:rounded-3xl prose-img:shadow-2xl prose-img:my-12 prose-table:w-full prose-table:border-collapse prose-table:my-10 prose-table:text-base prose-th:bg-slate-50 dark:prose-th:bg-slate-800/50 prose-th:p-5 prose-th:text-left prose-th:border-b-2 prose-th:border-slate-200 dark:prose-th:border-slate-700 prose-th:font-bold prose-th:text-slate-800 dark:prose-th:text-slate-200 prose-td:p-5 prose-td:border-b prose-td:border-slate-100 dark:prose-td:border-slate-700 hover:prose-tr:bg-slate-50/50 dark:hover:prose-tr:bg-slate-800/30 prose-hr:hidden transition-colors">
                   <Markdown
                     remarkPlugins={[remarkGfm]}
                     components={{
@@ -406,7 +406,7 @@ export const Article: React.FC = () => {
                         const text = React.Children.toArray(children).join('');
                         const titleText = text.replace(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '');
                         return (
-                          <h2 className="text-3xl font-bold text-slate-900 tracking-tight mt-12 mb-6" {...props}>
+                          <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-12 mb-6" {...props}>
                             {titleText}
                           </h2>
                         );
@@ -415,7 +415,7 @@ export const Article: React.FC = () => {
                         const text = React.Children.toArray(children).join('');
                         const titleText = text.replace(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '');
                         return (
-                          <h3 className="text-2xl font-semibold text-slate-800 mt-10 mb-4" {...props}>
+                          <h3 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mt-10 mb-4" {...props}>
                             {titleText}
                           </h3>
                         );
@@ -425,25 +425,25 @@ export const Article: React.FC = () => {
                         if (hasNestedList) {
                           return <CollapsibleList title="Chi tiết">{children}</CollapsibleList>;
                         }
-                        return <ul className="space-y-3 my-6 list-disc list-inside text-slate-700" {...props}>{children}</ul>;
+                        return <ul className="space-y-3 my-6 list-disc list-inside text-slate-700 dark:text-slate-300" {...props}>{children}</ul>;
                       },
                       li: ({node, children, ...props}) => (
                         <li className="leading-relaxed" {...props}>{children}</li>
                       ),
                       details: ({node, children, ...props}) => (
-                        <div className="my-6 border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/30">
+                        <div className="my-6 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden bg-slate-50/30 dark:bg-slate-800/30">
                           {children}
                         </div>
                       ),
                       summary: ({node, children, ...props}) => (
-                        <summary className="p-4 font-bold text-lg cursor-pointer hover:bg-slate-100 transition-colors flex items-center gap-2 list-none outline-none">
+                        <summary className="p-4 font-bold text-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-2 list-none outline-none text-slate-900 dark:text-white">
                           <div className="w-2 h-2 rounded-full bg-indigo-500" />
                           {children}
                         </summary>
                       ),
                       blockquote: ({node, ...props}) => (
-                        <blockquote className="relative overflow-hidden bg-gradient-to-r from-indigo-50 to-blue-50/30 border-l-4 border-indigo-500 rounded-r-2xl p-6 my-8 shadow-sm" {...props}>
-                          <div className="relative z-10 text-indigo-900 font-medium text-lg italic">
+                        <blockquote className="relative overflow-hidden bg-gradient-to-r from-indigo-50 to-blue-50/30 dark:from-indigo-900/20 dark:to-blue-900/10 border-l-4 border-indigo-500 rounded-r-2xl p-6 my-8 shadow-sm" {...props}>
+                          <div className="relative z-10 text-indigo-900 dark:text-indigo-200 font-medium text-lg italic">
                             {props.children}
                           </div>
                         </blockquote>
@@ -464,23 +464,23 @@ export const Article: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 p-8 md:p-12 lg:p-16"
+              className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700 p-8 md:p-12 lg:p-16"
             >
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                   {t('article.chartTitle')}
                 </h2>
               </div>
-              <div className="w-full h-[450px] bg-gradient-to-b from-slate-50 to-white rounded-[2rem] border border-slate-100 p-6 shadow-inner">
+              <div className="w-full h-[450px] bg-gradient-to-b from-slate-50 to-white dark:from-slate-800/50 dark:to-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 p-6 shadow-inner">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="70%" data={article.chartData.map(d => ({ ...d, subject: getLocalized(d.subject) }))}>
-                    <PolarGrid stroke="#cbd5e1" strokeDasharray="3 3" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8' }} />
+                    <PolarGrid stroke="#cbd5e1" className="dark:stroke-slate-600" strokeDasharray="3 3" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} className="dark:text-slate-300" />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8' }} className="dark:text-slate-500" />
                     <Radar name={title} dataKey="A" stroke="#4f46e5" strokeWidth={3} fill="#4f46e5" fillOpacity={0.4} />
                     <Tooltip 
-                      contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', padding: '12px 20px' }}
-                      itemStyle={{ color: '#0f172a', fontWeight: 'bold', fontSize: '16px' }}
+                      contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', padding: '12px 20px', backgroundColor: 'var(--color-bg-card)' }}
+                      itemStyle={{ color: 'var(--color-text-main)', fontWeight: 'bold', fontSize: '16px' }}
                     />
                   </RadarChart>
                 </ResponsiveContainer>
@@ -495,13 +495,13 @@ export const Article: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 p-8 md:p-12 lg:p-16"
+              className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700 p-8 md:p-12 lg:p-16"
             >
               <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
                   {getLocalized(article.comparison.title)}
                 </h2>
-                <p className="text-lg text-slate-500 max-w-2xl mx-auto">Hiểu rõ sự khác biệt để đưa ra lựa chọn phù hợp nhất với nhu cầu và ngân sách của bạn.</p>
+                <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Hiểu rõ sự khác biệt để đưa ra lựa chọn phù hợp nhất với nhu cầu và ngân sách của bạn.</p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
@@ -510,23 +510,23 @@ export const Article: React.FC = () => {
                     key={idx} 
                     className={`relative rounded-[2rem] p-8 md:p-10 transition-all duration-500 hover:-translate-y-2 ${
                       item.isPremium 
-                        ? 'bg-gradient-to-br from-amber-50 via-white to-amber-50/50 border-2 border-amber-200 shadow-2xl shadow-amber-100/50' 
-                        : 'bg-slate-50 border-2 border-slate-100 hover:border-slate-200 hover:shadow-xl'
+                        ? 'bg-gradient-to-br from-amber-50 via-white to-amber-50/50 dark:from-amber-900/20 dark:via-slate-800 dark:to-amber-900/10 border-2 border-amber-200 dark:border-amber-700/50 shadow-2xl shadow-amber-100/50 dark:shadow-none' 
+                        : 'bg-slate-50 dark:bg-slate-700/50 border-2 border-slate-100 dark:border-slate-600 hover:border-slate-200 dark:hover:border-slate-500 hover:shadow-xl dark:hover:shadow-none'
                     }`}
                   >
                     {item.isPremium && (
-                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-600 text-white px-6 py-1.5 rounded-full text-sm font-bold shadow-lg shadow-amber-500/30">
+                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-600 dark:from-amber-500 dark:to-amber-700 text-white px-6 py-1.5 rounded-full text-sm font-bold shadow-lg shadow-amber-500/30 dark:shadow-none">
                         {t('article.premium')}
                       </div>
                     )}
-                    <h3 className={`text-3xl font-extrabold mb-4 tracking-tight ${item.isPremium ? 'text-amber-900' : 'text-slate-900'}`}>
+                    <h3 className={`text-3xl font-extrabold mb-4 tracking-tight ${item.isPremium ? 'text-amber-900 dark:text-amber-400' : 'text-slate-900 dark:text-white'}`}>
                       {getLocalized(item.name)}
                     </h3>
-                    <p className="text-slate-600 mb-8 min-h-[48px] text-lg leading-relaxed">{getLocalized(item.description)}</p>
+                    <p className="text-slate-600 dark:text-slate-300 mb-8 min-h-[48px] text-lg leading-relaxed">{getLocalized(item.description)}</p>
                     <ul className="space-y-5">
                       {item.features.map((feature, fIdx) => (
                         <li key={fIdx} className="flex items-start">
-                          <span className="text-slate-700 font-medium leading-relaxed">{getLocalized(feature)}</span>
+                          <span className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{getLocalized(feature)}</span>
                         </li>
                       ))}
                     </ul>
@@ -543,43 +543,43 @@ export const Article: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 p-8 md:p-12 lg:p-16"
+              className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700 p-8 md:p-12 lg:p-16"
             >
               <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
                   {t('article.brands')}
                 </h2>
-                <p className="text-lg text-slate-500 max-w-2xl mx-auto">{t('article.brandsDesc')}</p>
+                <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">{t('article.brandsDesc')}</p>
               </div>
 
               <div className="space-y-12">
                 {article.brands.map((brand, idx) => (
-                  <div key={idx} className="bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden hover:shadow-2xl transition-all duration-500">
-                    <div className="p-8 md:p-10 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center gap-8">
-                      <div className="p-4 bg-white rounded-3xl shadow-sm border border-slate-100">
+                  <div key={idx} className="bg-white dark:bg-slate-800/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/40 dark:shadow-none overflow-hidden hover:shadow-2xl dark:hover:shadow-none transition-all duration-500">
+                    <div className="p-8 md:p-10 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800/80 dark:to-slate-800 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row items-start md:items-center gap-8">
+                      <div className="p-4 bg-white dark:bg-slate-700 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-600">
                         <img src={brand.logoUrl} alt={`${brand.name} logo`} className="w-24 h-24 object-contain" />
                       </div>
                       <div className="flex-1">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
-                          <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">{brand.name}</h3>
+                          <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{brand.name}</h3>
                           {brand.websiteUrl && (
-                            <a href={brand.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition-colors">
+                            <a href={brand.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-4 py-2 rounded-xl transition-colors">
                               {t('article.brandWebsite')}
                             </a>
                           )}
                         </div>
-                        <p className="text-slate-600 text-lg leading-relaxed">{getLocalized(brand.description)}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">{getLocalized(brand.description)}</p>
                       </div>
                     </div>
                     
                     <div className="p-8 md:p-10">
-                      <h4 className="text-xl font-bold text-slate-900 mb-8">
+                      <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-8">
                         {t('article.products')}
                       </h4>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {brand.products.map((product, pIdx) => (
-                          <div key={pIdx} className="group flex flex-col sm:flex-row gap-6 items-center sm:items-start p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:border-slate-200 transition-all duration-300">
-                            <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 flex-shrink-0">
+                          <div key={pIdx} className="group flex flex-col sm:flex-row gap-6 items-center sm:items-start p-6 rounded-3xl bg-slate-50 dark:bg-slate-700/30 border border-slate-100 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-xl dark:hover:shadow-none hover:border-slate-200 dark:hover:border-slate-600 transition-all duration-300">
+                            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 flex-shrink-0">
                               <img 
                                 src={product.imageUrl} 
                                 alt={getLocalized(product.name)} 
@@ -588,14 +588,14 @@ export const Article: React.FC = () => {
                               />
                             </div>
                             <div className="text-center sm:text-left flex-1 flex flex-col h-full">
-                              <h5 className="font-bold text-slate-900 mb-3 text-xl">{getLocalized(product.name)}</h5>
-                              <p className="text-slate-600 leading-relaxed mb-6 flex-grow">{getLocalized(product.description)}</p>
+                              <h5 className="font-bold text-slate-900 dark:text-white mb-3 text-xl">{getLocalized(product.name)}</h5>
+                              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6 flex-grow">{getLocalized(product.description)}</p>
                               
                               <div className="mt-auto space-y-4">
                                 {product.reviews && product.reviews.length > 0 && (
                                   <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                                     {product.reviews.map((review, rIdx) => (
-                                      <a key={rIdx} href={review.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-amber-50 text-amber-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-amber-200 hover:bg-amber-100 transition-colors shadow-sm">
+                                      <a key={rIdx} href={review.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-amber-50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-400 text-xs font-bold px-3 py-1.5 rounded-xl border border-amber-200 dark:border-amber-800/50 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors shadow-sm dark:shadow-none">
                                         {review.source}: {review.score}
                                       </a>
                                     ))}

@@ -3,9 +3,11 @@ import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const Auth: React.FC = () => {
   const { user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail } = useAuth();
+  const { t } = useTranslation();
   
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -31,7 +33,7 @@ export const Auth: React.FC = () => {
     try {
       await loginWithGoogle();
     } catch (err: any) {
-      setError(err.message || 'Đã xảy ra lỗi khi đăng nhập bằng Google.');
+      setError(err.message || t('auth.errorGoogle'));
     }
   };
 
@@ -40,7 +42,7 @@ export const Auth: React.FC = () => {
     try {
       await loginWithX();
     } catch (err: any) {
-      setError(err.message || 'Đã xảy ra lỗi khi đăng nhập bằng X.');
+      setError(err.message || t('auth.errorX'));
     }
   };
 
@@ -59,7 +61,7 @@ export const Auth: React.FC = () => {
         // For now, we assume it logs in or we just show a success message.
       }
     } catch (err: any) {
-      setError(err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+      setError(err.message || t('auth.errorEmail'));
     } finally {
       setIsSubmitting(false);
     }
@@ -88,19 +90,19 @@ export const Auth: React.FC = () => {
 
         <div className="relative z-10 max-w-lg">
           <h1 className="text-5xl font-bold text-white leading-tight mb-6">
-            Khám phá chiều sâu tâm trí con người.
+            {t('auth.heroTitle')}
           </h1>
           <p className="text-lg text-slate-300">
-            Nền tảng phân tích tâm lý học chuyên sâu, cung cấp các công cụ và tài liệu nghiên cứu học thuật hàng đầu dành cho chuyên gia và người học.
+            {t('auth.heroDesc')}
           </p>
         </div>
         
         <div className="relative z-10 flex items-center space-x-4 text-sm text-slate-400">
           <span>© 2026 PsycheAcademic</span>
           <span>•</span>
-          <Link to="/privacy" className="hover:text-white transition-colors">Bảo mật</Link>
+          <Link to="/privacy" className="hover:text-white transition-colors">{t('auth.privacyLink')}</Link>
           <span>•</span>
-          <Link to="/terms" className="hover:text-white transition-colors">Điều khoản</Link>
+          <Link to="/terms" className="hover:text-white transition-colors">{t('auth.termsLink')}</Link>
         </div>
       </div>
 
@@ -118,12 +120,21 @@ export const Auth: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
+              {isLogin ? t('auth.loginTitle') : t('auth.registerTitle')}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mb-8">
               {isLogin 
-                ? 'Đăng nhập để tiếp tục nghiên cứu và phân tích.' 
-                : 'Tham gia cộng đồng nghiên cứu tâm lý học ngay hôm nay.'}
+                ? t('auth.noAccount') 
+                : t('auth.hasAccount')}{' '}
+              <button 
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError('');
+                }}
+                className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+              >
+                {isLogin ? t('auth.registerTitle') : t('auth.loginTitle')}
+              </button>
             </p>
 
             {error && (
@@ -141,7 +152,7 @@ export const Auth: React.FC = () => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Họ và tên</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">{t('auth.name')}</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <User className="h-5 w-5 text-slate-400 dark:text-slate-500" />
@@ -152,7 +163,7 @@ export const Auth: React.FC = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
-                        placeholder="Nguyễn Văn A"
+                        placeholder={t('auth.name')}
                       />
                     </div>
                   </motion.div>
@@ -160,7 +171,7 @@ export const Auth: React.FC = () => {
               </AnimatePresence>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">{t('auth.email')}</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
@@ -177,7 +188,7 @@ export const Auth: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Mật khẩu</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">{t('auth.password')}</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
@@ -202,7 +213,7 @@ export const Auth: React.FC = () => {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    {isLogin ? 'Đăng nhập' : 'Tạo tài khoản'}
+                    {isLogin ? t('auth.loginBtn') : t('auth.registerBtn')}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </>
                 )}
@@ -215,7 +226,7 @@ export const Auth: React.FC = () => {
                   <div className="w-full border-t border-slate-200 dark:border-slate-700" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">Hoặc tiếp tục với</span>
+                  <span className="px-2 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">{t('auth.or')}</span>
                 </div>
               </div>
 
@@ -230,7 +241,7 @@ export const Auth: React.FC = () => {
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
-                  Google
+                  {t('auth.google')}
                 </button>
 
                 <button
@@ -240,13 +251,13 @@ export const Auth: React.FC = () => {
                   <svg className="w-5 h-5 mr-2 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
-                  X
+                  {t('auth.x')}
                 </button>
               </div>
             </div>
 
             <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
-              {isLogin ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
+              {isLogin ? t('auth.noAccountText') : t('auth.hasAccountText')}
               <button
                 onClick={() => {
                   setIsLogin(!isLogin);
@@ -254,16 +265,16 @@ export const Auth: React.FC = () => {
                 }}
                 className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
               >
-                {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
+                {isLogin ? t('auth.registerNow') : t('auth.loginNow')}
               </button>
             </p>
 
             <div className="mt-8 text-center text-xs text-slate-500 dark:text-slate-500">
-              Bằng cách đăng nhập, bạn đồng ý với{' '}
-              <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline">Điều khoản dịch vụ</Link>
-              {' '}và{' '}
-              <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline">Chính sách bảo mật</Link>
-              {' '}của chúng tôi.
+              {t('auth.termsAgreement1')}
+              <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.termsLink')}</Link>
+              {t('auth.termsAgreement2')}
+              <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.privacyLink')}</Link>
+              {t('auth.termsAgreement3')}
             </div>
           </motion.div>
         </div>
