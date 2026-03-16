@@ -164,11 +164,11 @@ export const TargetAnalysis: React.FC = () => {
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-black text-slate-900 mb-4"
+          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4"
         >
           {t('targetAnalysis.title')}
         </motion.h1>
-        <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
           {t('targetAnalysis.desc')}
         </p>
       </div>
@@ -179,23 +179,23 @@ export const TargetAnalysis: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-8"
+            className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl dark:shadow-none border border-slate-100 dark:border-slate-700 p-8"
           >
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-indigo-100 rounded-xl text-indigo-600">
+              <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl text-indigo-600 dark:text-indigo-400">
                 <User size={24} />
               </div>
-              <h2 className="text-xl font-bold text-slate-900">{t('targetAnalysis.addNew')}</h2>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t('targetAnalysis.addNew')}</h2>
             </div>
 
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.gender')}</label>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.gender')}</label>
                   <select 
                     value={currentTarget.gender}
                     onChange={(e) => setCurrentTarget({...currentTarget, gender: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                   >
                     <option value="">{t('targetAnalysis.selectGender')}</option>
                     <option value="male">{t('targetAnalysis.male')}</option>
@@ -203,12 +203,12 @@ export const TargetAnalysis: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.age')}</label>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.age')}</label>
                   <input 
                     type="number"
                     value={currentTarget.age}
                     onChange={(e) => setCurrentTarget({...currentTarget, age: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     placeholder={t('targetAnalysis.age')}
                   />
                 </div>
@@ -216,34 +216,34 @@ export const TargetAnalysis: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.job')}</label>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.job')}</label>
                   <input 
                     type="text"
                     value={currentTarget.job}
                     onChange={(e) => setCurrentTarget({...currentTarget, job: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     placeholder={t('targetAnalysis.jobPlaceholder')}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.hobbies')}</label>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.hobbies')}</label>
                   <input 
                     type="text"
                     value={currentTarget.hobbies}
                     onChange={(e) => setCurrentTarget({...currentTarget, hobbies: e.target.value})}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     placeholder={t('targetAnalysis.hobbiesPlaceholder')}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 ml-2">{t('targetAnalysis.name')}</label>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.name')}</label>
                 <input 
                   type="text"
                   value={currentTarget.name}
                   onChange={(e) => setCurrentTarget({...currentTarget, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   placeholder={t('targetAnalysis.namePlaceholder')}
                 />
               </div>
@@ -251,7 +251,7 @@ export const TargetAnalysis: React.FC = () => {
               <button 
                 onClick={handleSaveTarget}
                 disabled={!currentTarget.name}
-                className="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Save size={20} />
                 {t('targetAnalysis.saveBtn')}
@@ -265,10 +265,10 @@ export const TargetAnalysis: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white rounded-[2.5rem] shadow-2xl border border-indigo-50 p-8 md:p-10 relative overflow-hidden"
+            className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl dark:shadow-none border border-indigo-50 dark:border-slate-700 p-8 md:p-10 relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-6 opacity-10">
-              <Sparkles size={120} className="text-indigo-600" />
+              <Sparkles size={120} className="text-indigo-600 dark:text-indigo-400" />
             </div>
 
             <div className="relative z-10">
@@ -276,39 +276,39 @@ export const TargetAnalysis: React.FC = () => {
                 <div className="p-2 bg-indigo-600 rounded-xl text-white">
                   <Target size={24} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900">{t('targetAnalysis.analysisResult')}</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('targetAnalysis.analysisResult')}</h2>
               </div>
 
               {(!currentTarget.age && !currentTarget.gender && !currentTarget.job && !currentTarget.hobbies) ? (
                 <div className="py-12 text-center">
-                  <p className="text-slate-400 italic">{t('targetAnalysis.emptyDesc')}</p>
+                  <p className="text-slate-400 dark:text-slate-500 italic">{t('targetAnalysis.emptyDesc')}</p>
                 </div>
               ) : (
                 <div className="space-y-8">
                   {/* Result Table */}
-                  <div className="overflow-hidden rounded-3xl border border-slate-100">
+                  <div className="overflow-hidden rounded-3xl border border-slate-100 dark:border-slate-700">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-slate-50">
-                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">{t('targetAnalysis.category')}</th>
-                          <th className="px-6 py-4 text-sm font-bold text-slate-500 uppercase">{t('targetAnalysis.proposal')}</th>
+                        <tr className="bg-slate-50 dark:bg-slate-900/50">
+                          <th className="px-6 py-4 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase">{t('targetAnalysis.category')}</th>
+                          <th className="px-6 py-4 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase">{t('targetAnalysis.proposal')}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-t border-slate-100">
-                          <td className="px-6 py-4 font-bold text-slate-700">{t('targetAnalysis.vulnerability')}</td>
-                          <td className="px-6 py-4 text-red-600 font-medium">{liveStrategy.vulnerability}</td>
+                        <tr className="border-t border-slate-100 dark:border-slate-700">
+                          <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.vulnerability')}</td>
+                          <td className="px-6 py-4 text-red-600 dark:text-red-400 font-medium">{liveStrategy.vulnerability}</td>
                         </tr>
-                        <tr className="border-t border-slate-100">
-                          <td className="px-6 py-4 font-bold text-slate-700">{t('targetAnalysis.technique')}</td>
-                          <td className="px-6 py-4 text-indigo-600 font-bold">{liveStrategy.technique}</td>
+                        <tr className="border-t border-slate-100 dark:border-slate-700">
+                          <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.technique')}</td>
+                          <td className="px-6 py-4 text-indigo-600 dark:text-indigo-400 font-bold">{liveStrategy.technique}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
-                  <div className="bg-indigo-50 rounded-3xl p-8 border border-indigo-100">
-                    <h4 className="font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                  <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl p-8 border border-indigo-100 dark:border-indigo-800/30">
+                    <h4 className="font-bold text-indigo-900 dark:text-indigo-300 mb-6 flex items-center gap-2">
                       <ShieldAlert size={20} />
                       {t('targetAnalysis.actionPlan')}:
                     </h4>
@@ -319,7 +319,7 @@ export const TargetAnalysis: React.FC = () => {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.1 }}
-                          className="flex items-start gap-4 text-indigo-800 leading-relaxed"
+                          className="flex items-start gap-4 text-indigo-800 dark:text-indigo-200 leading-relaxed"
                         >
                           <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-400 flex-shrink-0" />
                           <span className="text-lg font-medium">{step}</span>
@@ -337,7 +337,7 @@ export const TargetAnalysis: React.FC = () => {
       {/* Saved Targets Section */}
       {targets.length > 0 && (
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 px-4">{t('targetAnalysis.savedTargets')}</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 px-4">{t('targetAnalysis.savedTargets')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {targets.map((target) => (
@@ -347,20 +347,20 @@ export const TargetAnalysis: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="bg-white rounded-[2rem] shadow-lg border border-slate-100 p-8"
+                  className="bg-white dark:bg-slate-800 rounded-[2rem] shadow-lg dark:shadow-none border border-slate-100 dark:border-slate-700 p-8"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 font-bold">
+                      <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold">
                         {target.name.charAt(0)}
                       </div>
-                      <h3 className="font-bold text-slate-900">{target.name}</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-white">{target.name}</h3>
                     </div>
-                    <button onClick={() => handleDeleteTarget(target.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                    <button onClick={() => handleDeleteTarget(target.id)} className="text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors">
                       <Trash2 size={18} />
                     </button>
                   </div>
-                  <div className="space-y-2 text-sm text-slate-500 mb-6">
+                  <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
                     <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
                     <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
                     <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
@@ -370,7 +370,7 @@ export const TargetAnalysis: React.FC = () => {
                       setCurrentTarget(target);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="w-full py-3 bg-slate-50 hover:bg-indigo-50 text-indigo-600 rounded-xl font-bold transition-colors"
+                    className="w-full py-3 bg-slate-50 dark:bg-slate-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-xl font-bold transition-colors"
                   >
                     {t('targetAnalysis.viewStrategy')}
                   </button>

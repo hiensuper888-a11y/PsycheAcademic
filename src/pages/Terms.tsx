@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 
 export const Terms: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
@@ -13,7 +13,7 @@ export const Terms: React.FC = () => {
         className="max-w-3xl mx-auto"
       >
         <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-white mb-4">{t('terms.title')}</h1>
-        <p className="text-slate-500 dark:text-slate-400 mb-10 pb-6 border-b border-slate-100 dark:border-slate-800">{t('terms.lastUpdated')} {new Date().toLocaleDateString('vi-VN')}</p>
+        <p className="text-slate-500 dark:text-slate-400 mb-10 pb-6 border-b border-slate-100 dark:border-slate-800">{t('terms.lastUpdated')} {new Date().toLocaleDateString(i18n.language)}</p>
         
         <div className="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
           <section>

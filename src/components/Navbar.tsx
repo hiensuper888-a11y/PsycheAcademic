@@ -34,6 +34,7 @@ export const Navbar: React.FC = () => {
             <a href="/#features" className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.features')}</a>
             <a href="/#articles" className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.library')}</a>
             <Link to="/target-analysis" className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.targetAnalysis')}</Link>
+            <Link to="/target-audience" className="text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors">{t('nav.targetAudience')}</Link>
           </div>
 
           <div className="flex items-center space-x-4 sm:space-x-6">

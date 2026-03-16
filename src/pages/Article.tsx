@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles } from 'lucide-react';
+import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTranslation } from 'react-i18next';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { TableOfContents } from '../components/TableOfContents';
 import { CollapsibleList } from '../components/CollapsibleList';
+import { summarizeArticle } from '../services/geminiService';
 
 export const Article: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +42,7 @@ export const Article: React.FC = () => {
 
   const tocItems = sections.map((section: string) => {
     const titleMatch = section.match(/^##\s+(.*)/m);
-    const title = titleMatch ? titleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : 'Section';
+    const title = titleMatch ? titleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : t('article.sectionFallback');
     const id = title.toLowerCase().replace(/\s+/g, '-');
     return { title, id };
   });
@@ -50,6 +51,9 @@ export const Article: React.FC = () => {
   const [contentSearch, setContentSearch] = React.useState('');
   const [userProfile, setUserProfile] = React.useState({ gender: '', age: '', job: '', hobbies: '' });
   const [showAnalysis, setShowAnalysis] = React.useState(false);
+  const [summary, setSummary] = React.useState<string | null>(null);
+  const [isSummarizing, setIsSummarizing] = React.useState(false);
+  const [summaryError, setSummaryError] = React.useState<string | null>(null);
 
   const { scrollY } = useScroll();
   const backgroundY = useTransform(scrollY, [0, 1000], ['0%', '25%']);
@@ -63,119 +67,112 @@ export const Article: React.FC = () => {
     const gender = userProfile.gender;
     const job = userProfile.job.toLowerCase();
     const hobbies = userProfile.hobbies.toLowerCase();
-    let advice = [];
+    let adviceKeys: string[] = [];
 
     if (age > 0 && age < 25) {
-      advice.push({
-        vi: "Bạn dễ bị tác động bởi 'Bằng chứng xã hội' và 'FOMO'. Hãy cẩn thận với áp lực đồng lứa.",
-        en: "You are susceptible to 'Social Proof' and 'FOMO'. Be careful with peer pressure.",
-        zh: "你容易受到“社会认同”和“错失恐惧症”的影响。小心同伴压力。"
-      });
+      adviceKeys.push('article.advice.age.young');
     } else if (age > 50) {
-      advice.push({
-        vi: "Bạn có xu hướng tôn trọng 'Cấp bậc' và 'Uy tín'. Hãy kiểm chứng thông tin từ các nguồn tự xưng là chuyên gia.",
-        en: "You tend to respect 'Authority' and 'Prestige'. Verify info from self-proclaimed experts.",
-        zh: "你倾向于尊重“权威”和“声望”。核实来自自称专家的人的信息。"
-      });
+      adviceKeys.push('article.advice.age.old');
     }
 
     if (gender === 'male') {
-      advice.push({
-        vi: "Kẻ thao túng thường đánh vào 'Cái tôi' và 'Sự công nhận' của nam giới.",
-        en: "Manipulators often target male 'Ego' and 'Recognition'.",
-        zh: "操纵者通常针对男性的“自我”和“认可”。"
-      });
+      adviceKeys.push('article.advice.gender.male');
     } else if (gender === 'female') {
-      advice.push({
-        vi: "Phụ nữ thường bị khai thác qua 'Sự đồng cảm' và 'Cảm giác tội lỗi'.",
-        en: "Women are often exploited through 'Empathy' and 'Guilt'.",
-        zh: "女性通常通过“共情”和“内疚”被利用。"
-      });
+      adviceKeys.push('article.advice.gender.female');
     }
 
     if (job) {
       const jobMap = [
-        { keys: ['kinh doanh', 'bán hàng', 'sales', 'marketing'], vi: "Với công việc kinh doanh, bạn dễ rơi vào bẫy 'Sự khan hiếm' và 'Sự đáp trả'. Hãy cẩn trọng với những món quà miễn phí." },
-        { keys: ['kỹ thuật', 'it', 'lập trình', 'kỹ sư'], vi: "Người làm kỹ thuật thường tin vào logic. Kẻ thao túng có thể dùng 'Dữ liệu định khung' (chọn lọc số liệu có lợi) để đánh lừa bạn." },
-        { keys: ['giáo dục', 'giáo viên', 'giảng viên'], vi: "Đặc thù nghề giáo khiến bạn có lòng trắc ẩn cao. Hãy cẩn thận với những kẻ lợi dụng sự thấu cảm và trách nhiệm đạo đức của bạn." },
-        { keys: ['y tế', 'bác sĩ', 'điều dưỡng', 'nha sĩ'], vi: "Áp lực thời gian và 'Hội chứng đấng cứu thế' khiến nhân viên y tế dễ bị thao túng bởi những lời cầu xin khẩn thiết giả tạo." },
-        { keys: ['quản lý', 'lãnh đạo', 'giám đốc', 'ceo'], vi: "Ở vị trí quản lý, bạn dễ bị thao túng qua 'Sự nhất quán'. Kẻ xấu có thể ép bạn bảo vệ quyết định sai lầm để giữ thể diện." },
-        { keys: ['nghệ thuật', 'sáng tạo', 'thiết kế', 'họa sĩ'], vi: "Người làm nghệ thuật dễ bị 'Cảm xúc quá tải' và 'Neo tâm lý'. Kẻ thao túng sẽ dùng hình ảnh và cảm xúc mạnh để lấn át lý trí của bạn." },
-        { keys: ['tài chính', 'kế toán', 'ngân hàng', 'kiểm toán'], vi: "Bạn làm việc với con số nên rất nhạy cảm với 'Nỗi sợ mất mát' (Loss Aversion). Hãy cẩn thận với các bẫy mỏ neo tài chính." },
-        { keys: ['nhân sự', 'hr', 'tuyển dụng'], vi: "Làm nhân sự khiến bạn phải lắng nghe nhiều. Kẻ thao túng sẽ dùng 'Sự thấu cảm giả tạo' để khai thác thông tin từ bạn." },
-        { keys: ['luật sư', 'pháp lý', 'công chứng'], vi: "Bạn quen với chi tiết, nhưng kẻ thao túng sẽ dùng 'Chi tiết vụn vặt' (Red Herring) để làm bạn kiệt sức nhận thức và bỏ qua bức tranh lớn." },
-        { keys: ['dịch vụ', 'cskh', 'nhà hàng', 'khách sạn'], vi: "Sự 'Kiệt sức cảm xúc' trong ngành dịch vụ khiến bạn dễ bị khuất phục trước những khách hàng dùng bạo hành tâm lý (Gaslighting)." },
-        { keys: ['xây dựng', 'kiến trúc', 'thầu'], vi: "Ngành xây dựng thường dính đến 'Chi phí chìm' (Sunk Cost Fallacy). Kẻ thao túng sẽ ép bạn tiếp tục dự án tồi tệ vì 'đã lỡ đầu tư quá nhiều'." },
-        { keys: ['nghiên cứu', 'khoa học', 'nhà khoa học'], vi: "Bạn tin vào chuyên môn. Kẻ thao túng sẽ dùng 'Lời kêu gọi từ uy tín' (danh xưng giả, báo cáo giả) để thuyết phục bạn." },
-        { keys: ['hành chính', 'văn phòng', 'thư ký'], vi: "Môi trường văn phòng dễ tạo ra 'Sự vâng lời mù quáng' và 'Hiệu ứng hào quang' từ cấp trên hoặc người có vẻ ngoài chuyên nghiệp." },
-        { keys: ['tự do', 'freelancer', 'mmo'], vi: "Sự bấp bênh của nghề tự do khiến bạn dễ mắc 'Ảo tưởng kiểm soát'. Kẻ thao túng sẽ bán cho bạn những khóa học/cơ hội làm giàu nhanh." },
-        { keys: ['nông nghiệp', 'nông dân', 'chăn nuôi'], vi: "Bạn coi trọng truyền thống và kinh nghiệm. Kẻ thao túng sẽ dùng 'Tâm lý bầy đàn' (hàng xóm đều làm thế) để dụ dỗ bạn." },
-        { keys: ['vận tải', 'lái xe', 'logistics'], vi: "Sự 'Mệt mỏi nhận thức' do làm việc căng thẳng khiến bạn dễ đưa ra các quyết định bốc đồng khi bị hối thúc." },
-        { keys: ['báo chí', 'phóng viên', 'truyền thông'], vi: "Bạn luôn săn tìm tin tức. Kẻ thao túng sẽ dùng 'Tính độc quyền' và 'Thiên kiến giật gân' để mớm cho bạn thông tin sai lệch." },
-        { keys: ['công an', 'quân đội', 'bảo vệ'], vi: "Kỷ luật thép khiến bạn quen với 'Lệnh từ cấp trên'. Kẻ thao túng có thể giả mạo thẩm quyền để ép bạn tuân thủ." },
-        { keys: ['sinh viên', 'thực tập sinh', 'học sinh'], vi: "Bạn khao khát sự công nhận và dễ mắc 'Hội chứng kẻ mạo danh'. Kẻ thao túng sẽ dùng lời khen ngợi giả tạo để bóc lột sức lao động." },
-        { keys: ['nội trợ', 'ở nhà'], vi: "Sự cô lập xã hội nhất định khiến bạn dễ bị thao túng bởi 'FOMO' và những lời đe dọa về sự an toàn của gia đình." }
+        { keys: ['kinh doanh', 'bán hàng', 'sales', 'marketing', 'business'], key: 'article.advice.job.business' },
+        { keys: ['kỹ thuật', 'it', 'lập trình', 'kỹ sư', 'tech', 'software', 'engineer'], key: 'article.advice.job.tech' },
+        { keys: ['giáo dục', 'giáo viên', 'giảng viên', 'teacher', 'education', 'professor'], key: 'article.advice.job.education' },
+        { keys: ['y tế', 'bác sĩ', 'điều dưỡng', 'nha sĩ', 'medical', 'doctor', 'nurse'], key: 'article.advice.job.medical' },
+        { keys: ['quản lý', 'lãnh đạo', 'giám đốc', 'ceo', 'manager', 'management', 'leader'], key: 'article.advice.job.management' },
+        { keys: ['nghệ thuật', 'sáng tạo', 'thiết kế', 'họa sĩ', 'creative', 'art', 'design', 'artist'], key: 'article.advice.job.creative' },
+        { keys: ['tài chính', 'kế toán', 'ngân hàng', 'kiểm toán', 'finance', 'accounting', 'banker'], key: 'article.advice.job.finance' },
+        { keys: ['nhân sự', 'hr', 'tuyển dụng', 'human resources'], key: 'article.advice.job.hr' },
+        { keys: ['luật sư', 'pháp lý', 'công chứng', 'legal', 'lawyer'], key: 'article.advice.job.legal' },
+        { keys: ['dịch vụ', 'cskh', 'nhà hàng', 'khách sạn', 'service', 'hospitality'], key: 'article.advice.job.service' },
+        { keys: ['xây dựng', 'kiến trúc', 'thầu', 'construction', 'architect'], key: 'article.advice.job.construction' },
+        { keys: ['nghiên cứu', 'khoa học', 'nhà khoa học', 'science', 'researcher'], key: 'article.advice.job.science' },
+        { keys: ['hành chính', 'văn phòng', 'thư ký', 'office', 'admin'], key: 'article.advice.job.office' },
+        { keys: ['tự do', 'freelancer', 'mmo'], key: 'article.advice.job.freelance' },
+        { keys: ['nông nghiệp', 'nông dân', 'chăn nuôi', 'agriculture', 'farmer'], key: 'article.advice.job.agriculture' },
+        { keys: ['vận tải', 'lái xe', 'logistics', 'transport', 'driver'], key: 'article.advice.job.transport' },
+        { keys: ['báo chí', 'phóng viên', 'truyền thông', 'media', 'journalist'], key: 'article.advice.job.media' },
+        { keys: ['công quan', 'quân đội', 'bảo vệ', 'security', 'police', 'military'], key: 'article.advice.job.security' },
+        { keys: ['sinh viên', 'thực tập sinh', 'học sinh', 'student'], key: 'article.advice.job.student' },
+        { keys: ['nội trợ', 'ở nhà', 'homemaker', 'housewife'], key: 'article.advice.job.homemaker' }
       ];
 
       let jobMatched = false;
       for (const j of jobMap) {
         if (j.keys.some(k => job.includes(k))) {
-          advice.push({ vi: j.vi, en: "Job-specific vulnerability detected.", zh: "检测到特定职业的漏洞。" });
+          adviceKeys.push(j.key);
           jobMatched = true;
           break;
         }
       }
       if (!jobMatched && job.length > 2) {
-        advice.push({ vi: `Công việc "${userProfile.job}" của bạn có thể bị thao túng qua các đòn bẩy về áp lực chuyên môn và định kiến ngành nghề.`, en: "Your job has specific professional pressure points.", zh: "你的工作有特定的专业压力点。" });
+        adviceKeys.push('article.advice.job.fallback');
       }
     }
 
     if (hobbies) {
       const hobbyMap = [
-        { keys: ['thể thao', 'gym', 'chạy bộ', 'bóng đá', 'cầu lông'], vi: "Sở thích thể thao cho thấy bạn có tính kỷ luật và cái tôi thể chất. Kẻ thao túng có thể dùng 'Lời khích tướng' để điều khiển bạn." },
-        { keys: ['đọc sách', 'học', 'nghiên cứu', 'cờ vua'], vi: "Bạn thích tư duy sâu. Kẻ thao túng sẽ dùng những lời 'Tôn vinh trí tuệ' để làm bạn kiêu ngạo và mất cảnh giác." },
-        { keys: ['du lịch', 'phượt', 'khám phá'], vi: "Đam mê khám phá khiến bạn dễ bị thu hút bởi 'Sự khan hiếm' và những trải nghiệm được quảng cáo là 'độc bản'." },
-        { keys: ['game', 'trò chơi', 'esport'], vi: "Bạn quen với 'Cơ chế phần thưởng' (Dopamine). Kẻ thao túng sẽ chia nhỏ yêu cầu thành các nhiệm vụ để bạn nghiện việc tuân thủ." },
-        { keys: ['đầu tư', 'chứng khoán', 'crypto', 'coin'], vi: "Quan tâm đến tài chính khiến bạn dễ rơi vào bẫy 'Lòng tham' và 'Nỗi sợ mất mát'. Hãy cẩn thận với các quyết định vội vàng." },
-        { keys: ['nấu ăn', 'ẩm thực', 'làm bánh'], vi: "Bạn nhạy cảm với hương vị và sự tỉ mỉ. Kẻ thao túng có thể dùng 'Kích thích giác quan' để tạo thiện cảm trước khi đưa ra yêu cầu." },
-        { keys: ['nhiếp ảnh', 'quay phim', 'chụp ảnh'], vi: "Bạn có xu hướng theo đuổi 'Chủ nghĩa hoàn hảo'. Kẻ thao túng sẽ lợi dụng điều này để ép bạn đầu tư thêm thời gian/tiền bạc (Chi phí chìm)." },
-        { keys: ['âm nhạc', 'đàn', 'hát', 'ca hát'], vi: "Âm nhạc làm bạn nhạy cảm. Bạn dễ bị thao túng qua 'Cảm xúc lây lan' (Emotional contagion) trong các môi trường đông người." },
-        { keys: ['mua sắm', 'thời trang', 'shopping'], vi: "Bạn dễ mắc 'Hiệu ứng Diderot' (mua một món đồ dẫn đến mua nhiều món khác) và bị thao túng bởi 'Bằng chứng xã hội' (trend)." },
-        { keys: ['sưu tầm', 'đồ cổ', 'tem', 'mô hình'], vi: "Kẻ thao túng sẽ tạo ra 'Sự khan hiếm nhân tạo' để ép bạn mua hoặc đưa ra quyết định phi lý trí nhằm có được món đồ." },
-        { keys: ['tình nguyện', 'từ thiện', 'xã hội'], vi: "Lòng tốt của bạn là điểm yếu. Kẻ thao túng sẽ dùng 'Cảm giác tội lỗi' (Guilt trip) để bóc lột thời gian và tiền bạc của bạn." },
-        { keys: ['thú cưng', 'chó', 'mèo'], vi: "Tình cảm gắn bó với thú cưng rất mạnh mẽ. Kẻ xấu có thể thao túng bạn thông qua những lời đe dọa hoặc hứa hẹn về sự an toàn của chúng." },
-        { keys: ['làm vườn', 'cây cảnh', 'trồng cây'], vi: "Bạn dễ mắc 'Hiệu ứng IKEA' (đánh giá quá cao những gì mình tự làm). Kẻ thao túng sẽ để bạn tự làm một phần việc để bạn không nỡ bỏ cuộc." },
-        { keys: ['xem phim', 'cày phim', 'netflix'], vi: "Việc tiếp nhận thông tin thụ động liên tục gây 'Kiệt sức nhận thức'. Bạn dễ bị ám thị bởi các thông điệp lặp đi lặp lại." },
-        { keys: ['mạng xã hội', 'tiktok', 'facebook', 'lướt web'], vi: "Bạn bị kẹt trong 'Vòng lặp Dopamine' và 'So sánh xã hội'. Kẻ thao túng sẽ dùng FOMO để ép bạn hành động." },
-        { keys: ['thủ công', 'diy', 'đan len', 'handmade'], vi: "Tương tự làm vườn, bạn mắc 'Hiệu ứng IKEA' và 'Tâm lý tiếc của' (Sunk cost) khi đã lỡ dành nhiều thời gian cho một việc." },
-        { keys: ['yoga', 'thiền', 'tâm linh'], vi: "Bạn tìm kiếm sự bình yên nhưng dễ rơi vào 'Sự tin tưởng mù quáng' (Hiệu ứng hào quang) đối với những người tự xưng là Guru/Thầy." },
-        { keys: ['xe cộ', 'độ xe', 'mô tô', 'ô tô'], vi: "Sở thích này gắn liền với 'Cái tôi' và 'Đẳng cấp'. Kẻ thao túng sẽ khích bác hoặc tâng bốc chiếc xe để điều khiển bạn." },
-        { keys: ['công nghệ', 'đồ điện tử', 'gadget'], vi: "Bạn dễ mắc 'Hiệu ứng nâng cấp' (Upgrade fallacy) và luôn sợ bị lỗi thời (FOMO). Kẻ thao túng sẽ liên tục bán cho bạn sự mới mẻ." },
-        { keys: ['chiêm tinh', 'tarot', 'tử vi', 'cung hoàng đạo'], vi: "Bạn rất dễ mắc 'Hiệu ứng Barnum' (tin rằng những lời mô tả chung chung là dành riêng cho mình). Kẻ thao túng sẽ dùng kỹ thuật 'Cold Reading' để lừa bạn." }
+        { keys: ['thể thao', 'gym', 'chạy bộ', 'bóng đá', 'cầu lông', 'sports', 'running', 'football'], key: 'article.advice.hobby.sports' },
+        { keys: ['đọc sách', 'học', 'nghiên cứu', 'cờ vua', 'reading', 'books', 'study', 'chess'], key: 'article.advice.hobby.intellectual' },
+        { keys: ['du lịch', 'phượt', 'khám phá', 'travel', 'explore'], key: 'article.advice.hobby.travel' },
+        { keys: ['game', 'trò chơi', 'esport', 'gaming'], key: 'article.advice.hobby.gaming' },
+        { keys: ['đầu tư', 'chứng khoán', 'crypto', 'coin', 'investing', 'finance'], key: 'article.advice.hobby.finance' },
+        { keys: ['nấu ăn', 'ẩm thực', 'làm bánh', 'cooking', 'food'], key: 'article.advice.hobby.cooking' },
+        { keys: ['nhiếp ảnh', 'quay phim', 'chụp ảnh', 'photography', 'video'], key: 'article.advice.hobby.photography' },
+        { keys: ['âm nhạc', 'đàn', 'hát', 'ca hát', 'music', 'singing', 'guitar'], key: 'article.advice.hobby.music' },
+        { keys: ['mua sắm', 'thời trang', 'shopping', 'fashion'], key: 'article.advice.hobby.shopping' },
+        { keys: ['sưu tầm', 'đồ cổ', 'tem', 'mô hình', 'collecting'], key: 'article.advice.hobby.collecting' },
+        { keys: ['tình nguyện', 'từ thiện', 'xã hội', 'volunteering', 'charity'], key: 'article.advice.hobby.volunteering' },
+        { keys: ['thú cưng', 'chó', 'mèo', 'pets', 'dog', 'cat'], key: 'article.advice.hobby.pets' },
+        { keys: ['làm vườn', 'cây cảnh', 'trồng cây', 'gardening', 'plants'], key: 'article.advice.hobby.gardening' },
+        { keys: ['xem phim', 'cày phim', 'netflix', 'movies', 'cinema'], key: 'article.advice.hobby.movies' },
+        { keys: ['mạng xã hội', 'tiktok', 'facebook', 'lướt web', 'social media'], key: 'article.advice.hobby.social' },
+        { keys: ['thủ công', 'diy', 'đan len', 'handmade', 'crafts'], key: 'article.advice.hobby.crafts' },
+        { keys: ['tâm linh', 'thiền', 'yoga', 'spiritual', 'meditation'], key: 'article.advice.hobby.spiritual' },
+        { keys: ['xe', 'ô tô', 'xe máy', 'vehicles', 'cars', 'motorcycles'], key: 'article.advice.hobby.vehicles' },
+        { keys: ['công nghệ', 'gadget', 'tech'], key: 'article.advice.hobby.tech' },
+        { keys: ['huyền học', 'tử vi', 'bói', 'occult', 'astrology', 'tarot'], key: 'article.advice.hobby.occult' }
       ];
 
       let hobbyMatched = false;
       for (const h of hobbyMap) {
         if (h.keys.some(k => hobbies.includes(k))) {
-          advice.push({ vi: h.vi, en: "Hobby-specific vulnerability detected.", zh: "检测到特定爱好的漏洞。" });
+          adviceKeys.push(h.key);
           hobbyMatched = true;
           break;
         }
       }
       if (!hobbyMatched && hobbies.length > 2) {
-        advice.push({ vi: `Sở thích "${userProfile.hobbies}" của bạn có thể bị lợi dụng để tạo 'Sự tương đồng giả tạo' (Mirroring) nhằm lấy lòng tin.`, en: "Your hobby can be used for mirroring.", zh: "你的爱好可以用来进行镜像模仿。" });
+        adviceKeys.push('article.advice.hobby.fallback');
       }
     }
 
-    if (advice.length === 0) {
-      advice.push({
-        vi: "Vui lòng nhập thêm thông tin để nhận phân tích chi tiết hơn.",
-        en: "Please enter more information to receive a more detailed analysis.",
-        zh: "请输入更多信息以获得更详细的分析。"
-      });
+    if (adviceKeys.length === 0 && (userProfile.gender || userProfile.age || userProfile.job || userProfile.hobbies)) {
+      adviceKeys.push('article.advice.moreInfo');
     }
 
-    return advice;
+    return adviceKeys;
+  };
+
+  const handleSummarize = async () => {
+    setIsSummarizing(true);
+    setSummaryError(null);
+    try {
+      const result = await summarizeArticle(content, currentLang);
+      setSummary(result || null);
+    } catch (error) {
+      setSummaryError(t('article.summaryError'));
+    } finally {
+      setIsSummarizing(false);
+    }
   };
 
   useEffect(() => {
@@ -226,9 +223,17 @@ export const Article: React.FC = () => {
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight drop-shadow-lg">
               {title}
             </h1>
-            <p className="text-xl md:text-2xl text-slate-200 font-light leading-relaxed drop-shadow-md">
+            <p className="text-xl md:text-2xl text-slate-200 font-light leading-relaxed drop-shadow-md mb-8">
               {shortDescription}
             </p>
+            <button
+              onClick={handleSummarize}
+              disabled={isSummarizing}
+              className="inline-flex items-center px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white rounded-full font-bold text-lg shadow-xl shadow-indigo-500/30 transition-all hover:-translate-y-1 group"
+            >
+              <Sparkles className={`mr-2 w-6 h-6 ${isSummarizing ? 'animate-pulse' : 'group-hover:animate-spin'}`} />
+              {isSummarizing ? t('article.summarizing') : t('article.summarizeBtn')}
+            </button>
           </motion.div>
         </div>
       </div>
@@ -320,10 +325,10 @@ export const Article: React.FC = () => {
                       {t('article.riskAnalysis.result')}
                     </div>
                     <ul className="space-y-4">
-                      {getPersonalizedAdvice().map((advice, idx) => (
+                      {getPersonalizedAdvice().map((adviceKey, idx) => (
                         <li key={idx} className="flex items-start gap-3 text-indigo-800 dark:text-indigo-200 leading-relaxed">
                           <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                          {getLocalized(advice)}
+                          {t(adviceKey)}
                         </li>
                       ))}
                     </ul>
@@ -332,6 +337,44 @@ export const Article: React.FC = () => {
               )}
             </AnimatePresence>
           </motion.div>
+
+          {/* AI Summary Section */}
+          <AnimatePresence>
+            {(isSummarizing || summary || summaryError) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl border border-indigo-100 dark:border-slate-700 p-8 md:p-10 overflow-hidden relative"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl text-white shadow-lg">
+                    <Sparkles size={24} className={isSummarizing ? 'animate-pulse' : ''} />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('article.summaryTitle')}</h2>
+                </div>
+
+                {isSummarizing && (
+                  <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                    <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium animate-pulse">{t('article.summarizing')}</p>
+                  </div>
+                )}
+
+                {summaryError && (
+                  <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-100 dark:border-red-800/30 text-red-600 dark:text-red-400 font-medium">
+                    {summaryError}
+                  </div>
+                )}
+
+                {summary && !isSummarizing && (
+                  <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-indigo-600 dark:prose-headings:text-indigo-400 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-li:text-slate-600 dark:prose-li:text-slate-300">
+                    <Markdown remarkPlugins={[remarkGfm]}>{summary}</Markdown>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Content Search Filter */}
           <div className="relative group">
@@ -364,27 +407,33 @@ export const Article: React.FC = () => {
                     <BookOpen size={24} className="text-indigo-200" />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-                    {t('article.keyTakeaways') || 'Điểm cốt lõi'}
+                    {t('article.keyTakeaways')}
                   </h2>
                 </div>
                 
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {article.keyTakeaways.map((takeaway, idx) => (
-                    <li key={idx} className="flex items-start gap-4 group">
-                      <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-400 group-hover:scale-150 transition-transform duration-300" />
-                      <p className="text-indigo-100 text-lg leading-relaxed font-medium">
+                    <motion.div 
+                      key={idx} 
+                      whileHover={{ scale: 1.02 }}
+                      className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-lg flex items-start gap-4 group"
+                    >
+                      <div className="p-2 bg-indigo-500/30 rounded-full flex-shrink-0">
+                        <Zap size={20} className="text-indigo-200" />
+                      </div>
+                      <p className="text-indigo-50 text-lg leading-relaxed font-medium">
                         {getLocalized(takeaway)}
                       </p>
-                    </li>
+                    </motion.div>
                   ))}
-                </ul>
+                </div>
               </div>
             </motion.div>
           )}
 
           {filteredSections.map((section: string, index: number) => {
             const sectionTitleMatch = section.match(/^##\s+(.*)/m);
-            const sectionTitle = sectionTitleMatch ? sectionTitleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : 'Section';
+            const sectionTitle = sectionTitleMatch ? sectionTitleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : t('article.sectionFallback');
             const id = sectionTitle.toLowerCase().replace(/\s+/g, '-');
             
             return (
@@ -423,7 +472,7 @@ export const Article: React.FC = () => {
                       ul: ({node, children, ...props}) => {
                         const hasNestedList = React.Children.toArray(children).some(child => React.isValidElement(child) && child.type === 'ul');
                         if (hasNestedList) {
-                          return <CollapsibleList title="Chi tiết">{children}</CollapsibleList>;
+                          return <CollapsibleList title={t('article.details')}>{children}</CollapsibleList>;
                         }
                         return <ul className="space-y-3 my-6 list-disc list-inside text-slate-700 dark:text-slate-300" {...props}>{children}</ul>;
                       },
@@ -501,7 +550,7 @@ export const Article: React.FC = () => {
                 <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
                   {getLocalized(article.comparison.title)}
                 </h2>
-                <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Hiểu rõ sự khác biệt để đưa ra lựa chọn phù hợp nhất với nhu cầu và ngân sách của bạn.</p>
+                <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">{t('article.comparisonDesc')}</p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">

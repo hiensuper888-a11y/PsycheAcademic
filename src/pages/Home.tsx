@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
-import { Brain, BookOpen, Lightbulb, Search, ArrowRight } from 'lucide-react';
+import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const Home: React.FC = () => {
@@ -11,13 +11,32 @@ export const Home: React.FC = () => {
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [selectedAuthor, setSelectedAuthor] = useState('all');
+  const [selectedTopic, setSelectedTopic] = useState('all');
+  const [selectedDate, setSelectedDate] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // Extract unique authors and topics
+  const authors = Array.from(new Set(psychologyData.map(item => item.author))).sort();
+  const topics = Array.from(new Set(psychologyData.map(item => {
+    const cat = typeof item.category === 'string' ? item.category : (item.category[currentLang] || item.category['en']);
+    return cat;
+  }))).sort();
+  const years = Array.from(new Set(psychologyData.map(item => item.date.split('-')[0]))).sort((a, b) => b.localeCompare(a));
 
   const filteredArticles = psychologyData.filter(item => {
     const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
     const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
+    const category = typeof item.category === 'string' ? item.category : (item.category[currentLang] || item.category['en']);
     const query = searchQuery.toLowerCase();
-    return title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
+    
+    const matchesSearch = title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
+    const matchesAuthor = selectedAuthor === 'all' || item.author === selectedAuthor;
+    const matchesTopic = selectedTopic === 'all' || category === selectedTopic;
+    const matchesDate = selectedDate === 'all' || item.date.startsWith(selectedDate);
+
+    return matchesSearch && matchesAuthor && matchesTopic && matchesDate;
   });
 
   const suggestions = searchQuery.length >= 2 
@@ -167,6 +186,109 @@ export const Home: React.FC = () => {
                       </button>
                     );
                   })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Filter Toggle & Active Filters */}
+          <div className="max-w-4xl mx-auto mt-8">
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
+                  showFilters || selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                <Filter size={18} />
+                {t('home.filters.title')}
+                {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all') && (
+                  <span className="ml-1 w-5 h-5 bg-white text-indigo-600 rounded-full text-xs flex items-center justify-center font-bold">
+                    {[selectedAuthor, selectedTopic, selectedDate].filter(f => f !== 'all').length}
+                  </span>
+                )}
+              </button>
+
+              {(selectedAuthor !== 'all' || selectedTopic !== 'all' || selectedDate !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSelectedAuthor('all');
+                    setSelectedTopic('all');
+                    setSelectedDate('all');
+                  }}
+                  className="flex items-center gap-2 px-6 py-3 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
+                >
+                  <X size={18} />
+                  {t('home.filters.clear')}
+                </button>
+              )}
+            </div>
+
+            <AnimatePresence>
+              {showFilters && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border border-slate-100 dark:border-slate-700">
+                    {/* Author Filter */}
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        <User size={16} />
+                        {t('home.filters.author')}
+                      </label>
+                      <select
+                        value={selectedAuthor}
+                        onChange={(e) => setSelectedAuthor(e.target.value)}
+                        className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      >
+                        <option value="all">{t('home.filters.allAuthors')}</option>
+                        {authors.map(author => (
+                          <option key={author} value={author}>{author}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Topic Filter */}
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        <Tag size={16} />
+                        {t('home.filters.topic')}
+                      </label>
+                      <select
+                        value={selectedTopic}
+                        onChange={(e) => setSelectedTopic(e.target.value)}
+                        className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      >
+                        <option value="all">{t('home.filters.allTopics')}</option>
+                        {topics.map(topic => (
+                          <option key={topic} value={topic}>{topic}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Date Filter */}
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        <Calendar size={16} />
+                        {t('home.filters.date')}
+                      </label>
+                      <select
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      >
+                        <option value="all">{t('home.filters.allDates')}</option>
+                        {years.map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

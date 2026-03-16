@@ -13,6 +13,7 @@ import { Article } from './pages/Article';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { TargetAnalysis } from './pages/TargetAnalysis';
+import { TargetAudience } from './pages/TargetAudience';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
 
@@ -49,6 +50,7 @@ export default function App() {
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
                 <Route path="/article/:id" element={<ProtectedRoute><Article /></ProtectedRoute>} />
                 <Route path="/target-analysis" element={<ProtectedRoute><TargetAnalysis /></ProtectedRoute>} />
+                <Route path="/target-audience" element={<ProtectedRoute><TargetAudience /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               </Routes>
             </main>
