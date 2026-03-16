@@ -38,7 +38,7 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-200">
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 overflow-hidden border-b border-slate-100 bg-slate-900">
         <div className="absolute inset-0 z-0 opacity-30">
@@ -86,29 +86,29 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-24 bg-slate-50">
+      <section id="features" className="py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 transition-all hover:shadow-xl hover:-translate-y-2">
-              <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8">
+            <div className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl hover:-translate-y-2">
+              <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mb-8">
                 <BookOpen size={32} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('feat.research.title')}</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">{t('feat.research.desc')}</p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('feat.research.title')}</h3>
+              <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{t('feat.research.desc')}</p>
             </div>
-            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 transition-all hover:shadow-xl hover:-translate-y-2">
-              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-8">
+            <div className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl hover:-translate-y-2">
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-8">
                 <Brain size={32} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('feat.analysis.title')}</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">{t('feat.analysis.desc')}</p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('feat.analysis.title')}</h3>
+              <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{t('feat.analysis.desc')}</p>
             </div>
-            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 transition-all hover:shadow-xl hover:-translate-y-2">
-              <div className="w-16 h-16 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center mb-8">
+            <div className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl hover:-translate-y-2">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl flex items-center justify-center mb-8">
                 <Lightbulb size={32} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('feat.safety.title')}</h3>
-              <p className="text-slate-600 text-lg leading-relaxed">{t('feat.safety.desc')}</p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('feat.safety.title')}</h3>
+              <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{t('feat.safety.desc')}</p>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export const Home: React.FC = () => {
       {/* Articles Grid */}
       <section id="articles" className="py-32 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-6">{t('home.libraryTitle')}</h2>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 dark:text-white mb-6">{t('home.libraryTitle')}</h2>
           <div className="w-24 h-1 bg-indigo-600 mx-auto rounded-full mb-12"></div>
           
           {/* Search Bar */}
@@ -131,7 +131,7 @@ export const Home: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsFocused(true)}
-              className="w-full pl-16 pr-6 py-5 bg-white border-2 border-slate-100 rounded-[2rem] text-lg focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-xl shadow-slate-200/40 transition-all"
+              className="w-full pl-16 pr-6 py-5 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[2rem] text-lg text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 shadow-xl shadow-slate-200/40 dark:shadow-none transition-all"
             />
 
             {/* Suggestions Dropdown */}
@@ -141,7 +141,7 @@ export const Home: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full left-0 right-0 mt-4 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50 p-2"
+                  className="absolute top-full left-0 right-0 mt-4 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden z-50 p-2"
                 >
                   {suggestions.map((item) => {
                     const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
@@ -153,17 +153,17 @@ export const Home: React.FC = () => {
                           setIsFocused(false);
                           setSearchQuery('');
                         }}
-                        className="w-full flex items-center justify-between px-6 py-4 hover:bg-indigo-50 rounded-2xl transition-colors text-left group/item"
+                        className="w-full flex items-center justify-between px-6 py-4 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-2xl transition-colors text-left group/item"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover/item:bg-indigo-100 group-hover/item:text-indigo-600 transition-colors">
+                          <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 group-hover/item:bg-indigo-100 dark:group-hover/item:bg-indigo-900/50 group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors">
                             <BookOpen size={20} />
                           </div>
-                          <span className="font-bold text-slate-700 group-hover/item:text-indigo-600 transition-colors">
+                          <span className="font-bold text-slate-700 dark:text-slate-200 group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors">
                             {title}
                           </span>
                         </div>
-                        <ArrowRight size={18} className="text-slate-300 group-hover/item:text-indigo-400 group-hover/item:translate-x-1 transition-all" />
+                        <ArrowRight size={18} className="text-slate-300 dark:text-slate-600 group-hover/item:text-indigo-400 dark:group-hover/item:text-indigo-500 group-hover/item:translate-x-1 transition-all" />
                       </button>
                     );
                   })}
@@ -187,10 +187,10 @@ export const Home: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="group bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col"
+                  className="group bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-2xl dark:hover:shadow-indigo-900/20 transition-all duration-500 flex flex-col"
                 >
                   <div className="h-64 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                    <div className="absolute inset-0 bg-indigo-900/10 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
                     <img 
                       src={item.imageUrl} 
                       alt={title} 
@@ -199,11 +199,11 @@ export const Home: React.FC = () => {
                     />
                   </div>
                   <div className="p-10 flex flex-col flex-grow">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-indigo-600 transition-colors">{title}</h3>
-                    <p className="text-slate-600 mb-8 flex-grow leading-relaxed text-lg">{shortDesc}</p>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{title}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 mb-8 flex-grow leading-relaxed text-lg">{shortDesc}</p>
                     <Link 
                       to={`/article/${item.id}`}
-                      className="inline-flex items-center justify-center w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-slate-200 hover:shadow-indigo-200"
+                      className="inline-flex items-center justify-center w-full bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-slate-200 dark:shadow-none hover:shadow-indigo-200 dark:hover:shadow-indigo-900/50"
                     >
                       {t('home.readMore')}
                     </Link>

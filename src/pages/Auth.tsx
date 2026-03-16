@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
@@ -16,8 +16,8 @@ export const Auth: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-12 h-12 animate-spin text-indigo-600" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <Loader2 className="w-12 h-12 animate-spin text-indigo-600 dark:text-indigo-400" />
       </div>
     );
   }
@@ -25,6 +25,24 @@ export const Auth: React.FC = () => {
   if (user) {
     return <Navigate to="/" replace />;
   }
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      await loginWithGoogle();
+    } catch (err: any) {
+      setError(err.message || 'Đã xảy ra lỗi khi đăng nhập bằng Google.');
+    }
+  };
+
+  const handleXLogin = async () => {
+    setError('');
+    try {
+      await loginWithX();
+    } catch (err: any) {
+      setError(err.message || 'Đã xảy ra lỗi khi đăng nhập bằng X.');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +66,7 @@ export const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-white">
+    <div className="min-h-screen flex bg-white dark:bg-slate-900 transition-colors duration-200">
       {/* Left Pane - Branding & Imagery */}
       <div className="hidden lg:flex lg:w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-between p-12">
         <div className="absolute inset-0 z-0 opacity-20">
@@ -80,18 +98,18 @@ export const Auth: React.FC = () => {
         <div className="relative z-10 flex items-center space-x-4 text-sm text-slate-400">
           <span>© 2026 PsycheAcademic</span>
           <span>•</span>
-          <a href="#" className="hover:text-white transition-colors">Bảo mật</a>
+          <Link to="/privacy" className="hover:text-white transition-colors">Bảo mật</Link>
           <span>•</span>
-          <a href="#" className="hover:text-white transition-colors">Điều khoản</a>
+          <Link to="/terms" className="hover:text-white transition-colors">Điều khoản</Link>
         </div>
       </div>
 
       {/* Right Pane - Auth Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto bg-white dark:bg-slate-900">
         <div className="w-full max-w-md">
-          <div className="lg:hidden flex items-center justify-center space-x-3 text-slate-900 mb-12">
-            <Brain className="w-10 h-10 text-indigo-600" />
-            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-indigo-600">Academic</span></span>
+          <div className="lg:hidden flex items-center justify-center space-x-3 text-slate-900 dark:text-white mb-12">
+            <Brain className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
+            <span className="font-serif font-bold text-2xl tracking-tight">Psyche<span className="text-indigo-600 dark:text-indigo-400">Academic</span></span>
           </div>
 
           <motion.div
@@ -99,17 +117,17 @@ export const Auth: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
               {isLogin ? 'Chào mừng trở lại' : 'Tạo tài khoản mới'}
             </h2>
-            <p className="text-slate-500 mb-8">
+            <p className="text-slate-500 dark:text-slate-400 mb-8">
               {isLogin 
                 ? 'Đăng nhập để tiếp tục nghiên cứu và phân tích.' 
                 : 'Tham gia cộng đồng nghiên cứu tâm lý học ngay hôm nay.'}
             </p>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
+              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl text-sm">
                 {error}
               </div>
             )}
@@ -123,17 +141,17 @@ export const Auth: React.FC = () => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Họ và tên</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Họ và tên</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-slate-400" />
+                        <User className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                       </div>
                       <input
                         type="text"
                         required={!isLogin}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
+                        className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
                         placeholder="Nguyễn Văn A"
                       />
                     </div>
@@ -142,34 +160,34 @@ export const Auth: React.FC = () => {
               </AnimatePresence>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400" />
+                    <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
+                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
                     placeholder="you@example.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Mật khẩu</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Mật khẩu</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-400" />
+                    <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                   </div>
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
+                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -194,17 +212,17 @@ export const Auth: React.FC = () => {
             <div className="mt-8">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200" />
+                  <div className="w-full border-t border-slate-200 dark:border-slate-700" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-slate-500">Hoặc tiếp tục với</span>
+                  <span className="px-2 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400">Hoặc tiếp tục với</span>
                 </div>
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <button
-                  onClick={loginWithGoogle}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 rounded-xl shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -216,8 +234,8 @@ export const Auth: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={loginWithX}
-                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 rounded-xl shadow-sm bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  onClick={handleXLogin}
+                  className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -227,18 +245,26 @@ export const Auth: React.FC = () => {
               </div>
             </div>
 
-            <p className="mt-8 text-center text-sm text-slate-600">
+            <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
               {isLogin ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
               <button
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setError('');
                 }}
-                className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+                className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
               >
                 {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
               </button>
             </p>
+
+            <div className="mt-8 text-center text-xs text-slate-500 dark:text-slate-500">
+              Bằng cách đăng nhập, bạn đồng ý với{' '}
+              <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline">Điều khoản dịch vụ</Link>
+              {' '}và{' '}
+              <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline">Chính sách bảo mật</Link>
+              {' '}của chúng tôi.
+            </div>
           </motion.div>
         </div>
       </div>

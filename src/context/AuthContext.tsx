@@ -9,6 +9,11 @@ export interface UserProfile {
   username?: string;
   picture?: string;
   provider: string;
+  phone?: string;
+  address?: string;
+  company?: string;
+  department?: string;
+  position?: string;
 }
 
 interface AuthContextType {
@@ -19,6 +24,8 @@ interface AuthContextType {
   loginWithEmail: (email: string, password: string) => Promise<void>;
   registerWithEmail: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,6 +46,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       username: metadata?.user_name || metadata?.preferred_username,
       picture: metadata?.avatar_url || metadata?.picture,
       provider: provider,
+      phone: metadata?.phone,
+      address: metadata?.address,
+      company: metadata?.company,
+      department: metadata?.department,
+      position: metadata?.position,
     });
   };
 
@@ -77,6 +89,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (error) throw error;
     } catch (error) {
       console.error('Google login error:', error);
+      throw error;
     }
   };
 
@@ -91,6 +104,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (error) throw error;
     } catch (error) {
       console.error('X login error:', error);
+      throw error;
     }
   };
 
@@ -123,8 +137,43 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const updateProfile = async (data: Partial<UserProfile>) => {
+    try {
+      const { error, data: updateData } = await supabase.auth.updateUser({
+        data: {
+          full_name: data.name,
+          avatar_url: data.picture,
+          phone: data.phone,
+          address: data.address,
+          company: data.company,
+          department: data.department,
+          position: data.position,
+        }
+      });
+      if (error) throw error;
+      if (updateData.user) {
+        mapUser(updateData.user);
+      }
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
+  };
+
+  const updatePassword = async (password: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: password
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Update password error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail, logout }}>
+    <AuthContext.Provider value={{ user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail, logout, updateProfile, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );
