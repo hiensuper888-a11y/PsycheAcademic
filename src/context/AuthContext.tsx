@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const loginWithX = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'twitter',
+        provider: 'x',
         options: {
           redirectTo: window.location.origin
         }
