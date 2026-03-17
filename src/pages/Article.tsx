@@ -27,11 +27,15 @@ export const Article: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        console.log('id:', id);
-        console.log('psychologyData:', psychologyData);
+        console.log('id from params:', id);
+        console.log('psychologyData length:', psychologyData.length);
+        console.log('first 5 ids in psychologyData:', psychologyData.slice(0, 5).map(a => a.id));
+        
         const data = psychologyData.find(a => a.id === id);
-        console.log('data:', data);
+        console.log('found article:', data);
+        
         if (!data) {
+          console.error('Article not found for id:', id);
           throw new Error('Article not found');
         }
         setArticle(data);
