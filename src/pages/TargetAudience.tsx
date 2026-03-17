@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
@@ -17,19 +18,30 @@ interface TargetAudience {
   savedTechniques: string[];
 }
 
-const religions = ['Phật giáo', 'Ấn độ giáo', 'Thiên chúa giáo', 'Không tôn giáo', 'Đạo giáo', 'Do thái giáo', 'Hồi giáo'];
-const genders = ['Nam', 'Nữ', 'Khác'];
-const professions = ['Sales', 'Marketing', 'Customer Service', 'Management', 'Kỹ thuật', 'Giáo dục', 'Y tế', 'Khác'];
-const politicalSystems = ['Xã hội chủ nghĩa', 'Tư bản', 'Quân chủ lập hiến', 'Phiến quân/Loạn lạc'];
+const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
+const genders = ['male', 'female', 'other'];
+const professions = ['sales', 'marketing', 'customerService', 'management', 'tech', 'education', 'medical', 'other'];
+const politicalSystems = ['socialism', 'capitalism', 'constitutionalMonarchy', 'rebel'];
 
 export const TargetAudience: React.FC = () => {
+  const { t, i18n: i18nInstance } = useTranslation();
+  const currentLang = i18nInstance.language as 'vi' | 'en' | 'zh';
+
   const [targets, setTargets] = useState<TargetAudience[]>([]);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', hobbies: '', syndrome: '' });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
     if (saved) setTargets(JSON.parse(saved));
   }, []);
+
+  const getLocalized = (field: any) => {
+    if (typeof field === 'string') return field;
+    if (field && typeof field === 'object') {
+      return field[currentLang] || field['en'] || field['vi'] || '';
+    }
+    return '';
+  };
 
   const saveTargets = (updatedTargets: TargetAudience[]) => {
     setTargets(updatedTargets);
@@ -44,7 +56,7 @@ export const TargetAudience: React.FC = () => {
       savedTechniques: []
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', hobbies: '', syndrome: '' });
+    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -54,10 +66,10 @@ export const TargetAudience: React.FC = () => {
     const politicalSystem = target.politicalSystem;
     const hobbies = target.hobbies.toLowerCase();
 
-    const techniques = influenceTechniques.filter(t => 
-      (t.targetDemographics.professions.includes(target.profession) || t.targetDemographics.professions.includes('All')) &&
-      (t.targetDemographics.religions.includes(target.religion) || t.targetDemographics.religions.includes('All')) &&
-      (t.targetDemographics.politicalSystems.includes(target.politicalSystem) || t.targetDemographics.politicalSystems.includes('All'))
+    const techniques = influenceTechniques.filter(tech => 
+      (tech.targetDemographics.professions.includes(target.profession) || tech.targetDemographics.professions.includes('All')) &&
+      (tech.targetDemographics.religions.includes(target.religion) || tech.targetDemographics.religions.includes('All')) &&
+      (tech.targetDemographics.politicalSystems.includes(target.politicalSystem) || tech.targetDemographics.politicalSystems.includes('All'))
     );
 
     // Automatic Syndrome Suggestion Logic
@@ -69,40 +81,32 @@ export const TargetAudience: React.FC = () => {
     };
 
     if (age > 0 && age < 25) {
-      suggest("Imposter Syndrome", "Khen ngợi nỗ lực cá nhân để giảm bớt sự tự ti.");
-      suggest("FOMO", "Tạo ra các sự kiện giới hạn.");
+      suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
+      suggest("FOMO", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
-      suggest("Dunning-Kruger Effect", "Để họ tin rằng họ là chuyên gia.");
+      suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
     }
 
     if (profession.includes('management') || profession.includes('sales')) {
-      suggest("Halo Effect", "Xây dựng hình ảnh chuyên nghiệp.");
+      suggest("Halo Effect", t('targetAnalysis.strategy.haloInstructionFull'));
     }
 
-    if (religion && religion !== 'Không tôn giáo') {
-      suggest("Authority Bias", "Trích dẫn các giáo lý uy tín.");
+    if (religion && religion !== 'none') {
+      suggest("Authority Bias", t('targetAnalysis.strategy.authorityInstructionFull'));
     }
 
-    if (politicalSystem === 'Xã hội chủ nghĩa') {
-      suggest("Bandwagon Effect", "Nhấn mạnh vào lợi ích tập thể.");
+    if (politicalSystem === 'socialism') {
+      suggest("Bandwagon Effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
     }
 
-    if (hobbies.includes('game') || hobbies.includes('trò chơi')) {
-      suggest("Zeigarnik Effect", "Tạo ra các nhiệm vụ chưa hoàn thành để thu hút sự chú ý.");
+    if (hobbies.includes('game') || hobbies.includes('trò chơi') || hobbies.includes('gaming')) {
+      suggest("Zeigarnik Effect", t('targetAnalysis.strategy.zeigarnikInstruction'));
     }
 
-    if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức')) {
-      suggest("Confirmation Bias", "Cung cấp thông tin củng cố niềm tin sẵn có của họ.");
+    if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức') || hobbies.includes('reading')) {
+      suggest("Confirmation Bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
     }
     
-    const getLocalized = (field: any) => {
-      if (typeof field === 'string') return field;
-      if (field && typeof field === 'object') {
-        return field['en'] || field['vi'] || '';
-      }
-      return '';
-    };
-
     const articles = psychologyData.filter(a => 
       getLocalized(a.category).toLowerCase().includes(target.profession.toLowerCase()) || 
       getLocalized(a.title).toLowerCase().includes(target.profession.toLowerCase())
@@ -113,32 +117,32 @@ export const TargetAudience: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8">
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Quản lý Đối tượng Mục tiêu</h1>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">{t('targetAudience.title')}</h1>
       
       <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
-        <h2 className="text-xl font-semibold mb-4">Thêm đối tượng mới</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('targetAudience.addNew')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <input placeholder="Tên đối tượng" className="p-3 rounded-xl border" value={newTarget.name} onChange={e => setNewTarget({...newTarget, name: e.target.value})} />
-          <input type="number" placeholder="Độ tuổi" className="p-3 rounded-xl border" value={newTarget.age} onChange={e => setNewTarget({...newTarget, age: e.target.value})} />
+          <input placeholder={t('targetAudience.name')} className="p-3 rounded-xl border" value={newTarget.name} onChange={e => setNewTarget({...newTarget, name: e.target.value})} />
+          <input type="number" placeholder={t('targetAudience.age')} className="p-3 rounded-xl border" value={newTarget.age} onChange={e => setNewTarget({...newTarget, age: e.target.value})} />
           <select className="p-3 rounded-xl border" value={newTarget.gender} onChange={e => setNewTarget({...newTarget, gender: e.target.value})}>
-            {genders.map(g => <option key={g} value={g}>{g}</option>)}
+            {genders.map(g => <option key={g} value={g}>{t(`targetAnalysis.genders.${g}`)}</option>)}
           </select>
           <select className="p-3 rounded-xl border" value={newTarget.profession} onChange={e => setNewTarget({...newTarget, profession: e.target.value})}>
-            {professions.map(p => <option key={p} value={p}>{p}</option>)}
+            {professions.map(p => <option key={p} value={p}>{t(`targetAnalysis.professions.${p}`)}</option>)}
           </select>
           <select className="p-3 rounded-xl border" value={newTarget.religion} onChange={e => setNewTarget({...newTarget, religion: e.target.value})}>
-            {religions.map(r => <option key={r} value={r}>{r}</option>)}
+            {religions.map(r => <option key={r} value={r}>{t(`targetAnalysis.religions.${r}`)}</option>)}
           </select>
           <select className="p-3 rounded-xl border" value={newTarget.politicalSystem} onChange={e => setNewTarget({...newTarget, politicalSystem: e.target.value})}>
-            {politicalSystems.map(p => <option key={p} value={p}>{p}</option>)}
+            {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
           </select>
-          <input placeholder="Sở thích (ví dụ: Game, Đọc sách)" className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
+          <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
           <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-            <option value="">Chọn hội chứng</option>
-            {syndromes.map(s => <option key={s} value={s}>{s}</option>)}
+            <option value="">{t('targetAudience.selectSyndrome')}</option>
+            {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
           </select>
           <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
-            <Plus size={20} /> Thêm
+            <Plus size={20} /> {t('targetAudience.addBtn')}
           </button>
         </div>
       </div>
@@ -152,14 +156,14 @@ export const TargetAudience: React.FC = () => {
                 <h3 className="text-xl font-bold">{target.name}</h3>
                 <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-red-500"><Trash2 size={20} /></button>
               </div>
-              <p className="text-sm text-slate-500 mb-2">{target.gender} | {target.age} tuổi | {target.profession} | {target.religion} | {target.politicalSystem}</p>
-              {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">Sở thích: {target.hobbies}</p>}
-              {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">Hội chứng thủ công: {target.syndrome}</p>}
+              <p className="text-sm text-slate-500 mb-2">{t(`targetAnalysis.genders.${target.gender}`)} | {target.age} {t('targetAudience.yearsOld')} | {t(`targetAnalysis.professions.${target.profession}`)} | {t(`targetAnalysis.religions.${target.religion}`)} | {t(`targetAnalysis.politicalSystems.${target.politicalSystem}`)}</p>
+              {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">{t('targetAnalysis.hobbies')}: {target.hobbies}</p>}
+              {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">{t('targetAudience.manualSyndrome')} {target.syndrome}</p>}
               
               {suggestedSyndromes.length > 0 && (
                 <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
                   <h4 className="font-bold text-emerald-700 dark:text-emerald-400 text-sm mb-3 flex items-center gap-2">
-                    <Plus size={16} /> Hội chứng đề xuất tự động:
+                    <Plus size={16} /> {t('targetAudience.autoSyndrome')}
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {suggestedSyndromes.map((s, idx) => (
@@ -174,7 +178,7 @@ export const TargetAudience: React.FC = () => {
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><AlertTriangle size={18} /> Kỹ thuật thao túng thường gặp:</h4>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><AlertTriangle size={18} /> {t('targetAudience.manipulationTech')}</h4>
                   <div className="space-y-3">
                     {techniques.map(tech => (
                       <div key={tech.id} className="p-4 bg-slate-50 rounded-xl border">
@@ -186,11 +190,11 @@ export const TargetAudience: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><BookOpen size={18} /> Bài viết liên quan:</h4>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><BookOpen size={18} /> {t('targetAudience.relatedArticles')}</h4>
                   <div className="space-y-2">
                     {articles.map(article => (
                       <a key={article.id} href={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
-                        {typeof article.title === 'string' ? article.title : article.title.vi}
+                        {getLocalized(article.title)}
                       </a>
                     ))}
                   </div>

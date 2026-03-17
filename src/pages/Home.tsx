@@ -19,18 +19,23 @@ export const Home: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  const getLocalized = (field: any) => {
+    if (typeof field === 'string') return field;
+    if (field && typeof field === 'object') {
+      return field[currentLang] || field['en'] || field['vi'] || '';
+    }
+    return '';
+  };
+
   // Extract unique authors and topics
   const authors = Array.from(new Set(psychologyData.map(item => item.author))).sort();
-  const topics = Array.from(new Set(psychologyData.map(item => {
-    const cat = typeof item.category === 'string' ? item.category : (item.category[currentLang] || item.category['en']);
-    return cat;
-  }))).sort();
+  const topics = Array.from(new Set(psychologyData.map(item => getLocalized(item.category)))).sort();
   const years = Array.from(new Set(psychologyData.map(item => item.date.split('-')[0]))).sort((a, b) => b.localeCompare(a));
 
   const filteredArticles = psychologyData.filter(item => {
-    const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
-    const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
-    const category = typeof item.category === 'string' ? item.category : (item.category[currentLang] || item.category['en']);
+    const title = getLocalized(item.title);
+    const shortDesc = getLocalized(item.shortDescription);
+    const category = getLocalized(item.category);
     const query = searchQuery.toLowerCase();
     
     const matchesSearch = title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
@@ -44,7 +49,7 @@ export const Home: React.FC = () => {
 
   const suggestions = searchQuery.length >= 2 
     ? psychologyData.filter(item => {
-        const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+        const title = getLocalized(item.title);
         return title.toLowerCase().includes(searchQuery.toLowerCase());
       }).slice(0, 5)
     : [];
@@ -166,7 +171,7 @@ export const Home: React.FC = () => {
                   className="absolute top-full left-0 right-0 mt-4 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden z-50 p-2"
                 >
                   {suggestions.map((item) => {
-                    const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
+                    const title = getLocalized(item.title);
                     return (
                       <button
                         key={item.id}
@@ -297,14 +302,14 @@ export const Home: React.FC = () => {
                     <div className="space-y-3">
                       <label className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         <Brain size={16} />
-                        Influence Principles
+                        {t('home.filters.principles')}
                       </label>
                       <select
                         value={selectedPrinciple}
                         onChange={(e) => setSelectedPrinciple(e.target.value)}
                         className="w-full p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                       >
-                        <option value="all">All Principles</option>
+                        <option value="all">{t('home.filters.allPrinciples')}</option>
                         {INFLUENCE_PRINCIPLES.map(principle => (
                           <option key={principle} value={principle}>{principle}</option>
                         ))}
@@ -320,9 +325,8 @@ export const Home: React.FC = () => {
         {filteredArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredArticles.map((item, index) => {
-              // Use localized strings if available, fallback to vi
-              const title = typeof item.title === 'string' ? item.title : (item.title[currentLang] || item.title['vi']);
-              const shortDesc = typeof item.shortDescription === 'string' ? item.shortDescription : (item.shortDescription[currentLang] || item.shortDescription['vi']);
+              const title = getLocalized(item.title);
+              const shortDesc = getLocalized(item.shortDescription);
               
               return (
                 <motion.div 

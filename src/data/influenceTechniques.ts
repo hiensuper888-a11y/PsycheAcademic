@@ -1,7 +1,9 @@
+import { LocalizedString } from "./psychologyData";
+
 export interface InfluenceTechnique {
   id: string;
-  title: string;
-  description: string;
+  title: string | LocalizedString;
+  description: string | LocalizedString;
   sourceBook: string;
   targetDemographics: {
     ageGroups: string[];
@@ -10,14 +12,22 @@ export interface InfluenceTechnique {
     religions: string[];
     politicalSystems: string[];
   };
-  defensiveStrategy: string;
+  defensiveStrategy: string | LocalizedString;
 }
 
 export const influenceTechniques: InfluenceTechnique[] = [
   {
     id: "social-proof",
-    title: "Bằng chứng xã hội (Social Proof)",
-    description: "Con người có xu hướng làm theo hành động của đám đông khi không chắc chắn.",
+    title: {
+      vi: "Bằng chứng xã hội (Social Proof)",
+      en: "Social Proof",
+      zh: "社会认同"
+    },
+    description: {
+      vi: "Con người có xu hướng làm theo hành động của đám đông khi không chắc chắn.",
+      en: "People tend to follow the crowd's actions when uncertain.",
+      zh: "在不确定时，人们倾向于跟随大众的行为。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -26,12 +36,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Luôn tự đặt câu hỏi: 'Tôi làm điều này vì tôi thực sự muốn, hay vì thấy người khác làm?'"
+    defensiveStrategy: {
+      vi: "Luôn tự đặt câu hỏi: 'Tôi làm điều này vì tôi thực sự muốn, hay vì thấy người khác làm?'",
+      en: "Always ask yourself: 'Am I doing this because I really want to, or because I see others doing it?'",
+      zh: "总是问自己：'我这样做是因为我真的想做，还是因为我看到别人在做？'"
+    }
   },
   {
     id: "scarcity",
-    title: "Sự khan hiếm (Scarcity)",
-    description: "Tạo cảm giác cấp bách bằng cách giới hạn số lượng hoặc thời gian.",
+    title: {
+      vi: "Sự khan hiếm (Scarcity)",
+      en: "Scarcity",
+      zh: "稀缺性"
+    },
+    description: {
+      vi: "Tạo cảm giác cấp bách bằng cách giới hạn số lượng hoặc thời gian.",
+      en: "Creating a sense of urgency by limiting quantity or time.",
+      zh: "通过限制数量或时间来创造紧迫感。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -40,12 +62,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Dừng lại và đánh giá giá trị thực của sản phẩm/dịch vụ thay vì bị cuốn vào nỗi sợ bỏ lỡ (FOMO)."
+    defensiveStrategy: {
+      vi: "Dừng lại và đánh giá giá trị thực của sản phẩm/dịch vụ thay vì bị cuốn vào nỗi sợ bỏ lỡ (FOMO).",
+      en: "Stop and evaluate the true value of the product/service instead of being caught in FOMO.",
+      zh: "停下来评估产品/服务的真实价值，而不是陷入错失恐惧症（FOMO）。"
+    }
   },
   {
     id: "authority",
-    title: "Uy quyền (Authority)",
-    description: "Sử dụng danh xưng, bằng cấp hoặc vẻ ngoài chuyên gia để thuyết phục.",
+    title: {
+      vi: "Uy quyền (Authority)",
+      en: "Authority",
+      zh: "权威"
+    },
+    description: {
+      vi: "Sử dụng danh xưng, bằng cấp hoặc vẻ ngoài chuyên gia để thuyết phục.",
+      en: "Using titles, degrees, or expert appearance to persuade.",
+      zh: "使用头衔、学位或专家外表来劝说。"
+    },
     sourceBook: "48 Laws of Power - Robert Greene",
     targetDemographics: {
       ageGroups: ["Baby Boomers", "Gen X"],
@@ -54,12 +88,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Kiểm chứng thông tin độc lập và không mặc định tin tưởng chỉ vì người đó có vẻ ngoài chuyên gia."
+    defensiveStrategy: {
+      vi: "Kiểm chứng thông tin độc lập và không mặc định tin tưởng chỉ vì người đó có vẻ ngoài chuyên gia.",
+      en: "Verify information independently and don't default to trust just because someone looks like an expert.",
+      zh: "独立验证信息，不要仅仅因为某人看起来像专家就默认信任。"
+    }
   },
   {
     id: "liking",
-    title: "Sự yêu thích (Liking)",
-    description: "Mọi người có xu hướng đồng ý với những yêu cầu từ những người họ yêu thích.",
+    title: {
+      vi: "Sự yêu thích (Liking)",
+      en: "Liking",
+      zh: "喜好"
+    },
+    description: {
+      vi: "Mọi người có xu hướng đồng ý với những yêu cầu từ những người họ yêu thích.",
+      en: "People tend to agree with requests from people they like.",
+      zh: "人们倾向于同意他们喜欢的人提出的请求。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -68,12 +114,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Tách biệt cá nhân khỏi đề xuất. Hãy tập trung vào giá trị thực của yêu cầu, thay vì mức độ yêu thích của bạn đối với người đưa ra yêu cầu."
+    defensiveStrategy: {
+      vi: "Tách biệt cá nhân khỏi đề xuất. Hãy tập trung vào giá trị thực của yêu cầu, thay vì mức độ yêu thích của bạn đối với người đưa ra yêu cầu.",
+      en: "Separate the person from the proposal. Focus on the true value of the request rather than your liking for the person.",
+      zh: "将人与提议分开。关注请求的真实价值，而不是你对那个人的喜爱程度。"
+    }
   },
   {
     id: "reciprocity",
-    title: "Sự đáp trả (Reciprocity)",
-    description: "Mọi người cảm thấy có nghĩa vụ phải trả ơn. Việc trao đi thứ gì đó trước tiên sẽ thúc đẩy sự đáp trả.",
+    title: {
+      vi: "Sự đáp trả (Reciprocity)",
+      en: "Reciprocity",
+      zh: "互惠"
+    },
+    description: {
+      vi: "Mọi người cảm thấy có nghĩa vụ phải trả ơn. Việc trao đi thứ gì đó trước tiên sẽ thúc đẩy sự đáp trả.",
+      en: "People feel obligated to return favors. Giving something first promotes reciprocity.",
+      zh: "人们觉得有义务回报恩惠。先给予一些东西会促进互惠。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -82,12 +140,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện thủ thuật này. Bạn không có nghĩa vụ phải trả ơn, đặc biệt nếu món quà ban đầu là không mong muốn hoặc mang tính thao túng."
+    defensiveStrategy: {
+      vi: "Nhận diện thủ thuật này. Bạn không có nghĩa vụ phải trả ơn, đặc biệt nếu món quà ban đầu là không mong muốn hoặc mang tính thao túng.",
+      en: "Recognize this tactic. You are not obligated to return a favor, especially if the initial gift was unwanted or manipulative.",
+      zh: "识别这种策略。你没有义务回报恩惠，特别是如果最初的礼物是不需要的或具有操纵性的。"
+    }
   },
   {
     id: "respect",
-    title: "Sự tôn trọng (Respect)",
-    description: "Mọi người có xu hướng dễ bị thuyết phục bởi những cá nhân mà họ tôn trọng và coi là có thẩm quyền.",
+    title: {
+      vi: "Sự tôn trọng (Respect)",
+      en: "Respect",
+      zh: "尊重"
+    },
+    description: {
+      vi: "Mọi người có xu hướng dễ bị thuyết phục bởi những cá nhân mà họ tôn trọng và coi là có thẩm quyền.",
+      en: "People tend to be easily persuaded by individuals they respect and perceive as authoritative.",
+      zh: "人们倾向于容易被他们尊重并认为具有权威的人所说服。"
+    },
     sourceBook: "48 Laws of Power - Robert Greene",
     targetDemographics: {
       ageGroups: ["Baby Boomers", "Gen X"],
@@ -96,12 +166,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Xác minh chuyên môn và bằng cấp thực tế của người đó, thay vì chỉ dựa vào địa vị được cảm nhận. Tách biệt cá nhân khỏi thông điệp của họ."
+    defensiveStrategy: {
+      vi: "Xác minh chuyên môn và bằng cấp thực tế của người đó, thay vì chỉ dựa vào địa vị được cảm nhận. Tách biệt cá nhân khỏi thông điệp của họ.",
+      en: "Verify the person's actual expertise and credentials, rather than relying solely on perceived status. Separate the individual from their message.",
+      zh: "验证该人的实际专业知识和资历，而不是仅仅依靠感知到的地位。将个人与其信息分开。"
+    }
   },
   {
     id: "guilt-manipulation",
-    title: "Thao túng bằng cảm giác tội lỗi",
-    description: "Lợi dụng cảm giác tội lỗi hoặc sự sợ hãi về sự trừng phạt của đấng tối cao.",
+    title: {
+      vi: "Thao túng bằng cảm giác tội lỗi",
+      en: "Guilt Manipulation",
+      zh: "内疚操纵"
+    },
+    description: {
+      vi: "Lợi dụng cảm giác tội lỗi hoặc sự sợ hãi về sự trừng phạt của đấng tối cao.",
+      en: "Exploiting guilt or fear of divine punishment.",
+      zh: "利用内疚感或对神圣惩罚的恐惧。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -110,12 +192,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["Thiên chúa giáo", "Do thái giáo", "Hồi giáo"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện sự thao túng cảm xúc. Trả lời bằng lý trí và không để cảm giác tội lỗi chi phối quyết định."
+    defensiveStrategy: {
+      vi: "Nhận diện sự thao túng cảm xúc. Trả lời bằng lý trí và không để cảm giác tội lỗi chi phối quyết định.",
+      en: "Identify emotional manipulation. Respond rationally and don't let guilt dominate your decisions.",
+      zh: "识别情绪操纵。理性回应，不要让内疚感支配你的决定。"
+    }
   },
   {
     id: "fear-of-missing-out-capitalism",
-    title: "Thao túng bằng nỗi sợ bị tụt hậu",
-    description: "Lợi dụng nỗi sợ thua kém về tài chính để thúc đẩy sự tham lam và cạnh tranh không lành mạnh.",
+    title: {
+      vi: "Thao túng bằng nỗi sợ bị tụt hậu",
+      en: "Fear of Lagging Behind",
+      zh: "落后恐惧操纵"
+    },
+    description: {
+      vi: "Lợi dụng nỗi sợ thua kém về tài chính để thúc đẩy sự tham lam và cạnh tranh không lành mạnh.",
+      en: "Exploiting the fear of financial inferiority to drive greed and unfair competition.",
+      zh: "利用财务自卑的恐惧来驱动贪婪和不公平竞争。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -124,12 +218,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Tự đánh giá nhu cầu thực tế và không để nỗi sợ bị tụt hậu ép buộc quyết định tiêu dùng."
+    defensiveStrategy: {
+      vi: "Tự đánh giá nhu cầu thực tế và không để nỗi sợ bị tụt hậu ép buộc quyết định tiêu dùng.",
+      en: "Self-assess actual needs and don't let the fear of lagging behind force consumption decisions.",
+      zh: "自我评估实际需求，不要让落后的恐惧强迫消费决定。"
+    }
   },
   {
     id: "collective-conformity",
-    title: "Thao túng bằng sự đồng thuận tập thể",
-    description: "Lợi dụng tinh thần tập thể, sự sợ hãi bị cô lập khỏi cộng đồng để ép buộc sự đồng thuận.",
+    title: {
+      vi: "Thao túng bằng sự đồng thuận tập thể",
+      en: "Collective Conformity",
+      zh: "集体从众操纵"
+    },
+    description: {
+      vi: "Lợi dụng tinh thần tập thể, sự sợ hãi bị cô lập khỏi cộng đồng để ép buộc sự đồng thuận.",
+      en: "Exploiting collective spirit and the fear of isolation from the community to force consensus.",
+      zh: "利用集体精神和对被社区孤立的恐惧来强迫达成共识。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -138,12 +244,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Xã hội chủ nghĩa"]
     },
-    defensiveStrategy: "Giữ vững quan điểm cá nhân và không để áp lực đồng trang lứa ép buộc phải đồng thuận."
+    defensiveStrategy: {
+      vi: "Giữ vững quan điểm cá nhân và không để áp lực đồng trang lứa ép buộc phải đồng thuận.",
+      en: "Maintain personal views and don't let peer pressure force consensus.",
+      zh: "保持个人观点，不要让同伴压力强迫达成共识。"
+    }
   },
   {
     id: "spiritual-bypassing",
-    title: "Thao túng tâm linh (Spiritual Bypassing)",
-    description: "Lợi dụng giáo lý về nghiệp quả hoặc sự buông bỏ để ép buộc nạn nhân chấp nhận sự áp bức.",
+    title: {
+      vi: "Thao túng tâm linh (Spiritual Bypassing)",
+      en: "Spiritual Bypassing",
+      zh: "灵性逃避操纵"
+    },
+    description: {
+      vi: "Lợi dụng giáo lý về nghiệp quả hoặc sự buông bỏ để ép buộc nạn nhân chấp nhận sự áp bức.",
+      en: "Exploiting doctrines of karma or detachment to force victims to accept oppression.",
+      zh: "利用因果报应或超脱的教义来强迫受害者接受压迫。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -152,12 +270,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["Phật giáo", "Đạo giáo"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Phân biệt giữa sự buông bỏ lành mạnh và việc trốn tránh thực tại. Tỉnh táo trước những kẻ nhân danh tâm linh để trục lợi."
+    defensiveStrategy: {
+      vi: "Phân biệt giữa sự buông bỏ lành mạnh và việc trốn tránh thực tại. Tỉnh táo trước những kẻ nhân danh tâm linh để trục lợi.",
+      en: "Distinguish between healthy detachment and escaping reality. Be alert to those using spirituality for profit.",
+      zh: "区分健康的超脱和逃避现实。警惕那些以灵性之名牟利的人。"
+    }
   },
   {
     id: "appeal-to-tradition",
-    title: "Lợi dụng truyền thống (Appeal to Tradition)",
-    description: "Lợi dụng sự tôn trọng truyền thống, lòng trung thành để che đậy các lợi ích nhóm.",
+    title: {
+      vi: "Lợi dụng truyền thống (Appeal to Tradition)",
+      en: "Appeal to Tradition",
+      zh: "诉诸传统"
+    },
+    description: {
+      vi: "Lợi dụng sự tôn trọng truyền thống, lòng trung thành để che đậy các lợi ích nhóm.",
+      en: "Exploiting respect for tradition and loyalty to cover up group interests.",
+      zh: "利用对传统和忠诚的尊重来掩盖利益集团。"
+    },
     sourceBook: "48 Laws of Power - Robert Greene",
     targetDemographics: {
       ageGroups: ["Baby Boomers", "Gen X"],
@@ -166,12 +296,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Quân chủ lập hiến"]
     },
-    defensiveStrategy: "Phân tích giá trị thực tế của truyền thống thay vì mù quáng tuân theo."
+    defensiveStrategy: {
+      vi: "Phân tích giá trị thực tế của truyền thống thay vì mù quáng tuân theo.",
+      en: "Analyze the practical value of tradition instead of blindly following it.",
+      zh: "分析传统的实际价值，而不是盲目跟随。"
+    }
   },
   {
     id: "fear-based-loyalty",
-    title: "Thao túng bằng sự sợ hãi",
-    description: "Lợi dụng sự sợ hãi cái chết, sự bất ổn để ép buộc sự trung thành tuyệt đối.",
+    title: {
+      vi: "Thao túng bằng sự sợ hãi",
+      en: "Fear-Based Loyalty",
+      zh: "恐惧忠诚操纵"
+    },
+    description: {
+      vi: "Lợi dụng sự sợ hãi cái chết, sự bất ổn để ép buộc sự trung thành tuyệt đối.",
+      en: "Exploiting fear of death and instability to force absolute loyalty.",
+      zh: "利用对死亡和不稳定的恐惧来强迫绝对忠诚。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -180,12 +322,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Phiến quân/Loạn lạc"]
     },
-    defensiveStrategy: "Tìm kiếm sự an toàn và hỗ trợ từ các nguồn tin cậy thay vì bị thao túng bởi sự sợ hãi."
+    defensiveStrategy: {
+      vi: "Tìm kiếm sự an toàn và hỗ trợ từ các nguồn tin cậy thay vì bị thao túng bởi sự sợ hãi.",
+      en: "Seek safety and support from reliable sources instead of being manipulated by fear.",
+      zh: "从可靠来源寻求安全和支持，而不是被恐惧所操纵。"
+    }
   },
   {
     id: "gaslighting-political",
-    title: "Thao túng thực tại (Gaslighting) trong chính trị",
-    description: "Phủ nhận sự thật hiển nhiên, khiến nạn nhân nghi ngờ trí nhớ và nhận thức của bản thân để củng cố quyền lực.",
+    title: {
+      vi: "Thao túng thực tại (Gaslighting) trong chính trị",
+      en: "Political Gaslighting",
+      zh: "政治煤气灯操纵"
+    },
+    description: {
+      vi: "Phủ nhận sự thật hiển nhiên, khiến nạn nhân nghi ngờ trí nhớ và nhận thức của bản thân để củng cố quyền lực.",
+      en: "Denying obvious truths, making victims doubt their own memory and perception to consolidate power.",
+      zh: "否认显而易见的事实，使受害者怀疑自己的记忆和感知，以巩固权力。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -194,12 +348,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Xã hội chủ nghĩa", "Quân chủ lập hiến"]
     },
-    defensiveStrategy: "Ghi chép lại sự kiện, tin tưởng vào trực giác và bằng chứng khách quan thay vì lời nói của kẻ thao túng."
+    defensiveStrategy: {
+      vi: "Ghi chép lại sự kiện, tin tưởng vào trực giác và bằng chứng khách quan thay vì lời nói của kẻ thao túng.",
+      en: "Record events, trust your intuition and objective evidence instead of the manipulator's words.",
+      zh: "记录事件，信任你的直觉和客观证据，而不是操纵者的话。"
+    }
   },
   {
     id: "consumerist-shaming",
-    title: "Thao túng bằng sự xấu hổ tiêu dùng",
-    description: "Tạo ra cảm giác thấp kém nếu không sở hữu sản phẩm/dịch vụ cụ thể, ép buộc người dùng phải mua để khẳng định đẳng cấp.",
+    title: {
+      vi: "Thao túng bằng sự xấu hổ tiêu dùng",
+      en: "Consumerist Shaming",
+      zh: "消费主义羞辱操纵"
+    },
+    description: {
+      vi: "Tạo ra cảm giác thấp kém nếu không sở hữu sản phẩm/dịch vụ cụ thể, ép buộc người dùng phải mua để khẳng định đẳng cấp.",
+      en: "Creating a sense of inferiority if one doesn't own a specific product/service, forcing users to buy to assert status.",
+      zh: "如果不拥有特定的产品/服务，就会产生一种自卑感，强迫用户购买以确立地位。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -208,12 +374,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Tách biệt giá trị bản thân khỏi tài sản vật chất. Nhận diện các thông điệp quảng cáo đánh vào sự tự ti."
+    defensiveStrategy: {
+      vi: "Tách biệt giá trị bản thân khỏi tài sản vật chất. Nhận diện các thông điệp quảng cáo đánh vào sự tự ti.",
+      en: "Separate self-worth from material possessions. Identify advertising messages that target insecurity.",
+      zh: "将自我价值与物质财富分开。识别针对自卑感的广告信息。"
+    }
   },
   {
     id: "nostalgia-manipulation",
-    title: "Thao túng bằng sự hoài niệm (Nostalgia)",
-    description: "Lợi dụng ký ức đẹp đẽ về quá khứ để tạo sự tin tưởng và ép buộc hành vi hiện tại.",
+    title: {
+      vi: "Thao túng bằng sự hoài niệm (Nostalgia)",
+      en: "Nostalgia Manipulation",
+      zh: "怀旧操纵"
+    },
+    description: {
+      vi: "Lợi dụng ký ức đẹp đẽ về quá khứ để tạo sự tin tưởng và ép buộc hành vi hiện tại.",
+      en: "Exploiting beautiful memories of the past to create trust and force current behavior.",
+      zh: "利用过去的美好回忆来建立信任并强迫当前的行为。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Baby Boomers", "Gen X"],
@@ -222,12 +400,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện rằng quá khứ không phải lúc nào cũng tốt đẹp hơn hiện tại. Đánh giá quyết định dựa trên thực tế hiện tại."
+    defensiveStrategy: {
+      vi: "Nhận diện rằng quá khứ không phải lúc nào cũng tốt đẹp hơn hiện tại. Đánh giá quyết định dựa trên thực tế hiện tại.",
+      en: "Recognize that the past is not always better than the present. Evaluate decisions based on current reality.",
+      zh: "认识到过去并不总是比现在更好。根据当前的现实评估决定。"
+    }
   },
   {
     id: "jargon-overload",
-    title: "Thao túng bằng ngôn ngữ kỹ thuật (Jargon Overload)",
-    description: "Sử dụng thuật ngữ chuyên môn phức tạp để làm nạn nhân cảm thấy kém cỏi và buộc phải đồng ý.",
+    title: {
+      vi: "Thao túng bằng ngôn ngữ kỹ thuật (Jargon Overload)",
+      en: "Jargon Overload",
+      zh: "术语超载操纵"
+    },
+    description: {
+      vi: "Sử dụng thuật ngữ chuyên môn phức tạp để làm nạn nhân cảm thấy kém cỏi và buộc phải đồng ý.",
+      en: "Using complex technical terminology to make victims feel inferior and forced to agree.",
+      zh: "使用复杂的专业术语使受害者感到自卑并被迫同意。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -236,12 +426,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Yêu cầu giải thích bằng ngôn ngữ đơn giản. Không ngại thừa nhận nếu không hiểu."
+    defensiveStrategy: {
+      vi: "Yêu cầu giải thích bằng ngôn ngữ đơn giản. Không ngại thừa nhận nếu không hiểu.",
+      en: "Request explanations in simple language. Don't be afraid to admit if you don't understand.",
+      zh: "要求用简单的语言解释。如果不懂，不要害怕承认。"
+    }
   },
   {
     id: "community-pressure",
-    title: "Thao túng bằng áp lực cộng đồng",
-    description: "Lợi dụng sự gắn kết chặt chẽ trong cộng đồng tôn giáo để ép buộc sự tuân thủ.",
+    title: {
+      vi: "Thao túng bằng áp lực cộng đồng",
+      en: "Community Pressure",
+      zh: "社区压力操纵"
+    },
+    description: {
+      vi: "Lợi dụng sự gắn kết chặt chẽ trong cộng đồng tôn giáo để ép buộc sự tuân thủ.",
+      en: "Exploiting tight-knit religious community bonds to force compliance.",
+      zh: "利用紧密的宗教社区纽带强迫服从。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -250,12 +452,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["Hồi giáo", "Do thái giáo"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Giữ vững ranh giới cá nhân. Hiểu rằng sự thuộc về cộng đồng không đồng nghĩa với việc phải từ bỏ chính kiến."
+    defensiveStrategy: {
+      vi: "Giữ vững ranh giới cá nhân. Hiểu rằng sự thuộc về cộng đồng không đồng nghĩa với việc phải từ bỏ chính kiến.",
+      en: "Maintain personal boundaries. Understand that belonging to a community doesn't mean giving up your own views.",
+      zh: "保持个人界限。明白属于一个社区并不意味着放弃自己的观点。"
+    }
   },
   {
     id: "nationalism-manipulation",
-    title: "Thao túng bằng chủ nghĩa dân tộc",
-    description: "Lợi dụng lòng yêu nước để ép buộc sự trung thành và đồng thuận với các chính sách.",
+    title: {
+      vi: "Thao túng bằng chủ nghĩa dân tộc",
+      en: "Nationalism Manipulation",
+      zh: "民族主义操纵"
+    },
+    description: {
+      vi: "Lợi dụng lòng yêu nước để ép buộc sự trung thành và đồng thuận với các chính sách.",
+      en: "Exploiting patriotism to force loyalty and consensus with policies.",
+      zh: "利用爱国主义强迫对政策的忠诚和共识。"
+    },
     sourceBook: "48 Laws of Power - Robert Greene",
     targetDemographics: {
       ageGroups: ["All"],
@@ -264,12 +478,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Xã hội chủ nghĩa", "Tư bản"]
     },
-    defensiveStrategy: "Phân biệt giữa lòng yêu nước chân chính và việc bị lợi dụng bởi các mục đích chính trị."
+    defensiveStrategy: {
+      vi: "Phân biệt giữa lòng yêu nước chân chính và việc bị lợi dụng bởi các mục đích chính trị.",
+      en: "Distinguish between genuine patriotism and being exploited for political purposes.",
+      zh: "区分真正的爱国主义和被政治目的利用。"
+    }
   },
   {
     id: "guilt-tripping",
-    title: "Thao túng bằng cảm giác tội lỗi (Guilt Tripping)",
-    description: "Gây áp lực tâm lý bằng cách khiến nạn nhân cảm thấy mình là nguyên nhân gây ra nỗi đau hoặc sự thất vọng của kẻ thao túng.",
+    title: {
+      vi: "Thao túng bằng cảm giác tội lỗi (Guilt Tripping)",
+      en: "Guilt Tripping",
+      zh: "内疚陷阱"
+    },
+    description: {
+      vi: "Gây áp lực tâm lý bằng cách khiến nạn nhân cảm thấy mình là nguyên nhân gây ra nỗi đau hoặc sự thất vọng của kẻ thao túng.",
+      en: "Exerting psychological pressure by making victims feel they are the cause of the manipulator's pain or disappointment.",
+      zh: "通过让受害者感到自己是操纵者痛苦或失望的原因来施加心理压力。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -278,12 +504,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện hành vi thao túng. Thiết lập ranh giới cá nhân và không chịu trách nhiệm cho cảm xúc của người khác."
+    defensiveStrategy: {
+      vi: "Nhận diện hành vi thao túng. Thiết lập ranh giới cá nhân và không chịu trách nhiệm cho cảm xúc của người khác.",
+      en: "Identify manipulative behavior. Set personal boundaries and don't take responsibility for others' emotions.",
+      zh: "识别操纵行为。设定个人界限，不对他人的情绪负责。"
+    }
   },
   {
     id: "love-bombing",
-    title: "Thao túng bằng sự quan tâm thái quá (Love Bombing)",
-    description: "Tấn công nạn nhân bằng sự quan tâm, khen ngợi và tình cảm dồn dập để tạo sự phụ thuộc.",
+    title: {
+      vi: "Thao túng bằng sự quan tâm thái quá (Love Bombing)",
+      en: "Love Bombing",
+      zh: "爱心炸弹"
+    },
+    description: {
+      vi: "Tấn công nạn nhân bằng sự quan tâm, khen ngợi và tình cảm dồn dập để tạo sự phụ thuộc.",
+      en: "Attacking victims with intense attention, praise, and affection to create dependency.",
+      zh: "以密集的关注、赞美和情感攻击受害者以产生依赖。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -292,12 +530,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Giữ sự tỉnh táo trong các mối quan hệ mới. Nếu mọi thứ tiến triển quá nhanh, hãy chậm lại và quan sát."
+    defensiveStrategy: {
+      vi: "Giữ sự tỉnh táo trong các mối quan hệ mới. Nếu mọi thứ tiến triển quá nhanh, hãy chậm lại và quan sát.",
+      en: "Stay alert in new relationships. If things progress too quickly, slow down and observe.",
+      zh: "在新的关系中保持警惕。如果事情进展太快，慢下来观察。"
+    }
   },
   {
     id: "isolation",
-    title: "Thao túng bằng sự cô lập (Isolation)",
-    description: "Tách biệt nạn nhân khỏi gia đình, bạn bè và các nguồn hỗ trợ để họ chỉ còn phụ thuộc vào kẻ thao túng.",
+    title: {
+      vi: "Thao túng bằng sự cô lập (Isolation)",
+      en: "Isolation",
+      zh: "孤立操纵"
+    },
+    description: {
+      vi: "Tách biệt nạn nhân khỏi gia đình, bạn bè và các nguồn hỗ trợ để họ chỉ còn phụ thuộc vào kẻ thao túng.",
+      en: "Separating victims from family, friends, and support sources so they only depend on the manipulator.",
+      zh: "将受害者与家人、朋友和支持来源分开，使他们只能依靠操纵者。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -306,12 +556,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Duy trì các mối quan hệ xã hội lành mạnh. Cảnh giác khi ai đó cố gắng kiểm soát các mối quan hệ của bạn."
+    defensiveStrategy: {
+      vi: "Duy trì các mối quan hệ xã hội lành mạnh. Cảnh giác khi ai đó cố gắng kiểm soát các mối quan hệ của bạn.",
+      en: "Maintain healthy social relationships. Be alert when someone tries to control your relationships.",
+      zh: "保持健康的社交关系。当有人试图控制你的关系时保持警惕。"
+    }
   },
   {
     id: "flattery",
-    title: "Thao túng bằng sự khen ngợi giả tạo (Flattery)",
-    description: "Sử dụng những lời khen ngợi không chân thành để làm nạn nhân mất cảnh giác và dễ dàng đồng ý với yêu cầu.",
+    title: {
+      vi: "Thao túng bằng sự khen ngợi giả tạo (Flattery)",
+      en: "Flattery",
+      zh: "谄媚操纵"
+    },
+    description: {
+      vi: "Sử dụng những lời khen ngợi không chân thành để làm nạn nhân mất cảnh giác và dễ dàng đồng ý với yêu cầu.",
+      en: "Using insincere praise to lower victims' guard and make them easily agree to requests.",
+      zh: "使用不真诚的赞美来降低受害者的警惕，使他们容易同意请求。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -320,12 +582,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Tỉnh táo trước những lời khen quá mức. Đánh giá xem lời khen có dựa trên thực tế hay không."
+    defensiveStrategy: {
+      vi: "Tỉnh táo trước những lời khen quá mức. Đánh giá xem lời khen có dựa trên thực tế hay không.",
+      en: "Stay alert to excessive praise. Evaluate whether the praise is based on reality.",
+      zh: "对过度的赞美保持警惕。评估赞美是否基于现实。"
+    }
   },
   {
     id: "foot-in-the-door",
-    title: "Thao túng bằng yêu cầu nhỏ (Foot-in-the-door)",
-    description: "Bắt đầu bằng một yêu cầu nhỏ mà nạn nhân dễ dàng đồng ý, sau đó tăng dần mức độ yêu cầu lên.",
+    title: {
+      vi: "Thao túng bằng yêu cầu nhỏ (Foot-in-the-door)",
+      en: "Foot-in-the-door",
+      zh: "登门槛操纵"
+    },
+    description: {
+      vi: "Bắt đầu bằng một yêu cầu nhỏ mà nạn nhân dễ dàng đồng ý, sau đó tăng dần mức độ yêu cầu lên.",
+      en: "Starting with a small request that victims easily agree to, then gradually increasing the level of requests.",
+      zh: "从受害者容易同意的小请求开始，然后逐渐增加请求的级别。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -334,12 +608,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện rằng việc đồng ý với yêu cầu nhỏ không có nghĩa là bạn phải đồng ý với yêu cầu lớn hơn sau đó."
+    defensiveStrategy: {
+      vi: "Nhận diện rằng việc đồng ý với yêu cầu nhỏ không có nghĩa là bạn phải đồng ý với yêu cầu lớn hơn sau đó.",
+      en: "Recognize that agreeing to a small request doesn't mean you have to agree to a larger request later.",
+      zh: "认识到同意一个小请求并不意味着你以后必须同意一个更大的请求。"
+    }
   },
   {
     id: "door-in-the-face",
-    title: "Thao túng bằng sự từ chối (Door-in-the-face)",
-    description: "Đưa ra một yêu cầu quá lớn để bị từ chối, sau đó đưa ra yêu cầu nhỏ hơn (thực tế là mục tiêu chính) để nạn nhân cảm thấy cần phải nhượng bộ.",
+    title: {
+      vi: "Thao túng bằng sự từ chối (Door-in-the-face)",
+      en: "Door-in-the-face",
+      zh: "留面子操纵"
+    },
+    description: {
+      vi: "Đưa ra một yêu cầu quá lớn để bị từ chối, sau đó đưa ra yêu cầu nhỏ hơn (thực tế là mục tiêu chính) để nạn nhân cảm thấy cần phải nhượng bộ.",
+      en: "Making a request too large to be rejected, then making a smaller request (the actual goal) so victims feel the need to concede.",
+      zh: "提出一个大到会被拒绝的请求，然后提出一个小一点的请求（实际目标），使受害者感到需要让步。"
+    },
     sourceBook: "Influence: The Psychology of Persuasion - Robert Cialdini",
     targetDemographics: {
       ageGroups: ["All"],
@@ -348,12 +634,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Đánh giá từng yêu cầu một cách độc lập. Đừng để cảm giác tội lỗi khi từ chối yêu cầu đầu tiên chi phối quyết định của bạn."
+    defensiveStrategy: {
+      vi: "Đánh giá từng yêu cầu một cách độc lập. Đừng để cảm giác tội lỗi khi từ chối yêu cầu đầu tiên chi phối quyết định của bạn.",
+      en: "Evaluate each request independently. Don't let guilt from rejecting the first request dominate your decision.",
+      zh: "独立评估每个请求。不要让拒绝第一个请求的内疚感支配你的决定。"
+    }
   },
   {
     id: "anchoring",
-    title: "Thao túng bằng điểm neo (Anchoring)",
-    description: "Đưa ra một con số hoặc thông tin ban đầu (điểm neo) để làm cơ sở so sánh, khiến các con số sau đó trông có vẻ hợp lý hơn.",
+    title: {
+      vi: "Thao túng bằng điểm neo (Anchoring)",
+      en: "Anchoring",
+      zh: "锚定操纵"
+    },
+    description: {
+      vi: "Đưa ra một con số hoặc thông tin ban đầu (điểm neo) để làm cơ sở so sánh, khiến các con số sau đó trông có vẻ hợp lý hơn.",
+      en: "Providing an initial number or info (anchor) as a basis for comparison, making subsequent numbers look more reasonable.",
+      zh: "提供一个初始数字或信息（锚点）作为比较基础，使随后的数字看起来更合理。"
+    },
     sourceBook: "Thinking, Fast and Slow - Daniel Kahneman",
     targetDemographics: {
       ageGroups: ["All"],
@@ -362,12 +660,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Tự nghiên cứu giá trị thực tế của sản phẩm/dịch vụ thay vì dựa vào con số ban đầu được đưa ra."
+    defensiveStrategy: {
+      vi: "Tự nghiên cứu giá trị thực tế của sản phẩm/dịch vụ thay vì dựa vào con số ban đầu được đưa ra.",
+      en: "Research the actual value of products/services yourself instead of relying on the initial number provided.",
+      zh: "自己研究产品/服务的实际价值，而不是依赖提供的初始数字。"
+    }
   },
   {
     id: "financial-gaslighting",
-    title: "Thao túng thực tại tài chính (Financial Gaslighting)",
-    description: "Khiến nạn nhân nghi ngờ trí nhớ hoặc nhận thức của họ về các thỏa thuận, chi tiêu hoặc tình trạng tài chính chung.",
+    title: {
+      vi: "Thao túng thực tại tài chính (Financial Gaslighting)",
+      en: "Financial Gaslighting",
+      zh: "财务煤气灯操纵"
+    },
+    description: {
+      vi: "Khiến nạn nhân nghi ngờ trí nhớ hoặc nhận thức của họ về các thỏa thuận, chi tiêu hoặc tình trạng tài chính chung.",
+      en: "Making victims doubt their memory or perception of agreements, spending, or general financial status.",
+      zh: "使受害者怀疑他们对协议、支出或一般财务状况的记忆或感知。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Millennials", "Gen X"],
@@ -376,12 +686,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Luôn ghi chép lại các giao dịch tài chính và thỏa thuận bằng văn bản. Tin tưởng vào bằng chứng thực tế thay vì lời nói của đối phương."
+    defensiveStrategy: {
+      vi: "Luôn ghi chép lại các giao dịch tài chính và thỏa thuận bằng văn bản. Tin tưởng vào bằng chứng thực tế thay vì lời nói của đối phương.",
+      en: "Always record financial transactions and agreements in writing. Trust actual evidence instead of the other person's words.",
+      zh: "始终以书面形式记录财务交易和协议。信任实际证据，而不是对方的话。"
+    }
   },
   {
     id: "love-bombing-financial",
-    title: "Dội bom tình cảm bằng vật chất (Love Bombing Financial)",
-    description: "Tặng những món quà đắt tiền dồn dập ngay từ đầu để tạo ra cảm giác nợ nần và nghĩa vụ phải đáp lại.",
+    title: {
+      vi: "Dội bom tình cảm bằng vật chất (Love Bombing Financial)",
+      en: "Love Bombing Financial",
+      zh: "财务爱心炸弹"
+    },
+    description: {
+      vi: "Tặng những món quà đắt tiền dồn dập ngay từ đầu để tạo ra cảm giác nợ nần và nghĩa vụ phải đáp lại.",
+      en: "Giving expensive gifts intensely from the start to create a sense of debt and obligation to reciprocate.",
+      zh: "从一开始就密集赠送昂贵的礼物，以产生债务感和回报义务。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -390,12 +712,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Cảnh giác với những món quà quá lớn so với mức độ thân thiết của mối quan hệ. Hiểu rằng quà tặng không đồng nghĩa với việc bạn phải từ bỏ quyền tự chủ."
+    defensiveStrategy: {
+      vi: "Cảnh giác với những món quà quá lớn so với mức độ thân thiết của mối quan hệ. Hiểu rằng quà tặng không đồng nghĩa với việc bạn phải từ bỏ quyền tự chủ.",
+      en: "Be alert to gifts that are too large compared to the relationship's intimacy. Understand that gifts don't mean giving up autonomy.",
+      zh: "警惕与关系亲密度相比过大的礼物。明白礼物并不意味着放弃自主权。"
+    }
   },
   {
     id: "expert-trap",
-    title: "Bẫy chuyên gia tài chính (The Expert Trap)",
-    description: "Sử dụng thuật ngữ tài chính cực kỳ phức tạp để làm nạn nhân cảm thấy kém cỏi và phải hoàn toàn dựa dẫm vào 'chuyên gia'.",
+    title: {
+      vi: "Bẫy chuyên gia tài chính (The Expert Trap)",
+      en: "The Expert Trap",
+      zh: "专家陷阱"
+    },
+    description: {
+      vi: "Sử dụng thuật ngữ tài chính cực kỳ phức tạp để làm nạn nhân cảm thấy kém cỏi và phải hoàn toàn dựa dẫm vào 'chuyên gia'.",
+      en: "Using extremely complex financial terms to make victims feel inferior and completely dependent on the 'expert'.",
+      zh: "使用极其复杂的财务术语使受害者感到自卑，并完全依赖于“专家”。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -404,12 +738,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Yêu cầu giải thích bằng ngôn ngữ đơn giản. Nếu họ không thể giải thích đơn giản, có thể họ đang cố tình làm khó bạn."
+    defensiveStrategy: {
+      vi: "Yêu cầu giải thích bằng ngôn ngữ đơn giản. Nếu họ không thể giải thích đơn giản, có thể họ đang cố tình làm khó bạn.",
+      en: "Request explanations in simple language. If they can't explain simply, they might be intentionally making it difficult for you.",
+      zh: "要求用简单的语言解释。如果他们不能简单地解释，他们可能是故意让你感到困难。"
+    }
   },
   {
     id: "sunk-cost-emotional",
-    title: "Bẫy chi phí chìm trong tình cảm (Sunk Cost Emotional)",
-    description: "Nhắc nhở nạn nhân về số năm hoặc nỗ lực đã đầu tư vào mối quan hệ để ngăn họ rời bỏ, dù mối quan hệ đó đã độc hại.",
+    title: {
+      vi: "Bẫy chi phí chìm trong tình cảm (Sunk Cost Emotional)",
+      en: "Emotional Sunk Cost",
+      zh: "情感沉没成本陷阱"
+    },
+    description: {
+      vi: "Nhắc nhở nạn nhân về số năm hoặc nỗ lực đã đầu tư vào mối quan hệ để ngăn họ rời bỏ, dù mối quan hệ đó đã độc hại.",
+      en: "Reminding victims of the years or effort invested in a relationship to prevent them from leaving, even if it's toxic.",
+      zh: "提醒受害者在关系中投入的年限或努力，以防止他们离开，即使关系是有毒的。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Millennials", "Gen X", "Baby Boomers"],
@@ -418,12 +764,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Đánh giá mối quan hệ dựa trên giá trị hiện tại và tương lai, thay vì tiếc nuối những gì đã mất trong quá khứ."
+    defensiveStrategy: {
+      vi: "Đánh giá mối quan hệ dựa trên giá trị hiện tại và tương lai, thay vì tiếc nuối những gì đã mất trong quá khứ.",
+      en: "Evaluate the relationship based on current and future value, rather than regretting what was lost in the past.",
+      zh: "根据当前和未来的价值评估关系，而不是遗憾过去失去的东西。"
+    }
   },
   {
     id: "soulmate-illusion",
-    title: "Ảo tưởng về người bạn tâm giao (Soulmate Illusion)",
-    description: "Phản chiếu hoàn hảo những khao khát và giá trị sâu kín nhất của nạn nhân để tạo ra một sự kết nối tức thì và mãnh liệt.",
+    title: {
+      vi: "Ảo tưởng về người bạn tâm giao (Soulmate Illusion)",
+      en: "Soulmate Illusion",
+      zh: "灵魂伴侣幻觉"
+    },
+    description: {
+      vi: "Phản chiếu hoàn hảo những khao khát và giá trị sâu kín nhất của nạn nhân để tạo ra một sự kết nối tức thì và mãnh liệt.",
+      en: "Perfectly mirroring the victim's deepest desires and values to create an instant and intense connection.",
+      zh: "完美地反映受害者最深层的欲望和价值观，以建立即时且强烈的联系。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -432,12 +790,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Dành thời gian để tìm hiểu đối phương thực sự thay vì bị cuốn vào cảm giác 'định mệnh' quá sớm."
+    defensiveStrategy: {
+      vi: "Dành thời gian để tìm hiểu đối phương thực sự thay vì bị cuốn vào cảm giác 'định mệnh' quá sớm.",
+      en: "Take time to truly get to know the other person instead of being swept up in a 'destiny' feeling too early.",
+      zh: "花时间真正了解对方，而不是过早地陷入“命运”的感觉。"
+    }
   },
   {
     id: "triangulation",
-    title: "Kỹ thuật tam giác hóa (Triangulation)",
-    description: "Đưa một người thứ ba vào động lực mối quan hệ để tạo ra sự ghen tuông và cạnh tranh nhằm giành lấy sự chú ý của kẻ thao túng.",
+    title: {
+      vi: "Kỹ thuật tam giác hóa (Triangulation)",
+      en: "Triangulation",
+      zh: "三角测量"
+    },
+    description: {
+      vi: "Đưa một người thứ ba vào động lực mối quan hệ để tạo ra sự ghen tuông và cạnh tranh nhằm giành lấy sự chú ý của kẻ thao túng.",
+      en: "Bringing a third person into the relationship dynamic to create jealousy and competition for the manipulator's attention.",
+      zh: "将第三个人引入关系动态中，以产生嫉妒和竞争，从而争取操纵者的注意。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -446,12 +816,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện rằng sự ghen tuông là một công cụ kiểm soát. Giao tiếp trực tiếp với các bên liên quan thay vì thông qua kẻ thao túng."
+    defensiveStrategy: {
+      vi: "Nhận diện rằng sự ghen tuông là một công cụ kiểm soát. Giao tiếp trực tiếp với các bên liên quan thay vì thông qua kẻ thao túng.",
+      en: "Recognize that jealousy is a control tool. Communicate directly with the parties involved instead of through the manipulator.",
+      zh: "认识到嫉妒是一种控制工具。直接与相关各方沟通，而不是通过操纵者。"
+    }
   },
   {
     id: "intermittent-reinforcement",
-    title: "Củng cố gián đoạn (Intermittent Reinforcement)",
-    description: "Cung cấp tình cảm hoặc phần thưởng một cách không thể đoán trước để tạo ra một chu kỳ gây nghiện trong việc tìm kiếm sự chấp thuận.",
+    title: {
+      vi: "Củng cố gián đoạn (Intermittent Reinforcement)",
+      en: "Intermittent Reinforcement",
+      zh: "间歇性强化"
+    },
+    description: {
+      vi: "Cung cấp tình cảm hoặc phần thưởng một cách không thể đoán trước để tạo ra một chu kỳ gây nghiện trong việc tìm kiếm sự chấp thuận.",
+      en: "Providing affection or rewards unpredictably to create an addictive cycle of seeking approval.",
+      zh: "不可预测地提供情感或奖励，以建立寻求认可的成瘾循环。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -460,12 +842,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nhận diện mô thức 'nóng - lạnh'. Đánh giá mối quan hệ dựa trên sự ổn định và tôn trọng nhất quán."
+    defensiveStrategy: {
+      vi: "Nhận diện mô thức 'nóng - lạnh'. Đánh giá mối quan hệ dựa trên sự ổn định và tôn trọng nhất quán.",
+      en: "Identify the 'hot-cold' pattern. Evaluate the relationship based on stability and consistent respect.",
+      zh: "识别“忽冷忽热”的模式。根据稳定性和一致的尊重评估关系。"
+    }
   },
   {
     id: "damsel-in-distress-financial",
-    title: "Kịch bản 'Nạn nhân tài chính' (Damsel in Distress)",
-    description: "Đóng vai nạn nhân của sự không may mắn về tài chính để yêu cầu các khoản vay hoặc sự hỗ trợ mà không bao giờ có ý định trả lại.",
+    title: {
+      vi: "Kịch bản 'Nạn nhân tài chính' (Damsel in Distress)",
+      en: "Financial 'Damsel in Distress'",
+      zh: "财务“受难少女”"
+    },
+    description: {
+      vi: "Đóng vai nạn nhân của sự không may mắn về tài chính để yêu cầu các khoản vay hoặc sự hỗ trợ mà không bao giờ có ý định trả lại.",
+      en: "Playing the victim of financial misfortune to request loans or support with no intention of paying back.",
+      zh: "扮演财务不幸的受害者，请求贷款或支持，却从未打算偿还。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -474,12 +868,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Chỉ cho vay số tiền mà bạn sẵn sàng mất. Kiểm chứng các câu chuyện về sự khó khăn trước khi hỗ trợ tài chính lớn."
+    defensiveStrategy: {
+      vi: "Chỉ cho vay số tiền mà bạn sẵn sàng mất. Kiểm chứng các câu chuyện về sự khó khăn trước khi hỗ trợ tài chính lớn.",
+      en: "Only lend money you're willing to lose. Verify stories of hardship before providing large financial support.",
+      zh: "只借出你愿意损失的钱。在提供重大财务支持之前核实困难故事。"
+    }
   },
   {
     id: "bait-and-switch-relationship",
-    title: "Mồi nhử và hoán đổi trong tình cảm (Bait and Switch)",
-    description: "Thể hiện một nhân cách hoàn hảo ban đầu, sau đó từ từ bộc lộ bản chất kiểm soát hoặc lạm dụng khi nạn nhân đã cam kết.",
+    title: {
+      vi: "Mồi nhử và hoán đổi trong tình cảm (Bait and Switch)",
+      en: "Emotional Bait and Switch",
+      zh: "情感诱导转向"
+    },
+    description: {
+      vi: "Thể hiện một nhân cách hoàn hảo ban đầu, sau đó từ từ bộc lộ bản chất kiểm soát hoặc lạm dụng khi nạn nhân đã cam kết.",
+      en: "Showing a perfect personality initially, then slowly revealing a controlling or abusive nature once the victim is committed.",
+      zh: "最初表现出完美的人格，一旦受害者做出承诺，就慢慢暴露出控制或虐待的本质。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -488,12 +894,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Chú ý đến những thay đổi nhỏ trong hành vi. Đừng phớt lờ những 'cờ đỏ' (red flags) chỉ vì những ấn tượng tốt ban đầu."
+    defensiveStrategy: {
+      vi: "Chú ý đến những thay đổi nhỏ trong hành vi. Đừng phớt lờ những 'cờ đỏ' (red flags) chỉ vì những ấn tượng tốt ban đầu.",
+      en: "Pay attention to small changes in behavior. Don't ignore 'red flags' just because of good initial impressions.",
+      zh: "注意行为的微小变化。不要仅仅因为最初的好印象就忽视“红旗”（警告信号）。"
+    }
   },
   {
     id: "future-faking",
-    title: "Vẽ ra tương lai ảo (Future Faking)",
-    description: "Lập ra những kế hoạch chi tiết cho tương lai (kết hôn, du lịch, kinh doanh) để giữ nạn nhân đầu tư vào hiện tại dù không có ý định thực hiện.",
+    title: {
+      vi: "Vẽ ra tương lai ảo (Future Faking)",
+      en: "Future Faking",
+      zh: "虚假未来"
+    },
+    description: {
+      vi: "Lập ra những kế hoạch chi tiết cho tương lai (kết hôn, du lịch, kinh doanh) để giữ nạn nhân đầu tư vào hiện tại dù không có ý định thực hiện.",
+      en: "Making detailed plans for the future (marriage, travel, business) to keep the victim invested in the present despite no intention of following through.",
+      zh: "制定详细的未来计划（结婚、旅行、商务），以使受害者在目前保持投入，尽管没有打算付诸实施。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -502,12 +920,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Đánh giá đối phương dựa trên hành động hiện tại thay vì những lời hứa hẹn xa vời."
+    defensiveStrategy: {
+      vi: "Đánh giá đối phương dựa trên hành động hiện tại thay vì những lời hứa hẹn xa vời.",
+      en: "Evaluate the other person based on current actions instead of distant promises.",
+      zh: "根据当前的行动而不是遥远的承诺来评估对方。"
+    }
   },
   {
     id: "digital-isolation",
-    title: "Cô lập kỹ thuật số (Digital Isolation)",
-    description: "Kiểm soát các tương tác trên mạng xã hội và dấu chân kỹ thuật số của nạn nhân để hạn chế ảnh hưởng từ bên ngoài.",
+    title: {
+      vi: "Cô lập kỹ thuật số (Digital Isolation)",
+      en: "Digital Isolation",
+      zh: "数字孤立"
+    },
+    description: {
+      vi: "Kiểm soát các tương tác trên mạng xã hội và dấu chân kỹ thuật số của nạn nhân để hạn chế ảnh hưởng từ bên ngoài.",
+      en: "Controlling the victim's social media interactions and digital footprint to limit outside influence.",
+      zh: "控制受害者的社交媒体互动和数字足迹，以限制外部影响。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -516,12 +946,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Giữ quyền kiểm soát mật khẩu và tài khoản cá nhân. Duy trì các kết nối trực tuyến độc lập với đối phương."
+    defensiveStrategy: {
+      vi: "Giữ quyền kiểm soát mật khẩu và tài khoản cá nhân. Duy trì các kết nối trực tuyến độc lập với đối phương.",
+      en: "Maintain control of passwords and personal accounts. Keep independent online connections from the other person.",
+      zh: "保持对密码和个人账户的控制。保持与对方独立的在线连接。"
+    }
   },
   {
     id: "inheritance-guilt",
-    title: "Thao túng bằng quyền thừa kế (Inheritance Guilt)",
-    description: "Sử dụng di sản gia đình hoặc quyền thừa kế như một công cụ để kiểm soát hành vi và lựa chọn của thế hệ trẻ.",
+    title: {
+      vi: "Thao túng bằng quyền thừa kế (Inheritance Guilt)",
+      en: "Inheritance Guilt",
+      zh: "继承权内疚操纵"
+    },
+    description: {
+      vi: "Sử dụng di sản gia đình hoặc quyền thừa kế như một công cụ để kiểm soát hành vi và lựa chọn của thế hệ trẻ.",
+      en: "Using family legacy or inheritance rights as a tool to control the behavior and choices of the younger generation.",
+      zh: "利用家族遗产或继承权作为控制年轻一代行为和选择的工具。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -530,12 +972,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Xây dựng sự độc lập tài chính. Hiểu rằng quyền tự do cá nhân quan trọng hơn các lời hứa về tài sản tương lai."
+    defensiveStrategy: {
+      vi: "Xây dựng sự độc lập tài chính. Hiểu rằng quyền tự do cá nhân quan trọng hơn các lời hứa về tài sản tương lai.",
+      en: "Build financial independence. Understand that personal freedom is more important than promises of future assets.",
+      zh: "建立财务独立。明白个人自由比未来资产的承诺更重要。"
+    }
   },
   {
     id: "charity-manipulation",
-    title: "Thao túng bằng lòng trắc ẩn (Charity Manipulation)",
-    description: "Lợi dụng lòng vị tha của nạn nhân để kêu gọi quyên góp cho các mục đích giả tạo hoặc tự phục vụ.",
+    title: {
+      vi: "Thao túng bằng lòng trắc ẩn (Charity Manipulation)",
+      en: "Charity Manipulation",
+      zh: "慈善操纵"
+    },
+    description: {
+      vi: "Lợi dụng lòng vị tha của nạn nhân để kêu gọi quyên góp cho các mục đích giả tạo hoặc tự phục vụ.",
+      en: "Exploiting the victim's altruism to call for donations for fake or self-serving purposes.",
+      zh: "利用受害者的利他主义，为虚假或自私的目的呼吁捐款。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -544,12 +998,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Kiểm tra tính minh bạch của các tổ chức từ thiện. Đừng để cảm xúc nhất thời ép buộc việc quyên góp."
+    defensiveStrategy: {
+      vi: "Kiểm tra tính minh bạch của các tổ chức từ thiện. Đừng để cảm xúc nhất thời ép buộc việc quyên góp.",
+      en: "Check the transparency of charitable organizations. Don't let temporary emotions force donations.",
+      zh: "检查慈善机构的透明度。不要让暂时的情绪强迫捐款。"
+    }
   },
   {
     id: "exclusive-club",
-    title: "Bẫy 'Câu lạc bộ đặc quyền' (Exclusive Club)",
-    description: "Tạo ra cảm giác thuộc về một nhóm tinh hoa yêu cầu sự hy sinh về tài chính hoặc cá nhân để duy trì vị thế.",
+    title: {
+      vi: "Bẫy 'Câu lạc bộ đặc quyền' (Exclusive Club)",
+      en: "Exclusive Club Trap",
+      zh: "“特权俱乐部”陷阱"
+    },
+    description: {
+      vi: "Tạo ra cảm giác thuộc về một nhóm tinh hoa yêu cầu sự hy sinh về tài chính hoặc cá nhân để duy trì vị thế.",
+      en: "Creating a sense of belonging to an elite group that requires financial or personal sacrifice to maintain status.",
+      zh: "建立一种属于精英阶层的归属感，这种归属感需要财务或个人牺牲来维持地位。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Millennials", "Gen X"],
@@ -558,12 +1024,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản"]
     },
-    defensiveStrategy: "Đánh giá giá trị thực sự của nhóm so với những gì bạn phải đánh đổi. Đừng để cái tôi bị thao túng bởi sự 'đặc quyền'."
+    defensiveStrategy: {
+      vi: "Đánh giá giá trị thực sự của nhóm so với những gì bạn phải đánh đổi. Đừng để cái tôi bị thao túng bởi sự 'đặc quyền'.",
+      en: "Evaluate the group's real value compared to what you have to trade off. Don't let your ego be manipulated by 'privilege'.",
+      zh: "评估该群体的真实价值与你必须付出的代价。不要让你的自尊被“特权”所操纵。"
+    }
   },
   {
     id: "induced-poverty-fear",
-    title: "Gieo rắc nỗi sợ nghèo đói (Induced Poverty Fear)",
-    description: "Phóng đại sự bất ổn kinh tế để ép buộc nạn nhân đưa ra các quyết định tài chính rủi ro cao hoặc bị bóc lột.",
+    title: {
+      vi: "Gieo rắc nỗi sợ nghèo đói (Induced Poverty Fear)",
+      en: "Induced Poverty Fear",
+      zh: "贫困恐惧操纵"
+    },
+    description: {
+      vi: "Phóng đại sự bất ổn kinh tế để ép buộc nạn nhân đưa ra các quyết định tài chính rủi ro cao hoặc bị bóc lột.",
+      en: "Exaggerating economic instability to force victims to make high-risk financial decisions or be exploited.",
+      zh: "夸大经济不稳定，强迫受害者做出高风险的财务决定或被剥削。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -572,12 +1050,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["Tư bản", "Xã hội chủ nghĩa"]
     },
-    defensiveStrategy: "Tìm kiếm thông tin kinh tế từ nhiều nguồn khách quan. Xây dựng quỹ dự phòng để giảm bớt nỗi sợ hãi."
+    defensiveStrategy: {
+      vi: "Tìm kiếm thông tin kinh tế từ nhiều nguồn khách quan. Xây dựng quỹ dự phòng để giảm bớt nỗi sợ hãi.",
+      en: "Seek economic info from multiple objective sources. Build a reserve fund to reduce fear.",
+      zh: "从多个客观来源寻求经济信息。建立储备基金以减少恐惧。"
+    }
   },
   {
     id: "hero-complex",
-    title: "Phức cảm anh hùng (Hero Complex)",
-    description: "Tự định vị mình là người duy nhất có thể cứu nạn nhân khỏi các vấn đề của họ, tạo ra sự phụ thuộc tuyệt đối.",
+    title: {
+      vi: "Phức cảm anh hùng (Hero Complex)",
+      en: "Hero Complex",
+      zh: "英雄情结"
+    },
+    description: {
+      vi: "Tự định vị mình là người duy nhất có thể cứu nạn nhân khỏi các vấn đề của họ, tạo ra sự phụ thuộc tuyệt đối.",
+      en: "Positioning oneself as the only person who can save the victim from their problems, creating absolute dependency.",
+      zh: "将自己定位为唯一能将受害者从问题中解救出来的人，从而产生绝对的依赖。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -586,12 +1076,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Phát triển kỹ năng giải quyết vấn đề cá nhân. Nhận diện rằng không ai có thể là 'vị cứu tinh' duy nhất của bạn."
+    defensiveStrategy: {
+      vi: "Phát triển kỹ năng giải quyết vấn đề cá nhân. Nhận diện rằng không ai có thể là 'vị cứu tinh' duy nhất của bạn.",
+      en: "Develop personal problem-solving skills. Recognize that no one can be your only 'savior'.",
+      zh: "培养个人解决问题的能力。认识到没有人能成为你唯一的“救世主”。"
+    }
   },
   {
     id: "emotional-blackmail-love",
-    title: "Tống tiền cảm ứng trong tình yêu (Emotional Blackmail)",
-    description: "Đe dọa chấm dứt mối quan hệ hoặc tự làm hại bản thân nếu nạn nhân không tuân theo các yêu cầu.",
+    title: {
+      vi: "Tống tiền cảm ứng trong tình yêu (Emotional Blackmail)",
+      en: "Emotional Blackmail",
+      zh: "情感勒索"
+    },
+    description: {
+      vi: "Đe dọa chấm dứt mối quan hệ hoặc tự làm hại bản thân nếu nạn nhân không tuân theo các yêu cầu.",
+      en: "Threatening to end the relationship or self-harm if the victim doesn't comply with requests.",
+      zh: "如果受害者不遵守要求，就威胁要结束关系或自残。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -600,12 +1102,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Không nhượng bộ trước các lời đe dọa. Khuyến khích đối phương tìm kiếm sự trợ giúp chuyên môn nếu họ đe dọa tự hại."
+    defensiveStrategy: {
+      vi: "Không nhượng bộ trước các lời đe dọa. Khuyến khích đối phương tìm kiếm sự trợ giúp chuyên môn nếu họ đe dọa tự hại.",
+      en: "Don't give in to threats. Encourage the other person to seek professional help if they threaten self-harm.",
+      zh: "不要屈服于威胁。如果对方威胁要自残，鼓励他们寻求专业帮助。"
+    }
   },
   {
     id: "shadow-influence",
-    title: "Ảnh hưởng bóng tối (Shadow Influence)",
-    description: "Sử dụng các gợi ý tinh tế, gián tiếp và thao túng môi trường để thay đổi hành vi của nạn nhân mà họ không hề hay biết.",
+    title: {
+      vi: "Ảnh hưởng bóng tối (Shadow Influence)",
+      en: "Shadow Influence",
+      zh: "影子影响"
+    },
+    description: {
+      vi: "Sử dụng các gợi ý tinh tế, gián tiếp và thao túng môi trường để thay đổi hành vi của nạn nhân mà họ không hề hay biết.",
+      en: "Using subtle, indirect suggestions and environment manipulation to change the victim's behavior without them knowing.",
+      zh: "使用微妙、间接的建议和环境操纵，在受害者不知情的情况下改变其行为。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -614,12 +1128,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Nâng cao sự tự nhận thức về các mô thức hành vi của bản thân. Đặt câu hỏi khi thấy mình thay đổi thói quen một cách đột ngột."
+    defensiveStrategy: {
+      vi: "Nâng cao sự tự nhận thức về các mô thức hành vi của bản thân. Đặt câu hỏi khi thấy mình thay đổi thói quen một cách đột ngột.",
+      en: "Increase self-awareness of your own behavior patterns. Ask questions when you see yourself suddenly changing habits.",
+      zh: "增加对自身行为模式的自我意识。当你发现自己突然改变习惯时，提出问题。"
+    }
   },
   {
     id: "information-asymmetry-money",
-    title: "Bất đối xứng thông tin tài chính (Information Asymmetry)",
-    description: "Cố tình giữ kín hoặc làm phức tạp hóa thông tin tài chính để duy trì quyền lực trong mối quan hệ đối tác hoặc gia đình.",
+    title: {
+      vi: "Bất đối xứng thông tin tài chính (Information Asymmetry)",
+      en: "Financial Information Asymmetry",
+      zh: "财务信息不对称"
+    },
+    description: {
+      vi: "Cố tình giữ kín hoặc làm phức tạp hóa thông tin tài chính để duy trì quyền lực trong mối quan hệ đối tác hoặc gia đình.",
+      en: "Intentionally keeping financial info secret or complicated to maintain power in partnerships or families.",
+      zh: "故意保持财务信息秘密或复杂化，以维持在合伙关系或家庭中的权力。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["All"],
@@ -628,12 +1154,24 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Yêu cầu sự minh bạch tuyệt đối trong các vấn đề tài chính chung. Tự học các kiến thức cơ bản về quản lý tài chính."
+    defensiveStrategy: {
+      vi: "Yêu cầu sự minh bạch tuyệt đối trong các vấn đề tài chính chung. Tự học các kiến thức cơ bản về quản lý tài chính.",
+      en: "Request absolute transparency in joint financial matters. Self-study basic financial management knowledge.",
+      zh: "要求在共同财务事项中绝对透明。自学基本的财务管理知识。"
+    }
   },
   {
     id: "legacy-trap",
-    title: "Bẫy di sản (Legacy Trap)",
-    description: "Gây áp lực buộc ai đó phải tuân theo một con đường hoặc sự nghiệp cụ thể để 'tôn vinh' truyền thống hoặc kỳ vọng của gia đình.",
+    title: {
+      vi: "Bẫy di sản (Legacy Trap)",
+      en: "Legacy Trap",
+      zh: "遗产陷阱"
+    },
+    description: {
+      vi: "Gây áp lực buộc ai đó phải tuân theo một con đường hoặc sự nghiệp cụ thể để 'tôn vinh' truyền thống hoặc kỳ vọng của gia đình.",
+      en: "Pressuring someone to follow a specific path or career to 'honor' family traditions or expectations.",
+      zh: "施加压力，迫使某人遵循特定的道路或职业，以“纪念”家庭传统或期望。"
+    },
     sourceBook: "Dark Psychology - Various",
     targetDemographics: {
       ageGroups: ["Gen Z", "Millennials"],
@@ -642,6 +1180,10 @@ export const influenceTechniques: InfluenceTechnique[] = [
       religions: ["All"],
       politicalSystems: ["All"]
     },
-    defensiveStrategy: "Xác định giá trị và đam mê cá nhân. Hiểu rằng cuộc đời bạn thuộc về bạn, không phải là phần mở rộng của thế hệ trước."
+    defensiveStrategy: {
+      vi: "Xác định giá trị và đam mê cá nhân. Hiểu rằng cuộc đời bạn thuộc về bạn, không phải là phần mở rộng của thế hệ trước.",
+      en: "Identify personal values and passions. Understand that your life belongs to you, not an extension of the previous generation.",
+      zh: "确定个人价值和激情。明白你的生活属于你，而不是上一代的延伸。"
+    }
   }
 ];

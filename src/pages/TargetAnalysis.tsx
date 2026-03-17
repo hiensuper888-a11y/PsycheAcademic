@@ -18,8 +18,8 @@ interface TargetProfile {
   syndrome: string;
 }
 
-const religions = ['Phật giáo', 'Ấn độ giáo', 'Thiên chúa giáo', 'Không tôn giáo', 'Đạo giáo', 'Do thái giáo', 'Hồi giáo'];
-const politicalSystems = ['Xã hội chủ nghĩa', 'Tư bản', 'Quân chủ lập hiến', 'Phiến quân/Loạn lạc'];
+const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
+const politicalSystems = ['socialism', 'capitalism', 'constitutionalMonarchy', 'rebel'];
 
 export const TargetAnalysis: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -50,6 +50,12 @@ export const TargetAnalysis: React.FC = () => {
     if (showPlan === id) setShowPlan(null);
   };
 
+  const getLocalized = (obj: any) => {
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    return obj[i18n.language] || obj['vi'] || '';
+  };
+
   const getInfluenceStrategy = (target: Partial<TargetProfile>) => {
     const age = parseInt(target.age || '0');
     const gender = target.gender;
@@ -59,8 +65,8 @@ export const TargetAnalysis: React.FC = () => {
     const politicalSystem = target.politicalSystem;
     
     let strategy = {
-      vulnerability: "Chưa đủ thông tin",
-      technique: "Chưa xác định",
+      vulnerability: t('targetAnalysis.strategy.noInfo'),
+      technique: t('targetAnalysis.strategy.undefined'),
       plan: [] as string[],
       suggestedSyndromes: [] as { name: string, instruction: string }[]
     };
@@ -76,129 +82,129 @@ export const TargetAnalysis: React.FC = () => {
 
     // Age-based suggestions
     if (age > 0 && age < 25) {
-      suggest("Imposter Syndrome", "Khen ngợi nỗ lực cá nhân để giảm bớt sự tự ti, sau đó dẫn dắt họ vào các thử thách mới mà bạn kiểm soát.");
-      suggest("FOMO", "Tạo ra các sự kiện 'giới hạn' hoặc 'độc quyền' để kích thích sự tham gia bốc đồng.");
+      suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
+      suggest("FOMO", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
-      suggest("Dunning-Kruger Effect", "Để họ tin rằng họ là chuyên gia, sau đó nhờ họ 'tư vấn' cho các quyết định mà bạn đã định sẵn.");
-      suggest("Sunk Cost Fallacy", "Nhắc lại những gì họ đã đầu tư (thời gian, tiền bạc) để ép họ tiếp tục theo đuổi mục tiêu của bạn.");
+      suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
+      suggest("Sunk Cost Fallacy", t('targetAnalysis.strategy.sunkCostInstruction'));
     }
 
     // Job-based suggestions
-    if (job.includes('quản lý') || job.includes('lãnh đạo')) {
-      suggest("Halo Effect", "Xây dựng hình ảnh chuyên nghiệp, đạo mạo để họ tin tưởng bạn vô điều kiện.");
-      suggest("Confirmation Bias", "Cung cấp các báo cáo củng cố niềm tin hiện tại của họ để họ phê duyệt các kế hoạch của bạn.");
-    } else if (job.includes('kỹ thuật') || job.includes('it')) {
-      suggest("Barnum Effect", "Sử dụng các phân tích có vẻ logic nhưng thực chất là chung chung để họ thấy bạn thấu hiểu họ.");
-    } else if (job.includes('nghệ thuật') || job.includes('sáng tạo')) {
-      suggest("Stendhal Syndrome", "Sử dụng các tác phẩm nghệ thuật hoặc không gian thẩm mỹ cực đoan để làm họ choáng ngợp và mất cảnh giác.");
+    if (job.includes('quản lý') || job.includes('lãnh đạo') || job.includes('management') || job.includes('leader')) {
+      suggest("Halo Effect", t('targetAnalysis.strategy.haloInstructionFull'));
+      suggest("Confirmation Bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
+    } else if (job.includes('kỹ thuật') || job.includes('it') || job.includes('tech')) {
+      suggest("Barnum Effect", t('targetAnalysis.strategy.barnumInstruction'));
+    } else if (job.includes('nghệ thuật') || job.includes('sáng tạo') || job.includes('art') || job.includes('creative')) {
+      suggest("Stendhal Syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
     }
 
     // Religion-based suggestions
-    if (religion && religion !== 'Không tôn giáo') {
-      suggest("Jerusalem Syndrome", "Sử dụng các biểu tượng hoặc ngôn từ tâm linh để tạo ra sự kết nối định mệnh.");
-      suggest("Authority Bias", "Trích dẫn các giáo lý hoặc nhân vật có uy tín trong tôn giáo của họ để tạo sức nặng cho yêu cầu.");
+    if (religion && religion !== 'none') {
+      suggest("Jerusalem Syndrome", t('targetAnalysis.strategy.jerusalemInstruction'));
+      suggest("Authority Bias", t('targetAnalysis.strategy.authorityInstructionFull'));
     }
 
     // Political-based suggestions
-    if (politicalSystem === 'Xã hội chủ nghĩa') {
-      suggest("Bandwagon Effect", "Nhấn mạnh vào lợi ích tập thể và sự đồng thuận của đa số.");
-    } else if (politicalSystem === 'Tư bản') {
-      suggest("IKEA Effect", "Để họ tham gia vào quá trình xây dựng giải pháp để họ cảm thấy sở hữu và bảo vệ nó.");
+    if (politicalSystem === 'socialism') {
+      suggest("Bandwagon Effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
+    } else if (politicalSystem === 'capitalism') {
+      suggest("IKEA Effect", t('targetAnalysis.strategy.ikeaInstruction'));
     }
 
     // Age & Gender based logic
     if (age > 0 && age < 25) {
       strategy.vulnerability = gender === 'female' 
-        ? "Nhu cầu thuộc về nhóm và sự thấu cảm cao." 
-        : "Cái tôi mới lớn và nhu cầu khẳng định vị thế.";
-      strategy.technique = "Bằng chứng xã hội (Social Proof) & FOMO.";
-      strategy.plan.push("Sử dụng áp lực đồng lứa: 'Mọi người trong nhóm đều đang làm vậy'.");
+        ? t('targetAnalysis.strategy.vulnerability.femaleYoung') 
+        : t('targetAnalysis.strategy.vulnerability.maleYoung');
+      strategy.technique = t('targetAnalysis.strategy.technique.young');
+      strategy.plan.push(t('targetAnalysis.strategy.plan.young'));
     } else if (age >= 25 && age <= 50) {
       strategy.vulnerability = gender === 'female'
-        ? "Cân bằng giữa gia đình/sự nghiệp và nỗi sợ không hoàn hảo."
-        : "Áp lực thành công tài chính và sự công nhận chuyên môn.";
-      strategy.technique = "Sự nhất quán (Consistency) & Định khung (Framing).";
-      strategy.plan.push("Gắn kết yêu cầu với giá trị cốt lõi hoặc mục tiêu dài hạn của họ.");
+        ? t('targetAnalysis.strategy.vulnerability.femaleMid')
+        : t('targetAnalysis.strategy.vulnerability.maleMid');
+      strategy.technique = t('targetAnalysis.strategy.technique.mid');
+      strategy.plan.push(t('targetAnalysis.strategy.plan.mid'));
     } else if (age > 50) {
-      strategy.vulnerability = "Sự an toàn, sức khỏe và tôn trọng kinh nghiệm cá nhân.";
-      strategy.technique = "Uy tín (Authority) & Sự thấu cảm giả tạo.";
-      strategy.plan.push("Sử dụng các dẫn chứng từ chuyên gia hoặc số liệu lịch sử.");
+      strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.old');
+      strategy.technique = t('targetAnalysis.strategy.technique.old');
+      strategy.plan.push(t('targetAnalysis.strategy.plan.old'));
     }
 
     // Job-based logic integration (20 jobs)
     if (job) {
       const jobMap = [
-        { keys: ['kinh doanh', 'bán hàng', 'sales', 'marketing'], tech: "Cánh cửa đập vào mặt & Sự khan hiếm", plan: ["Đưa ra đề nghị cực đoan trước để họ từ chối, sau đó đưa ra yêu cầu thực sự.", "Tạo cảm giác 'cơ hội cuối cùng' để kích hoạt bản năng săn đón."] },
-        { keys: ['kỹ thuật', 'it', 'lập trình', 'kỹ sư'], tech: "Con đường trung tâm (ELM) & Dữ liệu định khung", plan: ["Sử dụng dữ liệu logic, biểu đồ và phân tích sâu để thuyết phục.", "Cung cấp các số liệu đã được chọn lọc (cherry-picking) để họ tự đưa ra kết luận."] },
-        { keys: ['giáo dục', 'giáo viên', 'giảng viên'], tech: "Sự thấu cảm & Trách nhiệm đạo đức", plan: ["Khai thác lòng trắc ẩn và tinh thần trách nhiệm cộng đồng.", "Định khung yêu cầu như một hành động giúp đỡ học sinh hoặc xã hội."] },
-        { keys: ['y tế', 'bác sĩ', 'điều dưỡng', 'nha sĩ'], tech: "Hội chứng đấng cứu thế & Áp lực thời gian", plan: ["Tạo ra tình huống khẩn cấp giả tạo để họ không kịp suy nghĩ logic.", "Đóng vai nạn nhân cần sự cứu rỗi khẩn thiết từ chuyên môn của họ."] },
-        { keys: ['quản lý', 'lãnh đạo', 'giám đốc', 'ceo'], tech: "Sự nhất quán & Tôn vinh quyền lực", plan: ["Để họ tự đưa ra kết luận: 'Với tầm nhìn của bạn, tôi tin bạn đã thấy...'.", "Gắn kết yêu cầu với việc duy trì hình ảnh quyền lực và sự nhất quán của họ."] },
-        { keys: ['nghệ thuật', 'sáng tạo', 'thiết kế', 'họa sĩ'], tech: "Cảm xúc quá tải & Neo tâm lý", plan: ["Sử dụng ngôn từ giàu hình ảnh và tác động mạnh vào cảm giác.", "Tạo ra một không gian trải nghiệm độc đáo để làm suy yếu khả năng phòng vệ logic."] },
-        { keys: ['tài chính', 'kế toán', 'ngân hàng', 'kiểm toán'], tech: "Nỗi sợ mất mát (Loss Aversion) & Mỏ neo con số", plan: ["Nhấn mạnh vào những gì họ sẽ 'mất' (tiền bạc, cơ hội) nếu không thực hiện.", "Đưa ra một con số mỏ neo cực cao ban đầu để làm các con số sau có vẻ hợp lý."] },
-        { keys: ['nhân sự', 'hr', 'tuyển dụng'], tech: "Sự thấu cảm giả tạo", plan: ["Chia sẻ một bí mật giả tạo để kích hoạt nguyên tắc 'Có qua có lại' trong giao tiếp.", "Đóng vai người đang tìm kiếm sự định hướng nghề nghiệp."] },
-        { keys: ['luật sư', 'pháp lý', 'công chứng'], tech: "Chi tiết vụn vặt (Red Herring) & Kiệt sức nhận thức", plan: ["Cung cấp quá nhiều thông tin nhiễu để làm cạn kiệt tài nguyên nhận thức của họ.", "Đánh lạc hướng khỏi vấn đề chính bằng các tiểu tiết không quan trọng."] },
-        { keys: ['dịch vụ', 'cskh', 'nhà hàng', 'khách sạn'], tech: "Bạo hành tâm lý (Gaslighting) & Kiệt sức cảm xúc", plan: ["Lợi dụng lúc họ đang mệt mỏi vì khách hàng để đưa ra yêu cầu.", "Tỏ ra là một khách hàng VIP hoặc đe dọa đánh giá xấu để ép buộc."] },
-        { keys: ['xây dựng', 'kiến trúc', 'thầu'], tech: "Chi phí chìm (Sunk Cost Fallacy)", plan: ["Nhắc nhở về những công sức và tiền bạc họ đã đổ vào dự án.", "Thuyết phục rằng chỉ cần 'cố thêm một chút nữa' là sẽ thành công."] },
-        { keys: ['nghiên cứu', 'khoa học', 'nhà khoa học'], tech: "Lời kêu gọi từ uy tín (Appeal to Authority)", plan: ["Trích dẫn các nguồn tài liệu, giáo sư hoặc viện nghiên cứu (có thể giả mạo hoặc bóp méo).", "Sử dụng thuật ngữ chuyên ngành phức tạp để tạo vỏ bọc chuyên gia."] },
-        { keys: ['hành chính', 'văn phòng', 'thư ký'], tech: "Sự vâng lời mù quáng & Hiệu ứng hào quang", plan: ["Ăn mặc sang trọng, sử dụng giọng điệu ra lệnh của cấp trên.", "Tạo ra cảm giác rằng yêu cầu này đã được 'sếp lớn' thông qua."] },
-        { keys: ['tự do', 'freelancer', 'mmo'], tech: "Ảo tưởng kiểm soát & Bằng chứng xã hội", plan: ["Vẽ ra viễn cảnh tự do tài chính và làm chủ hoàn toàn thời gian.", "Cho thấy những freelancer khác đang kiếm được rất nhiều tiền từ việc này."] },
-        { keys: ['nông nghiệp', 'nông dân', 'chăn nuôi'], tech: "Tâm lý bầy đàn & Truyền thống", plan: ["Nhấn mạnh rằng 'cả làng/cả xóm đều đã làm thế này rồi'.", "Gắn kết yêu cầu với các giá trị truyền thống gia đình."] },
-        { keys: ['vận tải', 'lái xe', 'logistics'], tech: "Mệt mỏi nhận thức & Quyết định bốc đồng", plan: ["Đưa ra yêu cầu vào cuối ca làm việc hoặc lúc họ đang căng thẳng trên đường.", "Tạo áp lực thời gian: 'Phải quyết định ngay trong 1 phút'."] },
-        { keys: ['báo chí', 'phóng viên', 'truyền thông'], tech: "Tính độc quyền & Thiên kiến giật gân", plan: ["Hứa hẹn cung cấp 'thông tin độc quyền chưa ai biết'.", "Đóng gói thông tin theo hướng drama, giật gân để kích thích sự tò mò."] },
-        { keys: ['công an', 'quân đội', 'bảo vệ'], tech: "Giả mạo thẩm quyền & Tư duy trắng đen", plan: ["Sử dụng ngôn ngữ mệnh lệnh, dứt khoát.", "Đưa ra các lựa chọn cực đoan (chỉ có A hoặc B) để ép họ chọn điều bạn muốn."] },
-        { keys: ['sinh viên', 'thực tập sinh', 'học sinh'], tech: "Hội chứng kẻ mạo danh & Lời khen giả tạo", plan: ["Khen ngợi họ là 'tài năng trẻ hiếm có' để bóc lột sức lao động.", "Tạo ra ảo giác rằng họ đang được trao một 'cơ hội ngàn vàng'."] },
-        { keys: ['nội trợ', 'ở nhà'], tech: "FOMO & Nỗi sợ an toàn gia đình", plan: ["Đánh vào nỗi sợ con cái thua thiệt so với bạn bè (FOMO giáo dục).", "Thổi phồng các nguy cơ về sức khỏe/an ninh để bán giải pháp."] }
+        { keys: ['kinh doanh', 'bán hàng', 'sales', 'marketing'], key: 'sales' },
+        { keys: ['kỹ thuật', 'it', 'lập trình', 'kỹ sư', 'tech'], key: 'tech' },
+        { keys: ['giáo dục', 'giáo viên', 'giảng viên', 'education'], key: 'education' },
+        { keys: ['y tế', 'bác sĩ', 'điều dưỡng', 'nha sĩ', 'medical'], key: 'medical' },
+        { keys: ['quản lý', 'lãnh đạo', 'giám đốc', 'ceo', 'management'], key: 'management' },
+        { keys: ['nghệ thuật', 'sáng tạo', 'thiết kế', 'họa sĩ', 'creative'], key: 'creative' },
+        { keys: ['tài chính', 'kế toán', 'ngân hàng', 'kiểm toán', 'finance'], key: 'finance' },
+        { keys: ['nhân sự', 'hr', 'tuyển dụng'], key: 'hr' },
+        { keys: ['luật sư', 'pháp lý', 'công chứng', 'legal'], key: 'legal' },
+        { keys: ['dịch vụ', 'cskh', 'nhà hàng', 'khách sạn', 'service'], key: 'service' },
+        { keys: ['xây dựng', 'kiến trúc', 'thầu', 'construction'], key: 'construction' },
+        { keys: ['nghiên cứu', 'khoa học', 'nhà khoa học', 'research'], key: 'research' },
+        { keys: ['hành chính', 'văn phòng', 'thư ký', 'office'], key: 'office' },
+        { keys: ['tự do', 'freelancer', 'mmo'], key: 'freelance' },
+        { keys: ['nông nghiệp', 'nông dân', 'chăn nuôi', 'agriculture'], key: 'agriculture' },
+        { keys: ['vận tải', 'lái xe', 'logistics', 'transport'], key: 'transport' },
+        { keys: ['báo chí', 'phóng viên', 'truyền thông', 'media'], key: 'media' },
+        { keys: ['công an', 'quân đội', 'bảo vệ', 'security'], key: 'security' },
+        { keys: ['sinh viên', 'thực tập sinh', 'học sinh', 'student'], key: 'student' },
+        { keys: ['nội trợ', 'ở nhà', 'housewife'], key: 'housewife' }
       ];
 
       let jobMatched = false;
       for (const j of jobMap) {
         if (j.keys.some(k => job.includes(k))) {
-          strategy.technique += (strategy.technique === "Chưa xác định" ? "" : " + ") + j.tech;
-          strategy.plan.push(...j.plan);
+          strategy.technique += (strategy.technique === t('targetAnalysis.strategy.undefined') ? "" : " + ") + t(`targetAnalysis.strategy.job.${j.key}.tech`);
+          strategy.plan.push(t(`targetAnalysis.strategy.job.${j.key}.plan`));
           jobMatched = true;
           break;
         }
       }
       if (!jobMatched && job.length > 2) {
-        strategy.plan.push(`Sử dụng định kiến về nghề "${target.job}" để tạo áp lực chuyên môn.`);
+        strategy.plan.push(t('targetAnalysis.strategy.jobBiasPlan', { job: target.job }));
       }
     }
 
     // Hobby-based logic integration (20 hobbies)
     if (hobbies) {
       const hobbyMap = [
-        { keys: ['thể thao', 'gym', 'chạy bộ', 'bóng đá', 'cầu lông'], plan: ["Thách thức bản lĩnh: 'Tôi nghĩ việc này có thể hơi quá sức với một người có kỷ luật như bạn'."] },
-        { keys: ['đọc sách', 'học', 'nghiên cứu', 'cờ vua'], plan: ["Tôn vinh trí tuệ: 'Với một người am hiểu và có tư duy chiều sâu như bạn, chắc chắn bạn sẽ thấy điểm hay ở đây'."] },
-        { keys: ['du lịch', 'phượt', 'khám phá'], plan: ["Khai thác sự khan hiếm: 'Đây là trải nghiệm độc bản, hiếm khi có cơ hội thứ hai để thử'."] },
-        { keys: ['game', 'trò chơi', 'esport'], plan: ["Sử dụng cơ chế phần thưởng: Chia nhỏ yêu cầu thành các 'nhiệm vụ' với phần thưởng tâm lý ngay lập tức."] },
-        { keys: ['đầu tư', 'chứng khoán', 'crypto', 'coin'], plan: ["Khai thác nỗi sợ mất mát (Loss Aversion): Nhấn mạnh vào những gì họ sẽ 'mất' nếu không thực hiện ngay."] },
-        { keys: ['nấu ăn', 'ẩm thực', 'làm bánh'], plan: ["Kích hoạt giác quan: Sử dụng các ẩn dụ về sự hòa quyện và quy trình tỉ mỉ để tạo thiện cảm."] },
-        { keys: ['nhiếp ảnh', 'quay phim', 'chụp ảnh'], plan: ["Khai thác chủ nghĩa hoàn hảo: Chỉ ra một 'lỗi nhỏ' trong công việc của họ và đề xuất giải pháp của bạn."] },
-        { keys: ['âm nhạc', 'đàn', 'hát', 'ca hát'], plan: ["Cảm xúc lây lan: Sử dụng âm nhạc nền hoặc nhịp điệu giọng nói để đồng bộ hóa nhịp tim và cảm xúc của họ."] },
-        { keys: ['mua sắm', 'thời trang', 'shopping'], plan: ["Hiệu ứng Diderot: Tặng họ một món đồ nhỏ, sau đó thuyết phục họ làm theo yêu cầu lớn để 'đồng bộ' với món đồ đó."] },
-        { keys: ['sưu tầm', 'đồ cổ', 'tem', 'mô hình'], plan: ["Sự khan hiếm nhân tạo: 'Tôi chỉ chia sẻ bí mật này với 3 người, và bạn là người cuối cùng'."] },
-        { keys: ['tình nguyện', 'từ thiện', 'xã hội'], plan: ["Cảm giác tội lỗi (Guilt trip): 'Nếu bạn không giúp, những người kia sẽ phải chịu hậu quả rất nặng nề'."] },
-        { keys: ['thú cưng', 'chó', 'mèo'], plan: ["Tình cảm gắn bó: Tỏ ra cực kỳ yêu thương động vật để ngay lập tức phá vỡ rào cản phòng vệ của họ."] },
-        { keys: ['làm vườn', 'cây cảnh', 'trồng cây'], plan: ["Hiệu ứng IKEA: Nhờ họ giúp một việc nhỏ xíu ban đầu, họ sẽ tự động gắn bó với toàn bộ dự án của bạn."] },
-        { keys: ['xem phim', 'cày phim', 'netflix'], plan: ["Ám thị tiềm thức: Lặp đi lặp lại một thông điệp nhiều lần khi họ đang trong trạng thái thư giãn, lơ đãng."] },
-        { keys: ['mạng xã hội', 'tiktok', 'facebook', 'lướt web'], plan: ["Vòng lặp Dopamine: Cho họ những lời khen ngợi nhỏ giọt, ngẫu nhiên để họ bị nghiện sự công nhận từ bạn."] },
-        { keys: ['thủ công', 'diy', 'đan len', 'handmade'], plan: ["Tâm lý tiếc của (Sunk cost): Khiến họ đầu tư thời gian vào bạn, họ sẽ không nỡ từ chối yêu cầu cuối cùng."] },
-        { keys: ['yoga', 'thiền', 'tâm linh'], plan: ["Hiệu ứng hào quang (Halo Effect): Đóng vai một người có năng lượng bình an, đạo mạo để họ tin tưởng mù quáng."] },
-        { keys: ['xe cộ', 'độ xe', 'mô tô', 'ô tô'], plan: ["Đánh vào cái tôi: 'Chỉ những người thực sự đẳng cấp mới hiểu được giá trị của đề nghị này'."] },
-        { keys: ['công nghệ', 'đồ điện tử', 'gadget'], plan: ["Hiệu ứng nâng cấp: Thuyết phục họ rằng cách làm cũ của họ đã 'lỗi thời' và bạn có giải pháp 'thế hệ mới'."] },
-        { keys: ['chiêm tinh', 'tarot', 'tử vi', 'cung hoàng đạo'], plan: ["Hiệu ứng Barnum (Cold Reading): Đưa ra những nhận xét chung chung về tính cách để họ tin rằng bạn 'đi guốc trong bụng' họ."] }
+        { keys: ['thể thao', 'gym', 'chạy bộ', 'bóng đá', 'cầu lông'], key: 'sports' },
+        { keys: ['đọc sách', 'học', 'nghiên cứu', 'cờ vua'], key: 'reading' },
+        { keys: ['du lịch', 'phượt', 'khám phá'], key: 'travel' },
+        { keys: ['game', 'trò chơi', 'esport'], key: 'game' },
+        { keys: ['đầu tư', 'chứng khoán', 'crypto', 'coin'], key: 'investing' },
+        { keys: ['nấu ăn', 'ẩm thực', 'làm bánh'], key: 'cooking' },
+        { keys: ['nhiếp ảnh', 'quay phim', 'chụp ảnh'], key: 'photography' },
+        { keys: ['âm nhạc', 'đàn', 'hát', 'ca hát'], key: 'music' },
+        { keys: ['mua sắm', 'thời trang', 'shopping'], key: 'shopping' },
+        { keys: ['sưu tầm', 'đồ cổ', 'tem', 'mô hình'], key: 'collecting' },
+        { keys: ['tình nguyện', 'từ thiện', 'xã hội'], key: 'volunteering' },
+        { keys: ['thú cưng', 'chó', 'mèo'], key: 'pets' },
+        { keys: ['làm vườn', 'cây cảnh', 'trồng cây'], key: 'gardening' },
+        { keys: ['xem phim', 'cày phim', 'netflix'], key: 'movies' },
+        { keys: ['mạng xã hội', 'tiktok', 'facebook', 'lướt web'], key: 'socialMedia' },
+        { keys: ['thủ công', 'diy', 'đan len', 'handmade'], key: 'crafts' },
+        { keys: ['yoga', 'thiền', 'tâm linh'], key: 'yoga' },
+        { keys: ['xe cộ', 'độ xe', 'mô tô', 'ô tô'], key: 'cars' },
+        { keys: ['công nghệ', 'đồ điện tử', 'gadget'], key: 'tech' },
+        { keys: ['chiêm tinh', 'tarot', 'tử vi', 'cung hoàng đạo'], key: 'astrology' }
       ];
 
       let hobbyMatched = false;
       for (const h of hobbyMap) {
         if (h.keys.some(k => hobbies.includes(k))) {
-          strategy.plan.push(...h.plan);
+          strategy.plan.push(t(`targetAnalysis.strategy.hobby.${h.key}.plan`));
           hobbyMatched = true;
           break;
         }
       }
       if (!hobbyMatched && hobbies.length > 2) {
-        strategy.plan.push(`Tìm hiểu sâu về sở thích "${target.hobbies}" để tạo sự tương đồng giả tạo (Mirroring).`);
+        strategy.plan.push(t('targetAnalysis.strategy.hobbyBiasPlan', { hobby: target.hobbies }));
       }
     }
 
@@ -208,44 +214,43 @@ export const TargetAnalysis: React.FC = () => {
       strategy.vulnerability += ` + ${syndrome}`;
       
       if (syndrome.includes("Imposter Syndrome")) {
-        strategy.technique += " + Khai thác sự tự ti";
-        strategy.plan.push("Sử dụng lời khen ngợi giả tạo để củng cố giá trị của họ, sau đó nhờ vả khi họ đang cảm thấy biết ơn.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.imposter.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.imposter.plan'));
       } else if (syndrome.includes("Dunning-Kruger")) {
-        strategy.technique += " + Tâng bốc trí tuệ";
-        strategy.plan.push("Khen ngợi sự 'thông thái' của họ và để họ tự dẫn dắt câu chuyện vào bẫy của bạn.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.dunningKruger.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.dunningKruger.plan'));
       } else if (syndrome.includes("Halo Effect")) {
-        strategy.technique += " + Xây dựng hình ảnh hào quang";
-        strategy.plan.push("Tạo ra một vẻ ngoài hoàn hảo hoặc thành đạt để họ tin tưởng tuyệt đối vào mọi lời bạn nói.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.halo.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.halo.plan'));
       } else if (syndrome.includes("Confirmation Bias")) {
-        strategy.technique += " + Cung cấp thông tin thiên kiến";
-        strategy.plan.push("Chỉ đưa ra những thông tin củng cố niềm tin sẵn có của họ để họ dễ dàng chấp nhận yêu cầu của bạn.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.confirmation.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.confirmation.plan'));
       } else if (syndrome.includes("Anchoring Effect")) {
-        strategy.technique += " + Thiết lập mỏ neo";
-        strategy.plan.push("Đưa ra một con số hoặc yêu cầu cực đoan ban đầu để làm mỏ neo cho các thỏa thuận sau này.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.anchoring.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.anchoring.plan'));
       } else if (syndrome.includes("FOMO")) {
-        strategy.technique += " + Tạo sự khan hiếm";
-        strategy.plan.push("Nhấn mạnh rằng đây là cơ hội duy nhất và họ sẽ hối tiếc nếu bỏ lỡ.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.fomo.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.fomo.plan'));
       } else if (syndrome.includes("Stockholm")) {
-        strategy.technique += " + Tạo sự phụ thuộc cảm xúc";
-        strategy.plan.push("Tạo ra một tình huống khó khăn và đóng vai người duy nhất có thể giúp đỡ họ.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.stockholm.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.stockholm.plan'));
       } else if (syndrome.includes("Barnum Effect")) {
-        strategy.technique += " + Đọc nguội (Cold Reading)";
-        strategy.plan.push("Đưa ra những nhận xét chung chung nhưng có vẻ cá nhân hóa để chiếm lòng tin.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.barnum.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.barnum.plan'));
       } else if (syndrome.includes("IKEA Effect")) {
-        strategy.technique += " + Gắn kết qua nỗ lực";
-        strategy.plan.push("Nhờ họ giúp một việc nhỏ trong quá trình thực hiện mục tiêu của bạn để họ cảm thấy có trách nhiệm với kết quả.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.ikea.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.ikea.plan'));
       } else if (syndrome.includes("Sunk Cost Fallacy")) {
-        strategy.technique += " + Khai thác chi phí chìm";
-        strategy.plan.push("Nhắc nhở họ về những gì họ đã đầu tư vào mối quan hệ hoặc dự án này để họ không nỡ từ bỏ.");
+        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.sunkCost.tech');
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.sunkCost.plan'));
       } else {
-        strategy.plan.push(`Nghiên cứu sâu về cơ chế của "${syndrome}" để tìm ra điểm yếu cụ thể trong nhận thức của đối tượng.`);
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome }));
       }
     }
 
-    if (strategy.vulnerability === "Chưa đủ thông tin" && (job || hobbies)) {
-        strategy.vulnerability = "Dựa trên công việc và sở thích.";
+    if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo') && (job || hobbies)) {
+        strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.basedOnJobHobby');
     }
-
     return strategy;
   };
 
@@ -347,7 +352,7 @@ export const TargetAnalysis: React.FC = () => {
                     className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                   >
                     <option value="">{t('targetAnalysis.selectReligion')}</option>
-                    {religions.map(r => <option key={r} value={r}>{r}</option>)}
+                    {religions.map(r => <option key={r} value={r}>{t(`targetAnalysis.religions.${r}`)}</option>)}
                   </select>
                 </div>
                 <div>
@@ -358,7 +363,7 @@ export const TargetAnalysis: React.FC = () => {
                     className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                   >
                     <option value="">{t('targetAnalysis.selectPoliticalSystem')}</option>
-                    {politicalSystems.map(p => <option key={p} value={p}>{p}</option>)}
+                    {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
                   </select>
                 </div>
               </div>
@@ -371,7 +376,7 @@ export const TargetAnalysis: React.FC = () => {
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                 >
                   <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-                  {syndromes.map(s => <option key={s} value={s}>{s}</option>)}
+                  {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
                 </select>
               </div>
 
@@ -472,13 +477,13 @@ export const TargetAnalysis: React.FC = () => {
                     <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl p-8 border border-emerald-100 dark:border-emerald-800/30">
                       <h4 className="font-bold text-emerald-900 dark:text-emerald-300 mb-6 flex items-center gap-2">
                         <Sparkles size={20} />
-                        Hội chứng tâm lý đề xuất:
+                        {t('targetAnalysis.suggestedSyndromesTitle')}
                       </h4>
                       <div className="space-y-6">
                         {liveStrategy.suggestedSyndromes.map((s, idx) => (
                           <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
                             <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">{s.name}</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">Hướng dẫn: {s.instruction}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">{t('targetAnalysis.instructionLabel')} {s.instruction}</p>
                           </div>
                         ))}
                       </div>
@@ -520,8 +525,8 @@ export const TargetAnalysis: React.FC = () => {
                   <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
                     <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
                     <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
-                    <p>• {t('targetAnalysis.religion')}: {target.religion || 'N/A'}</p>
-                    <p>• {t('targetAnalysis.politicalSystem')}: {target.politicalSystem || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.religion')}: {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'}</p>
+                    <p>• {t('targetAnalysis.politicalSystem')}: {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
                     <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
                     <p>• {t('targetAnalysis.syndrome')}: {target.syndrome || 'N/A'}</p>
                   </div>
