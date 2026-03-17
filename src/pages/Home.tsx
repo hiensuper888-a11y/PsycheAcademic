@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PsychologyArticle } from '../data/psychologyData';
+import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X, Loader2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -26,10 +26,7 @@ export const Home: React.FC = () => {
     const fetchArticles = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/articles');
-        if (!response.ok) throw new Error(t('errors.fetchFailed') || 'Failed to fetch articles');
-        const data = await response.json();
-        setArticles(data);
+        setArticles(psychologyData);
         setError(null);
       } catch (err: any) {
         console.error('Error fetching articles:', err);

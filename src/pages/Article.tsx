@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { PsychologyArticle } from '../data/psychologyData';
+import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import Markdown from 'react-markdown';
@@ -27,12 +27,10 @@ export const Article: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        const response = await fetch(`/api/articles/${id}`);
-        if (!response.ok) {
-          if (response.status === 404) throw new Error('Article not found');
-          throw new Error('Failed to fetch article');
+        const data = psychologyData.find(a => a.id === id);
+        if (!data) {
+          throw new Error('Article not found');
         }
-        const data = await response.json();
         setArticle(data);
         setError(null);
       } catch (err: any) {
