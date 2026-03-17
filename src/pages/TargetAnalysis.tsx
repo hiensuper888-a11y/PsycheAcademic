@@ -11,10 +11,15 @@ interface TargetProfile {
   age: string;
   gender: string;
   job: string;
+  religion: string;
+  politicalSystem: string;
   hobbies: string;
   habits: string;
   syndrome: string;
 }
+
+const religions = ['Phật giáo', 'Ấn độ giáo', 'Thiên chúa giáo', 'Không tôn giáo', 'Đạo giáo', 'Do thái giáo', 'Hồi giáo'];
+const politicalSystems = ['Xã hội chủ nghĩa', 'Tư bản', 'Quân chủ lập hiến', 'Phiến quân/Loạn lạc'];
 
 export const TargetAnalysis: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -25,6 +30,8 @@ export const TargetAnalysis: React.FC = () => {
     age: '',
     gender: '',
     job: '',
+    religion: '',
+    politicalSystem: '',
     hobbies: '',
     habits: '',
     syndrome: ''
@@ -35,7 +42,7 @@ export const TargetAnalysis: React.FC = () => {
     if (!currentTarget.name) return;
     const newTarget = { ...currentTarget, id: Date.now().toString() };
     setTargets([...targets, newTarget]);
-    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', hobbies: '', habits: '', syndrome: '' });
+    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '', habits: '', syndrome: '' });
   };
 
   const handleDeleteTarget = (id: string) => {
@@ -48,14 +55,56 @@ export const TargetAnalysis: React.FC = () => {
     const gender = target.gender;
     const job = (target.job || '').toLowerCase();
     const hobbies = (target.hobbies || '').toLowerCase();
+    const religion = target.religion;
+    const politicalSystem = target.politicalSystem;
     
     let strategy = {
       vulnerability: "Chưa đủ thông tin",
       technique: "Chưa xác định",
-      plan: [] as string[]
+      plan: [] as string[],
+      suggestedSyndromes: [] as { name: string, instruction: string }[]
     };
 
-    if (!age && !gender && !job && !hobbies) return strategy;
+    if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
+
+    // Automatic Syndrome Suggestion Logic
+    const suggest = (name: string, instruction: string) => {
+      if (!strategy.suggestedSyndromes.find(s => s.name === name)) {
+        strategy.suggestedSyndromes.push({ name, instruction });
+      }
+    };
+
+    // Age-based suggestions
+    if (age > 0 && age < 25) {
+      suggest("Imposter Syndrome", "Khen ngợi nỗ lực cá nhân để giảm bớt sự tự ti, sau đó dẫn dắt họ vào các thử thách mới mà bạn kiểm soát.");
+      suggest("FOMO", "Tạo ra các sự kiện 'giới hạn' hoặc 'độc quyền' để kích thích sự tham gia bốc đồng.");
+    } else if (age >= 25 && age <= 45) {
+      suggest("Dunning-Kruger Effect", "Để họ tin rằng họ là chuyên gia, sau đó nhờ họ 'tư vấn' cho các quyết định mà bạn đã định sẵn.");
+      suggest("Sunk Cost Fallacy", "Nhắc lại những gì họ đã đầu tư (thời gian, tiền bạc) để ép họ tiếp tục theo đuổi mục tiêu của bạn.");
+    }
+
+    // Job-based suggestions
+    if (job.includes('quản lý') || job.includes('lãnh đạo')) {
+      suggest("Halo Effect", "Xây dựng hình ảnh chuyên nghiệp, đạo mạo để họ tin tưởng bạn vô điều kiện.");
+      suggest("Confirmation Bias", "Cung cấp các báo cáo củng cố niềm tin hiện tại của họ để họ phê duyệt các kế hoạch của bạn.");
+    } else if (job.includes('kỹ thuật') || job.includes('it')) {
+      suggest("Barnum Effect", "Sử dụng các phân tích có vẻ logic nhưng thực chất là chung chung để họ thấy bạn thấu hiểu họ.");
+    } else if (job.includes('nghệ thuật') || job.includes('sáng tạo')) {
+      suggest("Stendhal Syndrome", "Sử dụng các tác phẩm nghệ thuật hoặc không gian thẩm mỹ cực đoan để làm họ choáng ngợp và mất cảnh giác.");
+    }
+
+    // Religion-based suggestions
+    if (religion && religion !== 'Không tôn giáo') {
+      suggest("Jerusalem Syndrome", "Sử dụng các biểu tượng hoặc ngôn từ tâm linh để tạo ra sự kết nối định mệnh.");
+      suggest("Authority Bias", "Trích dẫn các giáo lý hoặc nhân vật có uy tín trong tôn giáo của họ để tạo sức nặng cho yêu cầu.");
+    }
+
+    // Political-based suggestions
+    if (politicalSystem === 'Xã hội chủ nghĩa') {
+      suggest("Bandwagon Effect", "Nhấn mạnh vào lợi ích tập thể và sự đồng thuận của đa số.");
+    } else if (politicalSystem === 'Tư bản') {
+      suggest("IKEA Effect", "Để họ tham gia vào quá trình xây dựng giải pháp để họ cảm thấy sở hữu và bảo vệ nó.");
+    }
 
     // Age & Gender based logic
     if (age > 0 && age < 25) {
@@ -153,6 +202,46 @@ export const TargetAnalysis: React.FC = () => {
       }
     }
 
+    // Syndrome-based logic
+    if (target.syndrome) {
+      const syndrome = target.syndrome;
+      strategy.vulnerability += ` + ${syndrome}`;
+      
+      if (syndrome.includes("Imposter Syndrome")) {
+        strategy.technique += " + Khai thác sự tự ti";
+        strategy.plan.push("Sử dụng lời khen ngợi giả tạo để củng cố giá trị của họ, sau đó nhờ vả khi họ đang cảm thấy biết ơn.");
+      } else if (syndrome.includes("Dunning-Kruger")) {
+        strategy.technique += " + Tâng bốc trí tuệ";
+        strategy.plan.push("Khen ngợi sự 'thông thái' của họ và để họ tự dẫn dắt câu chuyện vào bẫy của bạn.");
+      } else if (syndrome.includes("Halo Effect")) {
+        strategy.technique += " + Xây dựng hình ảnh hào quang";
+        strategy.plan.push("Tạo ra một vẻ ngoài hoàn hảo hoặc thành đạt để họ tin tưởng tuyệt đối vào mọi lời bạn nói.");
+      } else if (syndrome.includes("Confirmation Bias")) {
+        strategy.technique += " + Cung cấp thông tin thiên kiến";
+        strategy.plan.push("Chỉ đưa ra những thông tin củng cố niềm tin sẵn có của họ để họ dễ dàng chấp nhận yêu cầu của bạn.");
+      } else if (syndrome.includes("Anchoring Effect")) {
+        strategy.technique += " + Thiết lập mỏ neo";
+        strategy.plan.push("Đưa ra một con số hoặc yêu cầu cực đoan ban đầu để làm mỏ neo cho các thỏa thuận sau này.");
+      } else if (syndrome.includes("FOMO")) {
+        strategy.technique += " + Tạo sự khan hiếm";
+        strategy.plan.push("Nhấn mạnh rằng đây là cơ hội duy nhất và họ sẽ hối tiếc nếu bỏ lỡ.");
+      } else if (syndrome.includes("Stockholm")) {
+        strategy.technique += " + Tạo sự phụ thuộc cảm xúc";
+        strategy.plan.push("Tạo ra một tình huống khó khăn và đóng vai người duy nhất có thể giúp đỡ họ.");
+      } else if (syndrome.includes("Barnum Effect")) {
+        strategy.technique += " + Đọc nguội (Cold Reading)";
+        strategy.plan.push("Đưa ra những nhận xét chung chung nhưng có vẻ cá nhân hóa để chiếm lòng tin.");
+      } else if (syndrome.includes("IKEA Effect")) {
+        strategy.technique += " + Gắn kết qua nỗ lực";
+        strategy.plan.push("Nhờ họ giúp một việc nhỏ trong quá trình thực hiện mục tiêu của bạn để họ cảm thấy có trách nhiệm với kết quả.");
+      } else if (syndrome.includes("Sunk Cost Fallacy")) {
+        strategy.technique += " + Khai thác chi phí chìm";
+        strategy.plan.push("Nhắc nhở họ về những gì họ đã đầu tư vào mối quan hệ hoặc dự án này để họ không nỡ từ bỏ.");
+      } else {
+        strategy.plan.push(`Nghiên cứu sâu về cơ chế của "${syndrome}" để tìm ra điểm yếu cụ thể trong nhận thức của đối tượng.`);
+      }
+    }
+
     if (strategy.vulnerability === "Chưa đủ thông tin" && (job || hobbies)) {
         strategy.vulnerability = "Dựa trên công việc và sở thích.";
     }
@@ -246,6 +335,31 @@ export const TargetAnalysis: React.FC = () => {
                       placeholder={t('targetAnalysis.hobbiesPlaceholder')}
                     />
                   </Tooltip>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.religion')}</label>
+                  <select 
+                    value={currentTarget.religion}
+                    onChange={(e) => setCurrentTarget({...currentTarget, religion: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
+                  >
+                    <option value="">{t('targetAnalysis.selectReligion')}</option>
+                    {religions.map(r => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.politicalSystem')}</label>
+                  <select 
+                    value={currentTarget.politicalSystem}
+                    onChange={(e) => setCurrentTarget({...currentTarget, politicalSystem: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
+                  >
+                    <option value="">{t('targetAnalysis.selectPoliticalSystem')}</option>
+                    {politicalSystems.map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
                 </div>
               </div>
 
@@ -353,6 +467,23 @@ export const TargetAnalysis: React.FC = () => {
                       ))}
                     </ul>
                   </div>
+
+                  {liveStrategy.suggestedSyndromes.length > 0 && (
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl p-8 border border-emerald-100 dark:border-emerald-800/30">
+                      <h4 className="font-bold text-emerald-900 dark:text-emerald-300 mb-6 flex items-center gap-2">
+                        <Sparkles size={20} />
+                        Hội chứng tâm lý đề xuất:
+                      </h4>
+                      <div className="space-y-6">
+                        {liveStrategy.suggestedSyndromes.map((s, idx) => (
+                          <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
+                            <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">{s.name}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">Hướng dẫn: {s.instruction}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -389,6 +520,8 @@ export const TargetAnalysis: React.FC = () => {
                   <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
                     <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
                     <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.religion')}: {target.religion || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.politicalSystem')}: {target.politicalSystem || 'N/A'}</p>
                     <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
                     <p>• {t('targetAnalysis.syndrome')}: {target.syndrome || 'N/A'}</p>
                   </div>
