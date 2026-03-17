@@ -74,16 +74,18 @@ export const TargetAnalysis: React.FC = () => {
     if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
 
     // Automatic Syndrome Suggestion Logic
-    const suggest = (name: string, instruction: string) => {
-      if (!strategy.suggestedSyndromes.find(s => s.name === name)) {
-        strategy.suggestedSyndromes.push({ name, instruction });
+    const suggest = (enName: string, instruction: string) => {
+      const syndromeObj = syndromes.find(s => s.en === enName);
+      const localizedName = syndromeObj ? getLocalized(syndromeObj) : enName;
+      if (!strategy.suggestedSyndromes.find(s => s.name === localizedName)) {
+        strategy.suggestedSyndromes.push({ name: localizedName, instruction });
       }
     };
 
     // Age-based suggestions
     if (age > 0 && age < 25) {
       suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("FOMO", t('targetAnalysis.strategy.fomoInstructionFull'));
+      suggest("FOMO (Fear of Missing Out)", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
       suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
       suggest("Sunk Cost Fallacy", t('targetAnalysis.strategy.sunkCostInstruction'));

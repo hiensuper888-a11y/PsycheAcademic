@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
-import { psychologyData } from '../data/psychologyData';
+import { PsychologyArticle } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
-import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface TargetAudience {
   id: string;
@@ -28,11 +29,29 @@ export const TargetAudience: React.FC = () => {
   const currentLang = i18nInstance.language as 'vi' | 'en' | 'zh';
 
   const [targets, setTargets] = useState<TargetAudience[]>([]);
+  const [articles, setArticles] = useState<PsychologyArticle[]>([]);
+  const [loading, setLoading] = useState(true);
   const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
     if (saved) setTargets(JSON.parse(saved));
+
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/articles');
+        if (response.ok) {
+          const data = await response.json();
+          setArticles(data);
+        }
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArticles();
   }, []);
 
   const getLocalized = (field: any) => {
@@ -74,15 +93,17 @@ export const TargetAudience: React.FC = () => {
 
     // Automatic Syndrome Suggestion Logic
     const suggestedSyndromes: { name: string, instruction: string }[] = [];
-    const suggest = (name: string, instruction: string) => {
-      if (!suggestedSyndromes.find(s => s.name === name)) {
-        suggestedSyndromes.push({ name, instruction });
+    const suggest = (enName: string, instruction: string) => {
+      const syndromeObj = syndromes.find(s => s.en === enName);
+      const localizedName = syndromeObj ? getLocalized(syndromeObj) : enName;
+      if (!suggestedSyndromes.find(s => s.name === localizedName)) {
+        suggestedSyndromes.push({ name: localizedName, instruction });
       }
     };
 
     if (age > 0 && age < 25) {
       suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("FOMO", t('targetAnalysis.strategy.fomoInstructionFull'));
+      suggest("FOMO (Fear of Missing Out)", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
       suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
     }
@@ -107,12 +128,12 @@ export const TargetAudience: React.FC = () => {
       suggest("Confirmation Bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
     }
     
-    const articles = psychologyData.filter(a => 
+    const relatedArticles = articles.filter(a => 
       getLocalized(a.category).toLowerCase().includes(target.profession.toLowerCase()) || 
       getLocalized(a.title).toLowerCase().includes(target.profession.toLowerCase())
     );
 
-    return { techniques, articles, suggestedSyndromes };
+    return { techniques, articles: relatedArticles, suggestedSyndromes };
   };
 
   return (
@@ -121,30 +142,36 @@ export const TargetAudience: React.FC = () => {
       
       <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
         <h2 className="text-xl font-semibold mb-4">{t('targetAudience.addNew')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <input placeholder={t('targetAudience.name')} className="p-3 rounded-xl border" value={newTarget.name} onChange={e => setNewTarget({...newTarget, name: e.target.value})} />
-          <input type="number" placeholder={t('targetAudience.age')} className="p-3 rounded-xl border" value={newTarget.age} onChange={e => setNewTarget({...newTarget, age: e.target.value})} />
-          <select className="p-3 rounded-xl border" value={newTarget.gender} onChange={e => setNewTarget({...newTarget, gender: e.target.value})}>
-            {genders.map(g => <option key={g} value={g}>{t(`targetAnalysis.genders.${g}`)}</option>)}
-          </select>
-          <select className="p-3 rounded-xl border" value={newTarget.profession} onChange={e => setNewTarget({...newTarget, profession: e.target.value})}>
-            {professions.map(p => <option key={p} value={p}>{t(`targetAnalysis.professions.${p}`)}</option>)}
-          </select>
-          <select className="p-3 rounded-xl border" value={newTarget.religion} onChange={e => setNewTarget({...newTarget, religion: e.target.value})}>
-            {religions.map(r => <option key={r} value={r}>{t(`targetAnalysis.religions.${r}`)}</option>)}
-          </select>
-          <select className="p-3 rounded-xl border" value={newTarget.politicalSystem} onChange={e => setNewTarget({...newTarget, politicalSystem: e.target.value})}>
-            {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
-          </select>
-          <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
-          <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-            <option value="">{t('targetAudience.selectSyndrome')}</option>
-            {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
-          </select>
-          <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
-            <Plus size={20} /> {t('targetAudience.addBtn')}
-          </button>
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="animate-spin text-indigo-600" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <input placeholder={t('targetAudience.name')} className="p-3 rounded-xl border" value={newTarget.name} onChange={e => setNewTarget({...newTarget, name: e.target.value})} />
+            <input type="number" placeholder={t('targetAudience.age')} className="p-3 rounded-xl border" value={newTarget.age} onChange={e => setNewTarget({...newTarget, age: e.target.value})} />
+            <select className="p-3 rounded-xl border" value={newTarget.gender} onChange={e => setNewTarget({...newTarget, gender: e.target.value})}>
+              {genders.map(g => <option key={g} value={g}>{t(`targetAnalysis.genders.${g}`)}</option>)}
+            </select>
+            <select className="p-3 rounded-xl border" value={newTarget.profession} onChange={e => setNewTarget({...newTarget, profession: e.target.value})}>
+              {professions.map(p => <option key={p} value={p}>{t(`targetAnalysis.professions.${p}`)}</option>)}
+            </select>
+            <select className="p-3 rounded-xl border" value={newTarget.religion} onChange={e => setNewTarget({...newTarget, religion: e.target.value})}>
+              {religions.map(r => <option key={r} value={r}>{t(`targetAnalysis.religions.${r}`)}</option>)}
+            </select>
+            <select className="p-3 rounded-xl border" value={newTarget.politicalSystem} onChange={e => setNewTarget({...newTarget, politicalSystem: e.target.value})}>
+              {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
+            </select>
+            <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
+            <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
+              <option value="">{t('targetAudience.selectSyndrome')}</option>
+              {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
+            </select>
+            <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
+              <Plus size={20} /> {t('targetAudience.addBtn')}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6">
@@ -182,9 +209,9 @@ export const TargetAudience: React.FC = () => {
                   <div className="space-y-3">
                     {techniques.map(tech => (
                       <div key={tech.id} className="p-4 bg-slate-50 rounded-xl border">
-                        <h5 className="font-bold text-sm">{tech.title}</h5>
-                        <p className="text-xs text-slate-600 mt-1">{tech.description}</p>
-                        <p className="text-xs text-emerald-600 mt-2 font-medium flex items-center gap-1"><ShieldCheck size={14} /> {tech.defensiveStrategy}</p>
+                        <h5 className="font-bold text-sm">{getLocalized(tech.title)}</h5>
+                        <p className="text-xs text-slate-600 mt-1">{getLocalized(tech.description)}</p>
+                        <p className="text-xs text-emerald-600 mt-2 font-medium flex items-center gap-1"><ShieldCheck size={14} /> {getLocalized(tech.defensiveStrategy)}</p>
                       </div>
                     ))}
                   </div>
@@ -193,9 +220,9 @@ export const TargetAudience: React.FC = () => {
                   <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><BookOpen size={18} /> {t('targetAudience.relatedArticles')}</h4>
                   <div className="space-y-2">
                     {articles.map(article => (
-                      <a key={article.id} href={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
+                      <Link key={article.id} to={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
                         {getLocalized(article.title)}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

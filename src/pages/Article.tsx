@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { psychologyData } from '../data/psychologyData';
+import { PsychologyArticle } from '../data/psychologyData';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -18,13 +18,106 @@ export const Article: React.FC = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
   
-  const article = psychologyData.find(s => s.id === id);
+  const [article, setArticle] = useState<PsychologyArticle | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchArticle = async () => {
+      if (!id) return;
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/articles/${id}`);
+        if (!response.ok) {
+          if (response.status === 404) throw new Error('Article not found');
+          throw new Error('Failed to fetch article');
+        }
+        const data = await response.json();
+        setArticle(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error fetching article:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticle();
     window.scrollTo(0, 0);
   }, [id]);
 
-  if (!article) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24 animate-pulse">
+        {/* Hero Skeleton */}
+        <div className="relative h-[60vh] min-h-[500px] w-full bg-slate-200 dark:bg-slate-800" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar Skeleton */}
+          <div className="hidden lg:block lg:col-span-1">
+            <div className="sticky top-24 bg-white dark:bg-slate-800 rounded-[2rem] p-8 space-y-4 shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700">
+              <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-3/4 mb-6" />
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-full" />
+              ))}
+            </div>
+          </div>
+
+          {/* Main Content Skeleton */}
+          <div className="lg:col-span-3 space-y-8 lg:space-y-12">
+            {/* Risk Analysis Skeleton */}
+            <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 space-y-8 shadow-2xl border border-slate-100 dark:border-slate-700">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-2xl" />
+                <div className="space-y-2">
+                  <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-48" />
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-64" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="h-14 bg-slate-50 dark:bg-slate-700/30 rounded-2xl border border-slate-100 dark:border-slate-700" />
+                ))}
+              </div>
+            </div>
+
+            {/* Search Bar Skeleton */}
+            <div className="h-16 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/20 dark:shadow-none" />
+
+            {/* Key Takeaways Skeleton */}
+            <div className="bg-slate-900 rounded-[2.5rem] p-12 space-y-8">
+              <div className="h-8 bg-slate-800 rounded-full w-64" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[1, 2].map(i => (
+                  <div key={i} className="h-40 bg-slate-800/50 rounded-3xl border border-slate-700/50" />
+                ))}
+              </div>
+            </div>
+
+            {/* Content Section Skeleton */}
+            {[1, 2].map(i => (
+              <div key={i} className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-12 space-y-6 shadow-xl border border-slate-100 dark:border-slate-700">
+                <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded-full w-1/2 mb-8" />
+                <div className="space-y-4">
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-full" />
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-full" />
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-5/6" />
+                </div>
+                <div className="h-64 bg-slate-50 dark:bg-slate-700/30 rounded-3xl border border-slate-100 dark:border-slate-700 my-8" />
+                <div className="space-y-4">
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-full" />
+                  <div className="h-4 bg-slate-100 dark:bg-slate-700/50 rounded-full w-4/5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !article) {
     return <Navigate to="/" />;
   }
 

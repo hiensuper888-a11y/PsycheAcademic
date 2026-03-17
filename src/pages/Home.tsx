@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { psychologyData } from '../data/psychologyData';
+import { PsychologyArticle } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
-import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X } from 'lucide-react';
+import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X, Loader2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { INFLUENCE_PRINCIPLES } from '../constants';
 
@@ -10,6 +10,9 @@ export const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
+  const [articles, setArticles] = useState<PsychologyArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState('all');
@@ -18,6 +21,25 @@ export const Home: React.FC = () => {
   const [selectedPrinciple, setSelectedPrinciple] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/articles');
+        if (!response.ok) throw new Error(t('errors.fetchFailed') || 'Failed to fetch articles');
+        const data = await response.json();
+        setArticles(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error fetching articles:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArticles();
+  }, [t]);
 
   const getLocalized = (field: any) => {
     if (typeof field === 'string') return field;
@@ -28,11 +50,11 @@ export const Home: React.FC = () => {
   };
 
   // Extract unique authors and topics
-  const authors = Array.from(new Set(psychologyData.map(item => item.author))).sort();
-  const topics = Array.from(new Set(psychologyData.map(item => getLocalized(item.category)))).sort();
-  const years = Array.from(new Set(psychologyData.map(item => item.date.split('-')[0]))).sort((a, b) => b.localeCompare(a));
+  const authors = Array.from(new Set(articles.map(item => item.author))).sort();
+  const topics = Array.from(new Set(articles.map(item => getLocalized(item.category)))).sort();
+  const years = Array.from(new Set(articles.map(item => item.date.split('-')[0]))).sort((a, b) => b.localeCompare(a));
 
-  const filteredArticles = psychologyData.filter(item => {
+  const filteredArticles = articles.filter(item => {
     const title = getLocalized(item.title);
     const shortDesc = getLocalized(item.shortDescription);
     const category = getLocalized(item.category);
@@ -48,7 +70,7 @@ export const Home: React.FC = () => {
   });
 
   const suggestions = searchQuery.length >= 2 
-    ? psychologyData.filter(item => {
+    ? articles.filter(item => {
         const title = getLocalized(item.title);
         return title.toLowerCase().includes(searchQuery.toLowerCase());
       }).slice(0, 5)
@@ -322,7 +344,26 @@ export const Home: React.FC = () => {
           </div>
         </div>
         
-        {filteredArticles.length > 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-32">
+            <Loader2 size={64} className="text-indigo-600 animate-spin mb-6" />
+            <p className="text-xl text-slate-500 font-medium">{t('common.loading')}</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mb-8">
+              <AlertCircle size={40} />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('errors.title')}</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 max-w-md">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition-all"
+            >
+              {t('common.retry')}
+            </button>
+          </div>
+        ) : filteredArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredArticles.map((item, index) => {
               const title = getLocalized(item.title);
