@@ -23,9 +23,10 @@ export const Home: React.FC = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchArticles = () => {
       try {
         setLoading(true);
+        console.log('psychologyData:', psychologyData);
         setArticles(psychologyData);
         setError(null);
       } catch (err: any) {

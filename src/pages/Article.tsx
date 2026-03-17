@@ -23,11 +23,14 @@ export const Article: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchArticle = async () => {
+    const fetchArticle = () => {
       if (!id) return;
       try {
         setLoading(true);
+        console.log('id:', id);
+        console.log('psychologyData:', psychologyData);
         const data = psychologyData.find(a => a.id === id);
+        console.log('data:', data);
         if (!data) {
           throw new Error('Article not found');
         }
