@@ -36,6 +36,8 @@ export const TargetAnalysis: React.FC = () => {
     habits: '',
     syndrome: ''
   });
+
+  const selectedSyndromeData = syndromes.find(s => getLocalized(s.name) === currentTarget.syndrome);
   const [showPlan, setShowPlan] = useState<string | null>(null);
 
   const handleSaveTarget = () => {
@@ -74,44 +76,60 @@ export const TargetAnalysis: React.FC = () => {
     if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
 
     // Automatic Syndrome Suggestion Logic
-    const suggest = (enName: string, instruction: string) => {
-      const syndromeObj = syndromes.find(s => s.en === enName);
-      const localizedName = syndromeObj ? getLocalized(syndromeObj) : enName;
+    const suggest = (id: string, instruction?: string) => {
+      const syndromeObj = syndromes.find(s => s.id === id || s.name.en === id);
+      if (!syndromeObj) return;
+      
+      const localizedName = getLocalized(syndromeObj.name);
+      const finalInstruction = instruction || t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: localizedName });
+      
       if (!strategy.suggestedSyndromes.find(s => s.name === localizedName)) {
-        strategy.suggestedSyndromes.push({ name: localizedName, instruction });
+        strategy.suggestedSyndromes.push({ name: localizedName, instruction: finalInstruction });
       }
     };
 
+    // Dynamic Syndrome Suggestion based on keywords in target profile
+    syndromes.forEach(s => {
+      const targetKeywords = getLocalized(s.target).toLowerCase();
+      const profileText = `${job} ${hobbies} ${gender} ${age}`.toLowerCase();
+      
+      // Check if any keyword from syndrome target matches profile
+      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
+      if (keywords.some(k => profileText.includes(k))) {
+        suggest(s.id);
+      }
+    });
+
     // Age-based suggestions
     if (age > 0 && age < 25) {
-      suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("FOMO (Fear of Missing Out)", t('targetAnalysis.strategy.fomoInstructionFull'));
+      suggest("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
+      suggest("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
-      suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
-      suggest("Sunk Cost Fallacy", t('targetAnalysis.strategy.sunkCostInstruction'));
+      suggest("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
+      suggest("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
     }
 
     // Job-based suggestions
     if (job.includes('quản lý') || job.includes('lãnh đạo') || job.includes('management') || job.includes('leader')) {
-      suggest("Halo Effect", t('targetAnalysis.strategy.haloInstructionFull'));
-      suggest("Confirmation Bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
+      suggest("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
+      suggest("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
     } else if (job.includes('kỹ thuật') || job.includes('it') || job.includes('tech')) {
-      suggest("Barnum Effect", t('targetAnalysis.strategy.barnumInstruction'));
+      suggest("barnum-effect", t('targetAnalysis.strategy.barnumInstruction'));
     } else if (job.includes('nghệ thuật') || job.includes('sáng tạo') || job.includes('art') || job.includes('creative')) {
-      suggest("Stendhal Syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
+      suggest("stendhal-syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
     }
 
     // Religion-based suggestions
     if (religion && religion !== 'none') {
-      suggest("Jerusalem Syndrome", t('targetAnalysis.strategy.jerusalemInstruction'));
-      suggest("Authority Bias", t('targetAnalysis.strategy.authorityInstructionFull'));
+      suggest("jerusalem-syndrome", t('targetAnalysis.strategy.jerusalemInstruction'));
+      suggest("authority-bias", t('targetAnalysis.strategy.authorityInstructionFull'));
     }
 
     // Political-based suggestions
     if (politicalSystem === 'socialism') {
-      suggest("Bandwagon Effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
+      suggest("bandwagon-effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
     } else if (politicalSystem === 'capitalism') {
-      suggest("IKEA Effect", t('targetAnalysis.strategy.ikeaInstruction'));
+      suggest("ikea-effect", t('targetAnalysis.strategy.ikeaInstruction'));
     }
 
     // Age & Gender based logic
@@ -212,41 +230,48 @@ export const TargetAnalysis: React.FC = () => {
 
     // Syndrome-based logic
     if (target.syndrome) {
-      const syndrome = target.syndrome;
-      strategy.vulnerability += ` + ${syndrome}`;
+      const syndromeName = target.syndrome;
+      const syndromeObj = syndromes.find(s => getLocalized(s.name) === syndromeName || s.id === syndromeName || s.name.en === syndromeName);
       
-      if (syndrome.includes("Imposter Syndrome")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.imposter.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.imposter.plan'));
-      } else if (syndrome.includes("Dunning-Kruger")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.dunningKruger.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.dunningKruger.plan'));
-      } else if (syndrome.includes("Halo Effect")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.halo.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.halo.plan'));
-      } else if (syndrome.includes("Confirmation Bias")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.confirmation.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.confirmation.plan'));
-      } else if (syndrome.includes("Anchoring Effect")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.anchoring.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.anchoring.plan'));
-      } else if (syndrome.includes("FOMO")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.fomo.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.fomo.plan'));
-      } else if (syndrome.includes("Stockholm")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.stockholm.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.stockholm.plan'));
-      } else if (syndrome.includes("Barnum Effect")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.barnum.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.barnum.plan'));
-      } else if (syndrome.includes("IKEA Effect")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.ikea.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.ikea.plan'));
-      } else if (syndrome.includes("Sunk Cost Fallacy")) {
-        strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.sunkCost.tech');
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.sunkCost.plan'));
+      strategy.vulnerability += ` + ${syndromeName}`;
+      
+      if (syndromeObj) {
+        const id = syndromeObj.id;
+        if (id === "imposter-syndrome") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.imposter.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.imposter.plan'));
+        } else if (id === "dunning-kruger") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.dunningKruger.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.dunningKruger.plan'));
+        } else if (id === "halo-effect") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.halo.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.halo.plan'));
+        } else if (id === "confirmation-bias") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.confirmation.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.confirmation.plan'));
+        } else if (id === "anchoring-effect") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.anchoring.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.anchoring.plan'));
+        } else if (id === "fomo") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.fomo.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.fomo.plan'));
+        } else if (id === "stockholm-syndrome") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.stockholm.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.stockholm.plan'));
+        } else if (id === "barnum-effect") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.barnum.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.barnum.plan'));
+        } else if (id === "ikea-effect") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.ikea.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.ikea.plan'));
+        } else if (id === "sunk-cost") {
+          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.sunkCost.tech');
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.sunkCost.plan'));
+        } else {
+          strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: syndromeName }));
+        }
       } else {
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome }));
+        strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: syndromeName }));
       }
     }
 
@@ -378,8 +403,27 @@ export const TargetAnalysis: React.FC = () => {
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                 >
                   <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-                  {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
+                  {syndromes.map(s => <option key={getLocalized(s.name)} value={getLocalized(s.name)}>{getLocalized(s.name)}</option>)}
                 </select>
+
+                {selectedSyndromeData && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-2xl text-sm"
+                  >
+                    <p className="text-indigo-900 dark:text-indigo-200 font-bold mb-1">{getLocalized(selectedSyndromeData.name)}</p>
+                    <p className="text-indigo-700 dark:text-indigo-300 text-xs mb-3 italic">{getLocalized(selectedSyndromeData.description)}</p>
+                    <div className="space-y-2">
+                      <p className="text-slate-700 dark:text-slate-300 text-xs">
+                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{t('targetAnalysis.syndrome.example')}:</span> {getLocalized(selectedSyndromeData.example)}
+                      </p>
+                      <p className="text-slate-700 dark:text-slate-300 text-xs">
+                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{t('targetAnalysis.syndrome.target')}:</span> {getLocalized(selectedSyndromeData.target)}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               <div>

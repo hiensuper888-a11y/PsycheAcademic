@@ -93,39 +93,56 @@ export const TargetAudience: React.FC = () => {
 
     // Automatic Syndrome Suggestion Logic
     const suggestedSyndromes: { name: string, instruction: string }[] = [];
-    const suggest = (enName: string, instruction: string) => {
-      const syndromeObj = syndromes.find(s => s.en === enName);
-      const localizedName = syndromeObj ? getLocalized(syndromeObj) : enName;
+    const suggest = (id: string, instruction?: string) => {
+      const syndromeObj = syndromes.find(s => s.id === id || s.name.en === id);
+      if (!syndromeObj) return;
+      
+      const localizedName = getLocalized(syndromeObj.name);
+      const finalInstruction = instruction || t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: localizedName });
+      
       if (!suggestedSyndromes.find(s => s.name === localizedName)) {
-        suggestedSyndromes.push({ name: localizedName, instruction });
+        suggestedSyndromes.push({ name: localizedName, instruction: finalInstruction });
       }
     };
 
+    // Dynamic Syndrome Suggestion based on keywords in target profile
+    syndromes.forEach(s => {
+      const targetKeywords = getLocalized(s.target).toLowerCase();
+      const profileText = `${target.profession} ${hobbies} ${target.gender} ${age}`.toLowerCase();
+      
+      // Check if any keyword from syndrome target matches profile
+      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
+      if (keywords.some(k => profileText.includes(k))) {
+        suggest(s.id);
+      }
+    });
+
     if (age > 0 && age < 25) {
-      suggest("Imposter Syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("FOMO (Fear of Missing Out)", t('targetAnalysis.strategy.fomoInstructionFull'));
+      suggest("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
+      suggest("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
-      suggest("Dunning-Kruger Effect", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
+      suggest("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
+      suggest("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
     }
 
     if (profession.includes('management') || profession.includes('sales')) {
-      suggest("Halo Effect", t('targetAnalysis.strategy.haloInstructionFull'));
+      suggest("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
     }
 
     if (religion && religion !== 'none') {
-      suggest("Authority Bias", t('targetAnalysis.strategy.authorityInstructionFull'));
+      suggest("authority-bias", t('targetAnalysis.strategy.authorityInstructionFull'));
     }
 
     if (politicalSystem === 'socialism') {
-      suggest("Bandwagon Effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
+      suggest("bandwagon-effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
     }
 
     if (hobbies.includes('game') || hobbies.includes('trò chơi') || hobbies.includes('gaming')) {
-      suggest("Zeigarnik Effect", t('targetAnalysis.strategy.zeigarnikInstruction'));
+      suggest("zeigarnik-effect", t('targetAnalysis.strategy.zeigarnikInstruction'));
     }
 
     if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức') || hobbies.includes('reading')) {
-      suggest("Confirmation Bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
+      suggest("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
     }
     
     const relatedArticles = articles.filter(a => 
@@ -164,8 +181,12 @@ export const TargetAudience: React.FC = () => {
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
             <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-              <option value="">{t('targetAudience.selectSyndrome')}</option>
-              {syndromes.map(s => <option key={getLocalized(s)} value={getLocalized(s)}>{getLocalized(s)}</option>)}
+              <option value="">{t('targetAnalysis.selectSyndrome')}</option>
+              {syndromes.map(s => (
+                <option key={s.id} value={getLocalized(s.name)}>
+                  {getLocalized(s.name)}
+                </option>
+              ))}
             </select>
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
