@@ -80,15 +80,16 @@ export const TargetAudience: React.FC = () => {
 
   const getAnalysis = (target: TargetAudience) => {
     const age = parseInt(target.age || '0');
-    const profession = target.profession.toLowerCase();
-    const religion = target.religion;
-    const politicalSystem = target.politicalSystem;
-    const hobbies = target.hobbies.toLowerCase();
+    const profession = (target.profession || '').toLowerCase();
+    const religion = target.religion || '';
+    const politicalSystem = target.politicalSystem || '';
+    const hobbies = (target.hobbies || '').toLowerCase();
+    const gender = target.gender || '';
 
     const techniques = influenceTechniques.filter(tech => 
-      (tech.targetDemographics.professions.includes(target.profession) || tech.targetDemographics.professions.includes('All')) &&
-      (tech.targetDemographics.religions.includes(target.religion) || tech.targetDemographics.religions.includes('All')) &&
-      (tech.targetDemographics.politicalSystems.includes(target.politicalSystem) || tech.targetDemographics.politicalSystems.includes('All'))
+      (tech.targetDemographics.professions.some(p => p.toLowerCase() === profession) || tech.targetDemographics.professions.includes('All')) &&
+      (tech.targetDemographics.religions.some(r => r.toLowerCase() === religion.toLowerCase()) || tech.targetDemographics.religions.includes('All')) &&
+      (tech.targetDemographics.politicalSystems.some(p => p.toLowerCase() === politicalSystem.toLowerCase()) || tech.targetDemographics.politicalSystems.includes('All'))
     );
 
     // Automatic Syndrome Suggestion Logic
@@ -108,7 +109,7 @@ export const TargetAudience: React.FC = () => {
     // Dynamic Syndrome Suggestion based on keywords in target profile
     syndromes.forEach(s => {
       const targetKeywords = getLocalized(s.target).toLowerCase();
-      const profileText = `${target.profession} ${hobbies} ${target.gender} ${age}`.toLowerCase();
+      const profileText = `${profession} ${hobbies} ${gender} ${age}`.toLowerCase();
       
       // Check if any keyword from syndrome target matches profile
       const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
@@ -144,11 +145,15 @@ export const TargetAudience: React.FC = () => {
     if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức') || hobbies.includes('reading')) {
       suggest("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
     }
+
+    if (target.syndrome) {
+      suggest(target.syndrome);
+    }
     
-    const relatedArticles = articles.filter(a => 
-      getLocalized(a.category).toLowerCase().includes(target.profession.toLowerCase()) || 
-      getLocalized(a.title).toLowerCase().includes(target.profession.toLowerCase())
-    );
+    const relatedArticles = profession ? articles.filter(a => 
+      getLocalized(a.category).toLowerCase().includes(profession) || 
+      getLocalized(a.title).toLowerCase().includes(profession)
+    ) : [];
 
     return { techniques, articles: relatedArticles, suggestedSyndromes };
   };
@@ -183,7 +188,7 @@ export const TargetAudience: React.FC = () => {
             <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
               <option value="">{t('targetAnalysis.selectSyndrome')}</option>
               {syndromes.map(s => (
-                <option key={s.id} value={getLocalized(s.name)}>
+                <option key={s.id} value={s.id}>
                   {getLocalized(s.name)}
                 </option>
               ))}
@@ -204,9 +209,9 @@ export const TargetAudience: React.FC = () => {
                 <h3 className="text-xl font-bold">{target.name}</h3>
                 <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-red-500"><Trash2 size={20} /></button>
               </div>
-              <p className="text-sm text-slate-500 mb-2">{t(`targetAnalysis.genders.${target.gender}`)} | {target.age} {t('targetAudience.yearsOld')} | {t(`targetAnalysis.professions.${target.profession}`)} | {t(`targetAnalysis.religions.${target.religion}`)} | {t(`targetAnalysis.politicalSystems.${target.politicalSystem}`)}</p>
+              <p className="text-sm text-slate-500 mb-2">{target.gender ? t(`targetAnalysis.genders.${target.gender}`) : 'N/A'} | {target.age || 'N/A'} {t('targetAudience.yearsOld')} | {target.profession ? t(`targetAnalysis.professions.${target.profession}`) : 'N/A'} | {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'} | {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
               {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">{t('targetAnalysis.hobbies')}: {target.hobbies}</p>}
-              {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">{t('targetAudience.manualSyndrome')} {target.syndrome}</p>}
+              {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">{t('targetAudience.manualSyndrome')} {target.syndrome ? (syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome) ? getLocalized(syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome)?.name) : target.syndrome) : ''}</p>}
               
               {suggestedSyndromes.length > 0 && (
                 <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/30">

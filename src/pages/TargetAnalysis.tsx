@@ -37,7 +37,13 @@ export const TargetAnalysis: React.FC = () => {
     syndrome: ''
   });
 
-  const selectedSyndromeData = syndromes.find(s => getLocalized(s.name) === currentTarget.syndrome);
+  const getLocalized = (obj: any) => {
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    return obj[i18n.language] || obj['vi'] || '';
+  };
+
+  const selectedSyndromeData = syndromes.find(s => s.id === currentTarget.syndrome || getLocalized(s.name) === currentTarget.syndrome);
   const [showPlan, setShowPlan] = useState<string | null>(null);
 
   const handleSaveTarget = () => {
@@ -52,19 +58,13 @@ export const TargetAnalysis: React.FC = () => {
     if (showPlan === id) setShowPlan(null);
   };
 
-  const getLocalized = (obj: any) => {
-    if (!obj) return '';
-    if (typeof obj === 'string') return obj;
-    return obj[i18n.language] || obj['vi'] || '';
-  };
-
   const getInfluenceStrategy = (target: Partial<TargetProfile>) => {
     const age = parseInt(target.age || '0');
-    const gender = target.gender;
+    const gender = target.gender || '';
     const job = (target.job || '').toLowerCase();
     const hobbies = (target.hobbies || '').toLowerCase();
-    const religion = target.religion;
-    const politicalSystem = target.politicalSystem;
+    const religion = target.religion || '';
+    const politicalSystem = target.politicalSystem || '';
     
     let strategy = {
       vulnerability: t('targetAnalysis.strategy.noInfo'),
@@ -224,7 +224,7 @@ export const TargetAnalysis: React.FC = () => {
         }
       }
       if (!hobbyMatched && hobbies.length > 2) {
-        strategy.plan.push(t('targetAnalysis.strategy.hobbyBiasPlan', { hobby: target.hobbies }));
+        strategy.plan.push(t('targetAnalysis.strategy.hobbyBiasPlan', { hobby: target.hobbies || '' }));
       }
     }
 
@@ -233,7 +233,7 @@ export const TargetAnalysis: React.FC = () => {
       const syndromeName = target.syndrome;
       const syndromeObj = syndromes.find(s => getLocalized(s.name) === syndromeName || s.id === syndromeName || s.name.en === syndromeName);
       
-      strategy.vulnerability += ` + ${syndromeName}`;
+      strategy.vulnerability += ` + ${syndromeObj ? getLocalized(syndromeObj.name) : syndromeName}`;
       
       if (syndromeObj) {
         const id = syndromeObj.id;
@@ -403,7 +403,7 @@ export const TargetAnalysis: React.FC = () => {
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
                 >
                   <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-                  {syndromes.map(s => <option key={getLocalized(s.name)} value={getLocalized(s.name)}>{getLocalized(s.name)}</option>)}
+                  {syndromes.map(s => <option key={s.id} value={s.id}>{getLocalized(s.name)}</option>)}
                 </select>
 
                 {selectedSyndromeData && (
@@ -569,12 +569,12 @@ export const TargetAnalysis: React.FC = () => {
                     </button>
                   </div>
                   <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-                    <p>• {target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')}, {target.age} {t('targetAnalysis.age')}</p>
+                    <p>• {target.gender ? (target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')) : 'N/A'}, {target.age || 'N/A'} {t('targetAnalysis.age')}</p>
                     <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
                     <p>• {t('targetAnalysis.religion')}: {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'}</p>
                     <p>• {t('targetAnalysis.politicalSystem')}: {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
                     <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
-                    <p>• {t('targetAnalysis.syndrome')}: {target.syndrome || 'N/A'}</p>
+                    <p>• {t('targetAnalysis.syndrome')}: {target.syndrome ? (syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome) ? getLocalized(syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome)?.name) : target.syndrome) : 'N/A'}</p>
                   </div>
                   <button 
                     onClick={() => {
