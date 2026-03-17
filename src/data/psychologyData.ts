@@ -216,6 +216,212 @@ High EQ leads to better communication, reduced stress, effective conflict resolu
     ]
   },
   {
+    id: "psychology-of-money",
+    title: {
+      vi: "Tâm lý học về tiền bạc | Sức mạnh và sự thao túng",
+      en: "Psychology of Money | Power and Manipulation",
+      zh: "金钱心理学 | 权力与操纵"
+    },
+    shortDescription: {
+      vi: "Khám phá cách tiền bạc chi phối hành vi và các kỹ thuật thao túng tài chính tinh vi.",
+      en: "Explore how money governs behavior and sophisticated financial manipulation techniques.",
+      zh: "探索金钱如何支配行为以及复杂的财务操纵技术。"
+    },
+    content: {
+      vi: `
+## 💰 Tiền bạc và Tâm trí: Mối quan hệ phức tạp
+Tiền bạc không chỉ là phương tiện trao đổi; nó là một biểu tượng của quyền lực, sự an toàn và giá trị bản thân. Trong tâm lý học, tiền bạc có thể làm thay đổi cách chúng ta nhìn nhận thế giới và đối xử với người khác.
+
+## 🎭 Các kỹ thuật thao túng tài chính phổ biến
+
+<div className="space-y-6 my-8">
+  <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+    <h3 className="text-xl font-bold text-emerald-400 mb-3">1. Thao túng thực tại tài chính (Financial Gaslighting)</h3>
+    <p className="text-slate-300 mb-4">Kẻ thao túng khiến bạn nghi ngờ trí nhớ về các thỏa thuận tiền bạc hoặc chi tiêu chung, nhằm chiếm quyền kiểm soát ngân sách.</p>
+    <div className="bg-slate-900/50 p-4 rounded-xl italic text-sm text-slate-400">
+      "Ví dụ: 'Anh đã đưa tiền cho em rồi mà, em tiêu xài hoang phí quá nên mới không nhớ đấy thôi!'"
+    </div>
+  </div>
+
+  <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+    <h3 className="text-xl font-bold text-emerald-400 mb-3">2. Bẫy chuyên gia (The Expert Trap)</h3>
+    <p className="text-slate-300 mb-4">Sử dụng các thuật ngữ tài chính phức tạp để làm bạn cảm thấy mình 'ngu ngốc' và phải phó mặc tài sản cho họ quyết định.</p>
+    <div className="bg-slate-900/50 p-4 rounded-xl italic text-sm text-slate-400">
+      "Ví dụ: Các nhân viên tư vấn bảo hiểm hoặc đầu tư sử dụng biệt ngữ để ép bạn ký vào những hợp đồng bất lợi."
+    </div>
+  </div>
+
+  <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+    <h3 className="text-xl font-bold text-emerald-400 mb-3">3. Gieo rắc nỗi sợ nghèo đói (Induced Poverty Fear)</h3>
+    <p className="text-slate-300 mb-4">Phóng đại sự bất ổn của nền kinh tế để ép bạn đưa ra các quyết định đầu tư mạo hiểm hoặc chấp nhận bị bóc lột lao động.</p>
+  </div>
+</div>
+
+## 🛡️ Cách bảo vệ bản thân
+- **Minh bạch hóa:** Luôn yêu cầu sao kê và văn bản rõ ràng cho mọi giao dịch.
+- **Tự giáo dục:** Trang bị kiến thức tài chính cơ bản để không bị 'lòe' bởi biệt ngữ.
+- **Độc lập tài chính:** Luôn giữ một khoản dự phòng cá nhân để không bị phụ thuộc hoàn toàn vào bất kỳ ai.
+      `,
+      en: `
+## 💰 Money and the Mind: A Complex Relationship
+Money is more than just a medium of exchange; it's a symbol of power, security, and self-worth. In psychology, money can alter how we perceive the world and treat others.
+
+## 🎭 Common Financial Manipulation Techniques
+
+1. **Financial Gaslighting:** Making you doubt your memory of money agreements or shared spending to gain control over the budget.
+2. **The Expert Trap:** Using complex financial jargon to make you feel "stupid" and force you to leave asset decisions to them.
+3. **Induced Poverty Fear:** Exaggerating economic instability to force you into high-risk investment decisions or accept labor exploitation.
+
+## 🛡️ How to Protect Yourself
+- **Transparency:** Always demand clear statements and written documentation for all transactions.
+- **Self-Education:** Equip yourself with basic financial knowledge to avoid being fooled by jargon.
+- **Financial Independence:** Always keep a personal reserve to avoid being completely dependent on anyone.
+      `,
+      zh: `
+## 💰 金钱与心灵：复杂的关系
+金钱不仅仅是交换媒介；它是权力、安全和自我价值的象征。
+
+## 🎭 常见的财务操纵技术
+1. **财务煤气灯:** 让您怀疑自己对金钱协议或共同支出的记忆。
+2. **专家陷阱:** 使用复杂的财务术语让您感到“愚蠢”。
+3. **诱导贫困恐惧:** 夸大经济不稳定性以迫使您做出高风险决策。
+      `
+    },
+    imageUrl: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200",
+    researchSources: [
+      "Morgan Housel (2020). The Psychology of Money.",
+      "Robert Kiyosaki (1997). Rich Dad Poor Dad."
+    ],
+    author: "Financial Psychologist Alex Rivera",
+    date: "2024-03-15",
+    category: {
+      vi: "Tài chính",
+      en: "Finance",
+      zh: "财务"
+    },
+    keyTakeaways: [
+      {
+        vi: "Nhận diện các bẫy tâm lý trong quản lý tài chính cá nhân.",
+        en: "Identify psychological traps in personal finance management.",
+        zh: "识别个人财务管理中的心理陷阱。"
+      },
+      {
+        vi: "Xây dựng tư duy tài chính độc lập và chống lại sự thao túng.",
+        en: "Build an independent financial mindset and resist manipulation.",
+        zh: "建立独立的财务思维并抵制操纵。"
+      }
+    ],
+    chartData: [
+      { subject: { vi: "Lý trí", en: "Logic", zh: "逻辑" }, A: 40, fullMark: 100 },
+      { subject: { vi: "Tham lam", en: "Greed", zh: "贪婪" }, A: 90, fullMark: 100 },
+      { subject: { vi: "Sợ hãi", en: "Fear", zh: "恐惧" }, A: 85, fullMark: 100 },
+      { subject: { vi: "Kỷ luật", en: "Discipline", zh: "纪律" }, A: 30, fullMark: 100 },
+      { subject: { vi: "Kiến thức", en: "Knowledge", zh: "知识" }, A: 50, fullMark: 100 }
+    ]
+  },
+  {
+    id: "psychology-of-love",
+    title: {
+      vi: "Tâm lý học về tình yêu | Sự gắn kết và những cái bẫy cảm xúc",
+      en: "Psychology of Love | Bonding and Emotional Traps",
+      zh: "爱情心理学 | 依恋与情感陷阱"
+    },
+    shortDescription: {
+      vi: "Phân tích các giai đoạn của tình yêu và cách nhận diện các mối quan hệ độc hại bị thao túng.",
+      en: "Analyze the stages of love and how to identify toxic manipulated relationships.",
+      zh: "分析爱情的阶段以及如何识别被操纵的有毒关系。"
+    },
+    content: {
+      vi: `
+## ❤️ Bản chất của sự gắn kết
+Tình yêu là một sự pha trộn phức tạp giữa sinh học (hormone như Oxytocin, Dopamine) và tâm lý học (sự gắn kết, nhu cầu được thấu hiểu). Tuy nhiên, chính những nhu cầu mãnh liệt này lại là kẽ hở cho sự thao túng.
+
+## 🕸️ Những cái bẫy cảm xúc tinh vi
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+  <div className="bg-rose-900/20 p-4 rounded-xl border border-rose-500/30">
+    <h4 className="text-rose-400 font-bold mb-2">💣 Love Bombing</h4>
+    <p className="text-sm text-slate-300">Tấn công bằng sự quan tâm dồn dập để làm bạn 'say' và mất khả năng phòng thủ.</p>
+  </div>
+  <div className="bg-rose-900/20 p-4 rounded-xl border border-rose-500/30">
+    <h4 className="text-rose-400 font-bold mb-2">📐 Tam giác hóa (Triangulation)</h4>
+    <p className="text-sm text-slate-300">Đưa người thứ ba vào để tạo sự ghen tuông, khiến bạn phải nỗ lực hơn để giữ họ.</p>
+  </div>
+  <div className="bg-rose-900/20 p-4 rounded-xl border border-rose-500/30">
+    <h4 className="text-rose-400 font-bold mb-2">🎢 Củng cố gián đoạn</h4>
+    <p className="text-sm text-slate-300">Lúc nóng lúc lạnh, khiến bạn luôn trong trạng thái chờ đợi và khao khát sự quan tâm từ họ.</p>
+  </div>
+  <div className="bg-rose-900/20 p-4 rounded-xl border border-rose-500/30">
+    <h4 className="text-rose-400 font-bold mb-2">🔮 Future Faking</h4>
+    <p className="text-sm text-slate-300">Hứa hẹn về một đám cưới hay tương lai tươi sáng để giữ bạn ở lại trong hiện tại đầy đau khổ.</p>
+  </div>
+</div>
+
+## 🛡️ Cách xây dựng mối quan hệ lành mạnh
+- **Thiết lập ranh giới:** Biết nói 'Không' với những yêu cầu làm tổn thương giá trị bản thân.
+- **Quan sát hành động:** Đừng chỉ nghe lời nói, hãy nhìn vào cách họ đối xử với bạn trong thời gian dài.
+- **Giữ sự độc lập:** Đừng bao giờ từ bỏ bạn bè, gia đình hay đam mê cá nhân vì một mối quan hệ.
+      `,
+      en: `
+## ❤️ The Nature of Bonding
+Love is a complex mix of biology (hormones like Oxytocin, Dopamine) and psychology (attachment, the need to be understood). However, these intense needs are loopholes for manipulation.
+
+## 🕸️ Sophisticated Emotional Traps
+
+1. **Love Bombing:** Attacking with intense attention to make you "drunk" and lose your defenses.
+2. **Triangulation:** Bringing in a third person to create jealousy, making you work harder to keep them.
+3. **Intermittent Reinforcement:** Hot and cold behavior, keeping you in a state of waiting and craving their attention.
+4. **Future Faking:** Promising a wedding or a bright future to keep you in a painful present.
+
+## 🛡️ How to Build Healthy Relationships
+- **Set Boundaries:** Know how to say "No" to requests that hurt your self-worth.
+- **Observe Actions:** Don't just listen to words; look at how they treat you over time.
+- **Maintain Independence:** Never give up friends, family, or personal passions for a relationship.
+      `,
+      zh: `
+## ❤️ 依恋的本质
+爱情是生物学和心理学的复杂混合。然而，这些强烈的需求正是操纵的漏洞。
+
+## 🕸️ 复杂的情感陷阱
+1. **情感轰炸:** 用强烈的关注让你失去防御。
+2. **三角化:** 引入第三者制造嫉妒。
+3. **间歇性强化:** 忽冷忽热，让你产生渴望。
+4. **虚假未来:** 承诺美好未来以维持现状。
+      `
+    },
+    imageUrl: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=1200",
+    researchSources: [
+      "Helen Fisher (2004). Why We Love.",
+      "Amir Levine & Rachel Heller (2010). Attached."
+    ],
+    author: "Relationship Expert Dr. Sofia Martinez",
+    date: "2024-02-14",
+    category: {
+      vi: "Tình cảm",
+      en: "Relationship",
+      zh: "关系"
+    },
+    keyTakeaways: [
+      {
+        vi: "Phân biệt giữa tình yêu lành mạnh và sự thao túng cảm xúc.",
+        en: "Distinguish between healthy love and emotional manipulation.",
+        zh: "区分健康的爱和情感操纵。"
+      },
+      {
+        vi: "Học cách thiết lập ranh giới cá nhân trong các mối quan hệ.",
+        en: "Learn to set personal boundaries in relationships.",
+        zh: "学习在关系中建立个人边界。"
+      }
+    ],
+    chartData: [
+      { subject: { vi: "Tin tưởng", en: "Trust", zh: "信任" }, A: 80, fullMark: 100 },
+      { subject: { vi: "Thấu cảm", en: "Empathy", zh: "共情" }, A: 90, fullMark: 100 },
+      { subject: { vi: "Đam mê", en: "Passion", zh: "激情" }, A: 95, fullMark: 100 },
+      { subject: { vi: "Cam kết", en: "Commitment", zh: "承诺" }, A: 70, fullMark: 100 },
+      { subject: { vi: "Độc lập", en: "Independence", zh: "独立" }, A: 60, fullMark: 100 }
+    ]
+  },
+  {
     id: "cbt-therapy",
     title: {
       vi: "Liệu pháp Nhận thức - Hành vi (CBT)",

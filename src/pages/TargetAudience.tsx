@@ -12,6 +12,7 @@ interface TargetAudience {
   profession: string;
   religion: string;
   politicalSystem: string;
+  hobbies: string;
   syndrome: string;
   savedTechniques: string[];
 }
@@ -23,7 +24,7 @@ const politicalSystems = ['Xã hội chủ nghĩa', 'Tư bản', 'Quân chủ l�
 
 export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', syndrome: '' });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', hobbies: '', syndrome: '' });
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
@@ -43,7 +44,7 @@ export const TargetAudience: React.FC = () => {
       savedTechniques: []
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', syndrome: '' });
+    setNewTarget({ name: '', age: '', gender: 'Nam', profession: 'Sales', religion: 'Không tôn giáo', politicalSystem: 'Tư bản', hobbies: '', syndrome: '' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -51,6 +52,7 @@ export const TargetAudience: React.FC = () => {
     const profession = target.profession.toLowerCase();
     const religion = target.religion;
     const politicalSystem = target.politicalSystem;
+    const hobbies = target.hobbies.toLowerCase();
 
     const techniques = influenceTechniques.filter(t => 
       (t.targetDemographics.professions.includes(target.profession) || t.targetDemographics.professions.includes('All')) &&
@@ -83,6 +85,14 @@ export const TargetAudience: React.FC = () => {
 
     if (politicalSystem === 'Xã hội chủ nghĩa') {
       suggest("Bandwagon Effect", "Nhấn mạnh vào lợi ích tập thể.");
+    }
+
+    if (hobbies.includes('game') || hobbies.includes('trò chơi')) {
+      suggest("Zeigarnik Effect", "Tạo ra các nhiệm vụ chưa hoàn thành để thu hút sự chú ý.");
+    }
+
+    if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức')) {
+      suggest("Confirmation Bias", "Cung cấp thông tin củng cố niềm tin sẵn có của họ.");
     }
     
     const getLocalized = (field: any) => {
@@ -122,6 +132,7 @@ export const TargetAudience: React.FC = () => {
           <select className="p-3 rounded-xl border" value={newTarget.politicalSystem} onChange={e => setNewTarget({...newTarget, politicalSystem: e.target.value})}>
             {politicalSystems.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
+          <input placeholder="Sở thích (ví dụ: Game, Đọc sách)" className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
           <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
             <option value="">Chọn hội chứng</option>
             {syndromes.map(s => <option key={s} value={s}>{s}</option>)}
@@ -142,6 +153,7 @@ export const TargetAudience: React.FC = () => {
                 <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-red-500"><Trash2 size={20} /></button>
               </div>
               <p className="text-sm text-slate-500 mb-2">{target.gender} | {target.age} tuổi | {target.profession} | {target.religion} | {target.politicalSystem}</p>
+              {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">Sở thích: {target.hobbies}</p>}
               {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">Hội chứng thủ công: {target.syndrome}</p>}
               
               {suggestedSyndromes.length > 0 && (

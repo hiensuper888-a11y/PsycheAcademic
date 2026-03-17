@@ -363,5 +363,285 @@ export const influenceTechniques: InfluenceTechnique[] = [
       politicalSystems: ["Tư bản"]
     },
     defensiveStrategy: "Tự nghiên cứu giá trị thực tế của sản phẩm/dịch vụ thay vì dựa vào con số ban đầu được đưa ra."
+  },
+  {
+    id: "financial-gaslighting",
+    title: "Thao túng thực tại tài chính (Financial Gaslighting)",
+    description: "Khiến nạn nhân nghi ngờ trí nhớ hoặc nhận thức của họ về các thỏa thuận, chi tiêu hoặc tình trạng tài chính chung.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Millennials", "Gen X"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Luôn ghi chép lại các giao dịch tài chính và thỏa thuận bằng văn bản. Tin tưởng vào bằng chứng thực tế thay vì lời nói của đối phương."
+  },
+  {
+    id: "love-bombing-financial",
+    title: "Dội bom tình cảm bằng vật chất (Love Bombing Financial)",
+    description: "Tặng những món quà đắt tiền dồn dập ngay từ đầu để tạo ra cảm giác nợ nần và nghĩa vụ phải đáp lại.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["Tư bản"]
+    },
+    defensiveStrategy: "Cảnh giác với những món quà quá lớn so với mức độ thân thiết của mối quan hệ. Hiểu rằng quà tặng không đồng nghĩa với việc bạn phải từ bỏ quyền tự chủ."
+  },
+  {
+    id: "expert-trap",
+    title: "Bẫy chuyên gia tài chính (The Expert Trap)",
+    description: "Sử dụng thuật ngữ tài chính cực kỳ phức tạp để làm nạn nhân cảm thấy kém cỏi và phải hoàn toàn dựa dẫm vào 'chuyên gia'.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["Finance", "Retail"],
+      religions: ["All"],
+      politicalSystems: ["Tư bản"]
+    },
+    defensiveStrategy: "Yêu cầu giải thích bằng ngôn ngữ đơn giản. Nếu họ không thể giải thích đơn giản, có thể họ đang cố tình làm khó bạn."
+  },
+  {
+    id: "sunk-cost-emotional",
+    title: "Bẫy chi phí chìm trong tình cảm (Sunk Cost Emotional)",
+    description: "Nhắc nhở nạn nhân về số năm hoặc nỗ lực đã đầu tư vào mối quan hệ để ngăn họ rời bỏ, dù mối quan hệ đó đã độc hại.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Millennials", "Gen X", "Baby Boomers"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Đánh giá mối quan hệ dựa trên giá trị hiện tại và tương lai, thay vì tiếc nuối những gì đã mất trong quá khứ."
+  },
+  {
+    id: "soulmate-illusion",
+    title: "Ảo tưởng về người bạn tâm giao (Soulmate Illusion)",
+    description: "Phản chiếu hoàn hảo những khao khát và giá trị sâu kín nhất của nạn nhân để tạo ra một sự kết nối tức thì và mãnh liệt.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Dành thời gian để tìm hiểu đối phương thực sự thay vì bị cuốn vào cảm giác 'định mệnh' quá sớm."
+  },
+  {
+    id: "triangulation",
+    title: "Kỹ thuật tam giác hóa (Triangulation)",
+    description: "Đưa một người thứ ba vào động lực mối quan hệ để tạo ra sự ghen tuông và cạnh tranh nhằm giành lấy sự chú ý của kẻ thao túng.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Nhận diện rằng sự ghen tuông là một công cụ kiểm soát. Giao tiếp trực tiếp với các bên liên quan thay vì thông qua kẻ thao túng."
+  },
+  {
+    id: "intermittent-reinforcement",
+    title: "Củng cố gián đoạn (Intermittent Reinforcement)",
+    description: "Cung cấp tình cảm hoặc phần thưởng một cách không thể đoán trước để tạo ra một chu kỳ gây nghiện trong việc tìm kiếm sự chấp thuận.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Nhận diện mô thức 'nóng - lạnh'. Đánh giá mối quan hệ dựa trên sự ổn định và tôn trọng nhất quán."
+  },
+  {
+    id: "damsel-in-distress-financial",
+    title: "Kịch bản 'Nạn nhân tài chính' (Damsel in Distress)",
+    description: "Đóng vai nạn nhân của sự không may mắn về tài chính để yêu cầu các khoản vay hoặc sự hỗ trợ mà không bao giờ có ý định trả lại.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Chỉ cho vay số tiền mà bạn sẵn sàng mất. Kiểm chứng các câu chuyện về sự khó khăn trước khi hỗ trợ tài chính lớn."
+  },
+  {
+    id: "bait-and-switch-relationship",
+    title: "Mồi nhử và hoán đổi trong tình cảm (Bait and Switch)",
+    description: "Thể hiện một nhân cách hoàn hảo ban đầu, sau đó từ từ bộc lộ bản chất kiểm soát hoặc lạm dụng khi nạn nhân đã cam kết.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Chú ý đến những thay đổi nhỏ trong hành vi. Đừng phớt lờ những 'cờ đỏ' (red flags) chỉ vì những ấn tượng tốt ban đầu."
+  },
+  {
+    id: "future-faking",
+    title: "Vẽ ra tương lai ảo (Future Faking)",
+    description: "Lập ra những kế hoạch chi tiết cho tương lai (kết hôn, du lịch, kinh doanh) để giữ nạn nhân đầu tư vào hiện tại dù không có ý định thực hiện.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Đánh giá đối phương dựa trên hành động hiện tại thay vì những lời hứa hẹn xa vời."
+  },
+  {
+    id: "digital-isolation",
+    title: "Cô lập kỹ thuật số (Digital Isolation)",
+    description: "Kiểm soát các tương tác trên mạng xã hội và dấu chân kỹ thuật số của nạn nhân để hạn chế ảnh hưởng từ bên ngoài.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Giữ quyền kiểm soát mật khẩu và tài khoản cá nhân. Duy trì các kết nối trực tuyến độc lập với đối phương."
+  },
+  {
+    id: "inheritance-guilt",
+    title: "Thao túng bằng quyền thừa kế (Inheritance Guilt)",
+    description: "Sử dụng di sản gia đình hoặc quyền thừa kế như một công cụ để kiểm soát hành vi và lựa chọn của thế hệ trẻ.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Xây dựng sự độc lập tài chính. Hiểu rằng quyền tự do cá nhân quan trọng hơn các lời hứa về tài sản tương lai."
+  },
+  {
+    id: "charity-manipulation",
+    title: "Thao túng bằng lòng trắc ẩn (Charity Manipulation)",
+    description: "Lợi dụng lòng vị tha của nạn nhân để kêu gọi quyên góp cho các mục đích giả tạo hoặc tự phục vụ.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Kiểm tra tính minh bạch của các tổ chức từ thiện. Đừng để cảm xúc nhất thời ép buộc việc quyên góp."
+  },
+  {
+    id: "exclusive-club",
+    title: "Bẫy 'Câu lạc bộ đặc quyền' (Exclusive Club)",
+    description: "Tạo ra cảm giác thuộc về một nhóm tinh hoa yêu cầu sự hy sinh về tài chính hoặc cá nhân để duy trì vị thế.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Millennials", "Gen X"],
+      genders: ["All"],
+      professions: ["Management", "Finance"],
+      religions: ["All"],
+      politicalSystems: ["Tư bản"]
+    },
+    defensiveStrategy: "Đánh giá giá trị thực sự của nhóm so với những gì bạn phải đánh đổi. Đừng để cái tôi bị thao túng bởi sự 'đặc quyền'."
+  },
+  {
+    id: "induced-poverty-fear",
+    title: "Gieo rắc nỗi sợ nghèo đói (Induced Poverty Fear)",
+    description: "Phóng đại sự bất ổn kinh tế để ép buộc nạn nhân đưa ra các quyết định tài chính rủi ro cao hoặc bị bóc lột.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["Tư bản", "Xã hội chủ nghĩa"]
+    },
+    defensiveStrategy: "Tìm kiếm thông tin kinh tế từ nhiều nguồn khách quan. Xây dựng quỹ dự phòng để giảm bớt nỗi sợ hãi."
+  },
+  {
+    id: "hero-complex",
+    title: "Phức cảm anh hùng (Hero Complex)",
+    description: "Tự định vị mình là người duy nhất có thể cứu nạn nhân khỏi các vấn đề của họ, tạo ra sự phụ thuộc tuyệt đối.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Phát triển kỹ năng giải quyết vấn đề cá nhân. Nhận diện rằng không ai có thể là 'vị cứu tinh' duy nhất của bạn."
+  },
+  {
+    id: "emotional-blackmail-love",
+    title: "Tống tiền cảm ứng trong tình yêu (Emotional Blackmail)",
+    description: "Đe dọa chấm dứt mối quan hệ hoặc tự làm hại bản thân nếu nạn nhân không tuân theo các yêu cầu.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Không nhượng bộ trước các lời đe dọa. Khuyến khích đối phương tìm kiếm sự trợ giúp chuyên môn nếu họ đe dọa tự hại."
+  },
+  {
+    id: "shadow-influence",
+    title: "Ảnh hưởng bóng tối (Shadow Influence)",
+    description: "Sử dụng các gợi ý tinh tế, gián tiếp và thao túng môi trường để thay đổi hành vi của nạn nhân mà họ không hề hay biết.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["Marketing", "Management"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Nâng cao sự tự nhận thức về các mô thức hành vi của bản thân. Đặt câu hỏi khi thấy mình thay đổi thói quen một cách đột ngột."
+  },
+  {
+    id: "information-asymmetry-money",
+    title: "Bất đối xứng thông tin tài chính (Information Asymmetry)",
+    description: "Cố tình giữ kín hoặc làm phức tạp hóa thông tin tài chính để duy trì quyền lực trong mối quan hệ đối tác hoặc gia đình.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["Finance", "Management"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Yêu cầu sự minh bạch tuyệt đối trong các vấn đề tài chính chung. Tự học các kiến thức cơ bản về quản lý tài chính."
+  },
+  {
+    id: "legacy-trap",
+    title: "Bẫy di sản (Legacy Trap)",
+    description: "Gây áp lực buộc ai đó phải tuân theo một con đường hoặc sự nghiệp cụ thể để 'tôn vinh' truyền thống hoặc kỳ vọng của gia đình.",
+    sourceBook: "Dark Psychology - Various",
+    targetDemographics: {
+      ageGroups: ["Gen Z", "Millennials"],
+      genders: ["All"],
+      professions: ["Academic", "Corporate"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    },
+    defensiveStrategy: "Xác định giá trị và đam mê cá nhân. Hiểu rằng cuộc đời bạn thuộc về bạn, không phải là phần mở rộng của thế hệ trước."
   }
 ];

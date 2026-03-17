@@ -18,5 +18,9 @@ export const syndromes = [
   "Hội chứng Latah", "Hội chứng Amok", "Hội chứng Piblokto", "Hội chứng Susto", "Hội chứng Taijin Kyofusho",
   "Hội chứng Hikikomori", "Hội chứng Karoshi", "Hội chứng Gwang-byung", "Hội chứng Shin-byung", "Hội chứng Hwabyung",
   "Hội chứng Dhat", "Hội chứng Zar", "Hội chứng Mal de ojo", "Hội chứng Ataque de nervios", "Hội chứng Brain Fag",
-  "Hội chứng Locura", "Hội chứng Ghost Sickness", "Hội chứng Grisi Siknis", "Hội chứng Windigo", "Hội chứng Arctic Hysteria"
+  "Hội chứng Locura", "Hội chứng Ghost Sickness", "Hội chứng Grisi Siknis", "Hội chứng Windigo", "Hội chứng Arctic Hysteria",
+  "Hội chứng Baader-Meinhof", "Hội chứng Dorian Gray", "Hội chứng Cassandra", "Hội chứng Pollyanna", "Hội chứng Werther",
+  "Hội chứng Streisand", "Hội chứng Mozart", "Hội chứng Golem", "Hội chứng Pygmalion", "Hội chứng Hawthorne",
+  "Hội chứng Ringelmann", "Hội chứng Ben Franklin", "Hội chứng Von Restorff", "Hội chứng Google", "Hội chứng Tetris",
+  "Hội chứng Kleine-Levin", "Hội chứng Exploding Head", "Hội chứng Foreign Accent", "Hội chứng Ganymede", "Hội chứng Jerusalem"
 ];
