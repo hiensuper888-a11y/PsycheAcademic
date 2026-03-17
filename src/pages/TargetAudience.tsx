@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
-import { PsychologyArticle } from '../data/psychologyData';
+import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
 import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
 
@@ -37,14 +37,10 @@ export const TargetAudience: React.FC = () => {
     const saved = localStorage.getItem('target-audiences');
     if (saved) setTargets(JSON.parse(saved));
 
-    const fetchArticles = async () => {
+    const fetchArticles = () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/articles');
-        if (response.ok) {
-          const data = await response.json();
-          setArticles(data);
-        }
+        setArticles(psychologyData);
       } catch (err) {
         console.error('Error fetching articles:', err);
       } finally {
