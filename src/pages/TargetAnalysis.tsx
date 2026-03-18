@@ -81,11 +81,20 @@ export const TargetAnalysis: React.FC = () => {
     if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
 
     // Automatic Syndrome Suggestion Logic
-    const suggestedSyndromes: { name: string, instruction: string }[] = syndromes.filter(s => {
+    const ageNum = parseInt(target.age || '0');
+    const getGeneration = (age: number) => {
+      if (age >= 14 && age <= 29) return "Gen Z";
+      if (age >= 30 && age <= 45) return "Millennials";
+      if (age >= 46 && age <= 61) return "Gen X";
+      if (age >= 62 && age <= 80) return "Baby Boomers";
+      return "Other";
+    };
+    const generation = getGeneration(ageNum);
+
+    const matchedSyndromes = syndromes.filter(s => {
       if (!s.targetDemographics) return false;
       const d = s.targetDemographics;
-      const ageNum = parseInt(target.age || '0');
-      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.includes(generation) || d.ageGroups.some(ag => {
         const parts = ag.split('-');
         if (parts.length === 2) {
           const [min, max] = parts.map(Number);
@@ -100,7 +109,9 @@ export const TargetAnalysis: React.FC = () => {
       const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => hobbies.includes(i.toLowerCase()));
       
       return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
-    }).map(s => ({
+    });
+
+    strategy.suggestedSyndromes = matchedSyndromes.map(s => ({
       name: getLocalized(s.name),
       instruction: getLocalized(s.description)
     }));
@@ -109,12 +120,12 @@ export const TargetAnalysis: React.FC = () => {
     syndromes.forEach(s => {
       if (s.targetDemographics) return;
       const targetKeywords = getLocalized(s.target).toLowerCase();
-      const profileText = `${job} ${hobbies} ${gender} ${age}`.toLowerCase();
+      const profileText = `${job} ${hobbies} ${gender} ${ageNum}`.toLowerCase();
       const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
       if (keywords.some(k => profileText.includes(k))) {
         const localizedName = getLocalized(s.name);
-        if (!suggestedSyndromes.find(ss => ss.name === localizedName)) {
-          suggestedSyndromes.push({ 
+        if (!strategy.suggestedSyndromes.find(ss => ss.name === localizedName)) {
+          strategy.suggestedSyndromes.push({ 
             name: localizedName, 
             instruction: getLocalized(s.description) 
           });
@@ -122,49 +133,95 @@ export const TargetAnalysis: React.FC = () => {
       }
     });
 
-    strategy.suggestedSyndromes = suggestedSyndromes;
+    if (strategy.suggestedSyndromes.length > 0) {
+      strategy.vulnerability = strategy.suggestedSyndromes.map(s => s.name).join(', ');
+      strategy.suggestedSyndromes.forEach(s => {
+        strategy.plan.push(s.instruction);
+      });
+    }
 
     // Automatic Technique Suggestion Logic
-    const suggestTechnique = (id: string) => {
-      const techObj = influenceTechniques.find(t => t.id === id || (typeof t.title !== 'string' && t.title.en === id));
-      if (!techObj) return;
+    const matchedTechniques = influenceTechniques.filter(t => {
+      const d = t.targetDemographics;
       
-      const localizedTitle = getLocalized(techObj.title);
-      const localizedDesc = getLocalized(techObj.description);
-      const localizedDefensive = getLocalized(techObj.defensiveStrategy);
-      
-      if (!strategy.suggestedTechniques.find(t => t.title === localizedTitle)) {
-        strategy.suggestedTechniques.push({ title: localizedTitle, description: localizedDesc, defensive: localizedDefensive });
-      }
-    };
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.includes(generation) || d.ageGroups.some(ag => {
+        const parts = ag.split('-');
+        if (parts.length === 2) {
+          const [min, max] = parts.map(Number);
+          return ageNum >= min && ageNum <= max;
+        }
+        return false;
+      });
 
-    // Dynamic Technique Suggestion based on keywords in target profile
-    const profileText = `${job} ${hobbies} ${gender} ${age} ${religion} ${politicalSystem}`.toLowerCase();
-    
-    influenceTechniques.forEach(t => {
-      const targetKeywords = `${t.targetDemographics.professions.join(' ')} ${t.targetDemographics.interests?.join(' ') || ''} ${t.targetDemographics.religions.join(' ')} ${t.targetDemographics.politicalSystems.join(' ')}`.toLowerCase();
-      const keywords = targetKeywords.split(/[,.;\s]/).map(k => k.trim()).filter(k => k.length > 3);
-      if (keywords.some(k => profileText.includes(k))) {
-        suggestTechnique(t.id);
-      }
+      const genderMatch = d.genders.includes('All') || d.genders.includes(gender);
+      const jobMatch = d.professions.includes('All') || d.professions.some(p => job.includes(p.toLowerCase()));
+      const religionMatch = d.religions.includes('All') || d.religions.includes(religion);
+      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(politicalSystem);
+      const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => hobbies.includes(i.toLowerCase()));
+
+      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
     });
+
+    strategy.suggestedTechniques = matchedTechniques.map(tech => ({
+      title: getLocalized(tech.title),
+      description: getLocalized(tech.description),
+      defensive: getLocalized(tech.defensiveStrategy)
+    }));
+
+    // Fallback: Dynamic Technique Suggestion based on keywords in target profile if no direct matches
+    if (strategy.suggestedTechniques.length === 0) {
+      const profileText = `${job} ${hobbies} ${gender} ${ageNum} ${religion} ${politicalSystem}`.toLowerCase();
+      influenceTechniques.forEach(t => {
+        const targetKeywords = `${t.targetDemographics.professions.join(' ')} ${t.targetDemographics.interests?.join(' ') || ''} ${t.targetDemographics.religions.join(' ')} ${t.targetDemographics.politicalSystems.join(' ')}`.toLowerCase();
+        const keywords = targetKeywords.split(/[,.;\s]/).map(k => k.trim()).filter(k => k.length > 3);
+        if (keywords.some(k => profileText.includes(k))) {
+          const localizedTitle = getLocalized(t.title);
+          if (!strategy.suggestedTechniques.find(st => st.title === localizedTitle)) {
+            strategy.suggestedTechniques.push({ 
+              title: localizedTitle, 
+              description: getLocalized(t.description), 
+              defensive: getLocalized(t.defensiveStrategy) 
+            });
+          }
+        }
+      });
+    }
+
+    if (strategy.suggestedTechniques.length > 0) {
+      strategy.technique = strategy.suggestedTechniques.map(t => t.title).join(' + ');
+      strategy.suggestedTechniques.forEach(t => {
+        strategy.plan.push(t.description);
+      });
+    }
 
     // Age & Gender based logic
     if (age > 0 && age < 25) {
-      strategy.vulnerability = gender === 'female' 
-        ? t('targetAnalysis.strategy.vulnerability.femaleYoung') 
-        : t('targetAnalysis.strategy.vulnerability.maleYoung');
-      strategy.technique = t('targetAnalysis.strategy.technique.young');
+      if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo')) {
+        strategy.vulnerability = gender === 'female' 
+          ? t('targetAnalysis.strategy.vulnerability.femaleYoung') 
+          : t('targetAnalysis.strategy.vulnerability.maleYoung');
+      }
+      if (strategy.technique === t('targetAnalysis.strategy.undefined')) {
+        strategy.technique = t('targetAnalysis.strategy.technique.young');
+      }
       strategy.plan.push(t('targetAnalysis.strategy.plan.young'));
     } else if (age >= 25 && age <= 50) {
-      strategy.vulnerability = gender === 'female'
-        ? t('targetAnalysis.strategy.vulnerability.femaleMid')
-        : t('targetAnalysis.strategy.vulnerability.maleMid');
-      strategy.technique = t('targetAnalysis.strategy.technique.mid');
+      if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo')) {
+        strategy.vulnerability = gender === 'female'
+          ? t('targetAnalysis.strategy.vulnerability.femaleMid')
+          : t('targetAnalysis.strategy.vulnerability.maleMid');
+      }
+      if (strategy.technique === t('targetAnalysis.strategy.undefined')) {
+        strategy.technique = t('targetAnalysis.strategy.technique.mid');
+      }
       strategy.plan.push(t('targetAnalysis.strategy.plan.mid'));
     } else if (age > 50) {
-      strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.old');
-      strategy.technique = t('targetAnalysis.strategy.technique.old');
+      if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo')) {
+        strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.old');
+      }
+      if (strategy.technique === t('targetAnalysis.strategy.undefined')) {
+        strategy.technique = t('targetAnalysis.strategy.technique.old');
+      }
       strategy.plan.push(t('targetAnalysis.strategy.plan.old'));
     }
 
@@ -245,55 +302,6 @@ export const TargetAnalysis: React.FC = () => {
       }
     }
 
-    // Syndrome-based logic integration
-    const matchedSyndromes = syndromes.filter(s => {
-      if (!s.targetDemographics) return false;
-      const d = s.targetDemographics;
-      const ageNum = parseInt(target.age || '0');
-      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
-        const [min, max] = ag.split('-').map(Number);
-        return ageNum >= min && ageNum <= max;
-      });
-      const genderMatch = d.genders.includes('All') || d.genders.includes(target.gender || '');
-      const jobMatch = d.professions.includes('All') || d.professions.some(p => (target.job || '').toLowerCase().includes(p.toLowerCase()));
-      const religionMatch = d.religions.includes('All') || d.religions.includes(target.religion || '');
-      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(target.politicalSystem || '');
-      const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => (target.hobbies || '').toLowerCase().includes(i.toLowerCase()));
-      
-      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
-    });
-
-    if (matchedSyndromes.length > 0) {
-      strategy.vulnerability = matchedSyndromes.map(s => getLocalized(s.name)).join(', ');
-      matchedSyndromes.forEach(s => {
-        strategy.plan.push(getLocalized(s.description));
-      });
-    }
-
-    // Influence Technique matching
-    const matchedTechniques = influenceTechniques.filter(tech => {
-      const d = tech.targetDemographics;
-      const ageNum = parseInt(target.age || '0');
-      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
-        const [min, max] = ag.split('-').map(Number);
-        return ageNum >= min && ageNum <= max;
-      });
-      const genderMatch = d.genders.includes('All') || d.genders.includes(target.gender || '');
-      const jobMatch = d.professions.includes('All') || d.professions.some(p => (target.job || '').toLowerCase().includes(p.toLowerCase()));
-      const religionMatch = d.religions.includes('All') || d.religions.includes(target.religion || '');
-      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(target.politicalSystem || '');
-      const interestMatch = d.interests.includes('All') || d.interests.some(i => (target.hobbies || '').toLowerCase().includes(i.toLowerCase()));
-
-      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
-    });
-
-    if (matchedTechniques.length > 0) {
-      strategy.technique = matchedTechniques.map(t => getLocalized(t.title)).join(' + ');
-      matchedTechniques.forEach(t => {
-        strategy.plan.push(getLocalized(t.description));
-      });
-    }
-
     if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo') && (job || hobbies)) {
         strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.basedOnJobHobby');
     }
@@ -303,6 +311,9 @@ export const TargetAnalysis: React.FC = () => {
       (job && (getLocalized(a.category).toLowerCase().includes(job) || getLocalized(a.title).toLowerCase().includes(job))) || 
       (hobbies && (getLocalized(a.category).toLowerCase().includes(hobbies) || getLocalized(a.title).toLowerCase().includes(hobbies)))
     );
+
+    // Filter for unique plan steps
+    strategy.plan = Array.from(new Set(strategy.plan));
 
     return strategy;
   };
