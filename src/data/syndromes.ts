@@ -2167,5 +2167,145 @@ export const syndromes: Syndrome[] = [
     description: { vi: "Khó khăn trong tương tác xã hội.", en: "Difficulty in social interaction.", zh: "社交互动困难。" },
     example: { vi: "Khó hiểu cảm xúc người khác.", en: "Hard to understand others' emotions.", zh: "难以理解他人的情绪。" },
     target: { vi: "Tuổi: 5-60, Giới tính: Tất cả, Sở thích: Khoa học, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 5-60, Gender: All, Interests: Science, Profession: All, Religion: None, Regime: All", zh: "年龄: 5-60, 性别: 全部, 兴趣: 科学, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "capgras-syndrome",
+    name: { vi: "Hội chứng Capgras", en: "Capgras Syndrome", zh: "卡普格拉综合症" },
+    description: { vi: "Tin rằng người thân bị thay thế bởi kẻ mạo danh.", en: "Believing loved ones are replaced by imposters.", zh: "相信亲人被冒名顶替者取代。" },
+    example: { vi: "Không nhận ra vợ mình.", en: "Not recognizing one's wife.", zh: "不认得自己的妻子。" },
+    target: { vi: "Tuổi: 30-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "fregoli-syndrome",
+    name: { vi: "Hội chứng Fregoli", en: "Fregoli Syndrome", zh: "弗雷戈里综合症" },
+    description: { vi: "Tin rằng nhiều người là một người.", en: "Believing many people are one person.", zh: "相信许多人是同一个人。" },
+    example: { vi: "Nghĩ rằng mọi người là kẻ thù.", en: "Thinking everyone is an enemy.", zh: "认为每个人都是敌人。" },
+    target: { vi: "Tuổi: 30-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "cotard-syndrome",
+    name: { vi: "Hội chứng Cotard", en: "Cotard Syndrome", zh: "科塔尔综合症" },
+    description: { vi: "Tin rằng mình đã chết.", en: "Believing one is dead.", zh: "相信自己已经死了。" },
+    example: { vi: "Khăng khăng mình là xác sống.", en: "Insisting one is a zombie.", zh: "坚持认为自己是丧尸。" },
+    target: { vi: "Tuổi: 30-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "alien-hand-syndrome",
+    name: { vi: "Hội chứng bàn tay người lạ", en: "Alien Hand Syndrome", zh: "异手综合症" },
+    description: { vi: "Tay tự hoạt động không theo ý muốn.", en: "Hand acts independently.", zh: "手独立行动。" },
+    example: { vi: "Tay tự cài cúc áo.", en: "Hand buttons shirt independently.", zh: "手独立扣衬衫纽扣。" },
+    target: { vi: "Tuổi: 40-80, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 40-80, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 40-80, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "foreign-accent-syndrome",
+    name: { vi: "Hội chứng giọng lạ", en: "Foreign Accent Syndrome", zh: "外国口音综合症" },
+    description: { vi: "Nói giọng như người nước ngoài.", en: "Speaking with a foreign accent.", zh: "说话带有外国口音。" },
+    example: { vi: "Bỗng nhiên nói giọng Pháp.", en: "Suddenly speaking with a French accent.", zh: "突然带有法国口音。" },
+    target: { vi: "Tuổi: 20-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "synesthesia",
+    name: { vi: "Hội chứng Cảm giác kèm", en: "Synesthesia", zh: "联觉" },
+    description: { vi: "Trộn lẫn các giác quan.", en: "Mixing senses.", zh: "感官混合。" },
+    example: { vi: "Nghe nhạc thấy màu sắc.", en: "Seeing colors when hearing music.", zh: "听到音乐时看到颜色。" },
+    target: { vi: "Tuổi: 5-60, Giới tính: Tất cả, Sở thích: Nghệ thuật, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 5-60, Gender: All, Interests: Art, Profession: All, Religion: None, Regime: All", zh: "年龄: 5-60, 性别: 全部, 兴趣: 艺术, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "prosopagnosia",
+    name: { vi: "Hội chứng mù mặt", en: "Prosopagnosia", zh: "面容失认症" },
+    description: { vi: "Không nhận ra khuôn mặt.", en: "Unable to recognize faces.", zh: "无法识别面孔。" },
+    example: { vi: "Không nhận ra chính mình trong gương.", en: "Not recognizing oneself in the mirror.", zh: "在镜子里认不出自己。" },
+    target: { vi: "Tuổi: 5-80, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 5-80, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 5-80, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "apophenia",
+    name: { vi: "Hội chứng Apophenia", en: "Apophenia", zh: "空想性视错觉" },
+    description: { vi: "Thấy ý nghĩa trong dữ liệu ngẫu nhiên.", en: "Seeing meaning in random data.", zh: "在随机数据中看到意义。" },
+    example: { vi: "Thấy hình mặt người trên đám mây.", en: "Seeing faces in clouds.", zh: "在云中看到人脸。" },
+    target: { vi: "Tuổi: 10-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 10-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 10-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "derealization",
+    name: { vi: "Hội chứng Mất thực tại", en: "Derealization", zh: "现实解体" },
+    description: { vi: "Cảm thấy thế giới không có thật.", en: "Feeling the world is unreal.", zh: "感觉世界不真实。" },
+    example: { vi: "Thấy mọi thứ như phim ảnh.", en: "Seeing everything like a movie.", zh: "感觉一切像电影。" },
+    target: { vi: "Tuổi: 15-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 15-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 15-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "depersonalization",
+    name: { vi: "Hội chứng Mất nhân cách", en: "Depersonalization", zh: "人格解体" },
+    description: { vi: "Cảm thấy bản thân không có thật.", en: "Feeling oneself is unreal.", zh: "感觉自己不真实。" },
+    example: { vi: "Nhìn mình từ bên ngoài.", en: "Watching oneself from outside.", zh: "从外部观察自己。" },
+    target: { vi: "Tuổi: 15-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 15-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 15-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "body-integrity-dysphoria",
+    name: { vi: "Hội chứng rối loạn nhận dạng cơ thể", en: "Body Integrity Dysphoria", zh: "身体完整性认同障碍" },
+    description: { vi: "Muốn cắt bỏ một phần cơ thể.", en: "Desire to amputate a body part.", zh: "渴望截肢。" },
+    example: { vi: "Muốn mất một chân.", en: "Wanting to lose a leg.", zh: "想要失去一条腿。" },
+    target: { vi: "Tuổi: 20-60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-60, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-60, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "koro-syndrome",
+    name: { vi: "Hội chứng Koro", en: "Koro Syndrome", zh: "缩阳症" },
+    description: { vi: "Sợ bộ phận sinh dục co rút.", en: "Fear of genital retraction.", zh: "害怕生殖器收缩。" },
+    example: { vi: "Hoảng loạn vì nghĩ bộ phận sinh dục biến mất.", en: "Panic thinking genitals are disappearing.", zh: "恐慌认为生殖器正在消失。" },
+    target: { vi: "Tuổi: 20-50, Giới tính: Nam, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-50, Gender: Male, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-50, 性别: 男, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "windigo-psychosis",
+    name: { vi: "Hội chứng Windigo", en: "Windigo Psychosis", zh: "温迪戈精神病" },
+    description: { vi: "Thèm khát thịt người.", en: "Craving human flesh.", zh: "渴望人肉。" },
+    example: { vi: "Muốn ăn thịt người.", en: "Wanting to eat human flesh.", zh: "想要吃人肉。" },
+    target: { vi: "Tuổi: 20-60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-60, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-60, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "amok-syndrome",
+    name: { vi: "Hội chứng Amok", en: "Amok Syndrome", zh: "狂暴症" },
+    description: { vi: "Bùng phát bạo lực không kiểm soát.", en: "Uncontrollable violent outburst.", zh: "无法控制的暴力爆发。" },
+    example: { vi: "Tấn công người khác vô cớ.", en: "Attacking others for no reason.", zh: "无故攻击他人。" },
+    target: { vi: "Tuổi: 20-50, Giới tính: Nam, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-50, Gender: Male, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-50, 性别: 男, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "latah-syndrome",
+    name: { vi: "Hội chứng Latah", en: "Latah Syndrome", zh: "拉塔综合症" },
+    description: { vi: "Phản ứng thái quá khi bị giật mình.", en: "Exaggerated reaction to being startled.", zh: "受惊时的夸张反应。" },
+    example: { vi: "Làm theo hành động của người khác khi bị giật mình.", en: "Copying others' actions when startled.", zh: "受惊时模仿他人的动作。" },
+    target: { vi: "Tuổi: 30-70, Giới tính: Nữ, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-70, Gender: Female, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-70, 性别: 女, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "pica-syndrome",
+    name: { vi: "Hội chứng Pica", en: "Pica Syndrome", zh: "异食癖" },
+    description: { vi: "Ăn những thứ không phải thức ăn.", en: "Eating non-food items.", zh: "吃非食物物品。" },
+    example: { vi: "Ăn đất đá.", en: "Eating dirt or stones.", zh: "吃土或石头。" },
+    target: { vi: "Tuổi: 2-60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 2-60, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 2-60, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "trichotillomania",
+    name: { vi: "Hội chứng nhổ tóc", en: "Trichotillomania", zh: "拔毛癖" },
+    description: { vi: "Thói quen nhổ tóc.", en: "Habit of pulling out hair.", zh: "拔头发的习惯。" },
+    example: { vi: "Nhổ tóc khi căng thẳng.", en: "Pulling hair when stressed.", zh: "压力大时拔头发。" },
+    target: { vi: "Tuổi: 10-40, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 10-40, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 10-40, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "dermatillomania",
+    name: { vi: "Hội chứng cạy da", en: "Dermatillomania", zh: "皮肤抓挠症" },
+    description: { vi: "Thói quen cạy da.", en: "Habit of picking skin.", zh: "抠皮肤的习惯。" },
+    example: { vi: "Cạy da cho đến khi chảy máu.", en: "Picking skin until bleeding.", zh: "抠皮肤直到流血。" },
+    target: { vi: "Tuổi: 10-40, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 10-40, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 10-40, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "kleptomania",
+    name: { vi: "Hội chứng ăn cắp vặt", en: "Kleptomania", zh: "盗窃癖" },
+    description: { vi: "Không thể cưỡng lại việc ăn cắp.", en: "Unable to resist stealing.", zh: "无法抗拒偷窃。" },
+    example: { vi: "Ăn cắp những thứ không cần thiết.", en: "Stealing unnecessary things.", zh: "偷窃不需要的东西。" },
+    target: { vi: "Tuổi: 15-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 15-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 15-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "pyromania",
+    name: { vi: "Hội chứng phóng hỏa", en: "Pyromania", zh: "纵火癖" },
+    description: { vi: "Thích phóng hỏa.", en: "Enjoying setting fires.", zh: "喜欢纵火。" },
+    example: { vi: "Đốt đồ vật để giải tỏa.", en: "Setting things on fire to relieve stress.", zh: "纵火以缓解压力。" },
+    target: { vi: "Tuổi: 15-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 15-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 15-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
   }
 ];

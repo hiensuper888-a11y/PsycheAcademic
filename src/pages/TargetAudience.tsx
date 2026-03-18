@@ -19,10 +19,10 @@ interface TargetAudience {
   savedTechniques: string[];
 }
 
-const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
-const genders = ['male', 'female', 'other'];
-const professions = ['sales', 'marketing', 'customerService', 'management', 'tech', 'education', 'medical', 'other'];
-const politicalSystems = ['socialism', 'capitalism', 'constitutionalMonarchy', 'rebel'];
+const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam', 'atheism', 'sikhism', 'shintoism'];
+const genders = ['male', 'female', 'other', 'non-binary', 'preferNotToSay'];
+const professions = ['sales', 'marketing', 'customerService', 'management', 'tech', 'education', 'medical', 'other', 'engineering', 'finance', 'art', 'legal', 'science'];
+const politicalSystems = ['socialism', 'capitalism', 'constitutionalMonarchy', 'rebel', 'democracy', 'communism', 'anarchism'];
 
 export const TargetAudience: React.FC = () => {
   const { t, i18n: i18nInstance } = useTranslation();
@@ -31,7 +31,7 @@ export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '', savedTechniques: [] as string[] });
   const [showLibrary, setShowLibrary] = useState(false);
 
   useEffect(() => {
@@ -69,10 +69,9 @@ export const TargetAudience: React.FC = () => {
     const target: TargetAudience = {
       ...newTarget,
       id: Date.now().toString(),
-      savedTechniques: []
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
+    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '', savedTechniques: [] });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -222,6 +221,26 @@ export const TargetAudience: React.FC = () => {
               {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
+            <div className="flex flex-col gap-2">
+              <label>{t('targetAnalysis.selectTechniques')}</label>
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
+                {influenceTechniques.map(t => (
+                  <label key={t.id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={newTarget.savedTechniques.includes(t.id)}
+                      onChange={e => {
+                        const techniques = e.target.checked
+                          ? [...newTarget.savedTechniques, t.id]
+                          : newTarget.savedTechniques.filter(id => id !== t.id);
+                        setNewTarget({...newTarget, savedTechniques: techniques});
+                      }}
+                    />
+                    {getLocalized(t.title)}
+                  </label>
+                ))}
+              </div>
+            </div>
             <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
               <option value="">{t('targetAnalysis.selectSyndrome')}</option>
               {syndromes.map(s => (
@@ -249,6 +268,19 @@ export const TargetAudience: React.FC = () => {
               <p className="text-sm text-slate-500 mb-2">{target.gender ? t(`targetAnalysis.genders.${target.gender}`) : 'N/A'} | {target.age || 'N/A'} {t('targetAudience.yearsOld')} | {target.profession ? t(`targetAnalysis.professions.${target.profession}`) : 'N/A'} | {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'} | {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
               {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">{t('targetAnalysis.hobbies')}: {target.hobbies}</p>}
               {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">{t('targetAudience.manualSyndrome')} {target.syndrome ? (syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome) ? getLocalized(syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome)?.name) : target.syndrome) : ''}</p>}
+              {target.savedTechniques && target.savedTechniques.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t('targetAnalysis.savedTechniques')}:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {target.savedTechniques.map(techId => {
+                      const tech = influenceTechniques.find(t => t.id === techId);
+                      return tech ? (
+                        <span key={techId} className="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-xs">{getLocalized(tech.title)}</span>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              )}
               
               {suggestedSyndromes.length > 0 && (
                 <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
