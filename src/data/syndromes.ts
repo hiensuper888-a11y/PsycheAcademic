@@ -1887,5 +1887,145 @@ export const syndromes: Syndrome[] = [
       en: "Children, individuals with migraines.",
       zh: "儿童、偏头痛患者。"
     }
+  },
+  {
+    id: "paris-syndrome",
+    name: { vi: "Hội chứng Paris", en: "Paris Syndrome", zh: "巴黎综合症" },
+    description: { vi: "Cảm giác thất vọng cực độ khi thực tế ở Paris không giống như kỳ vọng lãng mạn.", en: "Extreme disappointment when reality in Paris doesn't match romantic expectations.", zh: "当巴黎的现实与浪漫期望不符时产生的极端失望感。" },
+    example: { vi: "Khách du lịch bị sốc tâm lý vì Paris không đẹp như phim.", en: "Tourist experiencing psychological shock because Paris isn't as beautiful as in movies.", zh: "游客因巴黎不像电影中那样美丽而遭受心理冲击。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Nữ, Sở thích: Du lịch, Nghề nghiệp: Văn phòng, Tôn giáo: Không, Chế độ: Tư bản", en: "Age: 20-40, Gender: Female, Interests: Travel, Profession: Office, Religion: None, Regime: Capitalist", zh: "年龄: 20-40, 性别: 女, 兴趣: 旅游, 职业: 办公室, 宗教: 无, 制度: 资本主义" }
+  },
+  {
+    id: "stendhal-syndrome",
+    name: { vi: "Hội chứng Stendhal", en: "Stendhal Syndrome", zh: "司汤达综合症" },
+    description: { vi: "Phản ứng tâm lý khi tiếp xúc với quá nhiều tác phẩm nghệ thuật đẹp.", en: "Psychological reaction when exposed to too many beautiful artworks.", zh: "接触过多美丽艺术品时的心理反应。" },
+    example: { vi: "Ngất xỉu khi thăm bảo tàng nghệ thuật.", en: "Fainting when visiting an art museum.", zh: "参观艺术博物馆时昏倒。" },
+    target: { vi: "Tuổi: 30-50, Giới tính: Tất cả, Sở thích: Nghệ thuật, Nghề nghiệp: Nghệ sĩ, Tôn giáo: Không, Chế độ: Tư bản", en: "Age: 30-50, Gender: All, Interests: Art, Profession: Artist, Religion: None, Regime: Capitalist", zh: "年龄: 30-50, 性别: 全部, 兴趣: 艺术, 职业: 艺术家, 宗教: 无, 制度: 资本主义" }
+  },
+  {
+    id: "jerusalem-syndrome",
+    name: { vi: "Hội chứng Jerusalem", en: "Jerusalem Syndrome", zh: "耶路撒冷综合症" },
+    description: { vi: "Ảo tưởng tôn giáo khi thăm Jerusalem.", en: "Religious delusions when visiting Jerusalem.", zh: "访问耶路撒冷时的宗教幻觉。" },
+    example: { vi: "Tin rằng mình là nhân vật trong Kinh thánh.", en: "Believing oneself to be a biblical character.", zh: "相信自己是圣经中的人物。" },
+    target: { vi: "Tuổi: 40-60, Giới tính: Tất cả, Sở thích: Tôn giáo, Nghề nghiệp: Tất cả, Tôn giáo: Thiên chúa giáo, Chế độ: Tất cả", en: "Age: 40-60, Gender: All, Interests: Religion, Profession: All, Religion: Christianity, Regime: All", zh: "年龄: 40-60, 性别: 全部, 兴趣: 宗教, 职业: 全部, 宗教: 基督教, 制度: 全部" }
+  },
+  {
+    id: "diogenes-syndrome",
+    name: { vi: "Hội chứng Diogenes", en: "Diogenes Syndrome", zh: "第欧根尼综合症" },
+    description: { vi: "Tự bỏ bê bản thân và tích trữ đồ đạc.", en: "Self-neglect and hoarding.", zh: "自我忽视和囤积。" },
+    example: { vi: "Sống trong căn nhà đầy rác.", en: "Living in a house full of trash.", zh: "住在满是垃圾的房子里。" },
+    target: { vi: "Tuổi: >60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Không, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: >60, Gender: All, Interests: None, Profession: None, Religion: None, Regime: All", zh: "年龄: >60, 性别: 全部, 兴趣: 无, 职业: 无, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "capgras-syndrome",
+    name: { vi: "Hội chứng Capgras", en: "Capgras Syndrome", zh: "卡普格拉综合症" },
+    description: { vi: "Tin rằng người thân đã bị thay thế bởi kẻ mạo danh.", en: "Believing loved ones have been replaced by imposters.", zh: "相信亲人已被冒名顶替者取代。" },
+    example: { vi: "Nói mẹ mình là người lạ.", en: "Saying their mother is a stranger.", zh: "说他们的母亲是陌生人。" },
+    target: { vi: "Tuổi: 40-70, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 40-70, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 40-70, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "fregoli-syndrome",
+    name: { vi: "Hội chứng Fregoli", en: "Fregoli Syndrome", zh: "弗雷戈里综合症" },
+    description: { vi: "Tin rằng những người lạ là người quen đang cải trang.", en: "Believing strangers are acquaintances in disguise.", zh: "相信陌生人是伪装的熟人。" },
+    example: { vi: "Nghĩ bác sĩ là người thân cũ.", en: "Thinking the doctor is an old relative.", zh: "认为医生是旧亲戚。" },
+    target: { vi: "Tuổi: 30-60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-60, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-60, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "cotard-syndrome",
+    name: { vi: "Hội chứng Cotard", en: "Cotard Syndrome", zh: "科塔尔综合症" },
+    description: { vi: "Tin rằng mình đã chết hoặc mất bộ phận cơ thể.", en: "Believing one is dead or missing body parts.", zh: "相信自己已经死亡或缺少身体部位。" },
+    example: { vi: "Nói mình không có máu.", en: "Saying they have no blood.", zh: "说他们没有血。" },
+    target: { vi: "Tuổi: 30-60, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-60, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-60, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "alice-in-wonderland-syndrome",
+    name: { vi: "Hội chứng Alice ở xứ sở thần tiên", en: "Alice in Wonderland Syndrome", zh: "爱丽丝梦游仙境综合症" },
+    description: { vi: "Rối loạn nhận thức về kích thước vật thể.", en: "Perceptual distortion of object size.", zh: "物体大小的感知扭曲。" },
+    example: { vi: "Thấy mình nhỏ bé hoặc khổng lồ.", en: "Feeling tiny or gigantic.", zh: "感觉自己很小或巨大。" },
+    target: { vi: "Tuổi: 5-15, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Không, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 5-15, Gender: All, Interests: None, Profession: None, Religion: None, Regime: All", zh: "年龄: 5-15, 性别: 全部, 兴趣: 无, 职业: 无, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "ekbom-syndrome",
+    name: { vi: "Hội chứng Ekbom", en: "Ekbom Syndrome", zh: "埃克博姆综合症" },
+    description: { vi: "Ảo tưởng bị côn trùng bò dưới da.", en: "Delusion of insects crawling under the skin.", zh: "皮肤下有昆虫爬行的幻觉。" },
+    example: { vi: "Cố gắng lấy côn trùng ra khỏi da.", en: "Trying to remove insects from skin.", zh: "试图从皮肤中取出昆虫。" },
+    target: { vi: "Tuổi: 40-70, Giới tính: Nữ, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 40-70, Gender: Female, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 40-70, 性别: 女, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "othello-syndrome",
+    name: { vi: "Hội chứng Othello", en: "Othello Syndrome", zh: "奥赛罗综合症" },
+    description: { vi: "Ghen tuông bệnh hoạn.", en: "Pathological jealousy.", zh: "病态嫉妒。" },
+    example: { vi: "Theo dõi vợ/chồng vì nghi ngoại tình.", en: "Tracking spouse due to suspicion of infidelity.", zh: "因怀疑不忠而跟踪配偶。" },
+    target: { vi: "Tuổi: 30-60, Giới tính: Nam, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-60, Gender: Male, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-60, 性别: 男, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "munchausen-syndrome",
+    name: { vi: "Hội chứng Munchausen", en: "Munchausen Syndrome", zh: "孟乔森综合症" },
+    description: { vi: "Giả bệnh để được chăm sóc.", en: "Faking illness to get care.", zh: "装病以获得照顾。" },
+    example: { vi: "Tự làm mình bị thương để nhập viện.", en: "Self-harming to be hospitalized.", zh: "自残以住院。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Y tế, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-40, Gender: All, Interests: None, Profession: Medical, Religion: None, Regime: All", zh: "年龄: 20-40, 性别: 全部, 兴趣: 无, 职业: 医疗, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "munchausen-by-proxy",
+    name: { vi: "Hội chứng Munchausen do người khác gây ra", en: "Munchausen Syndrome by Proxy", zh: "代理性孟乔森综合症" },
+    description: { vi: "Làm người khác bị bệnh để được chăm sóc.", en: "Making others sick to get care.", zh: "使他人患病以获得照顾。" },
+    example: { vi: "Mẹ làm con bị bệnh.", en: "Mother making child sick.", zh: "母亲使孩子患病。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Nữ, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-40, Gender: Female, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-40, 性别: 女, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "alien-hand-syndrome",
+    name: { vi: "Hội chứng bàn tay người ngoài hành tinh", en: "Alien Hand Syndrome", zh: "外星人手综合症" },
+    description: { vi: "Một tay tự hoạt động không theo ý muốn.", en: "One hand acting on its own.", zh: "一只手不受控制地行动。" },
+    example: { vi: "Tay tự cài cúc áo.", en: "Hand buttoning shirt on its own.", zh: "手自己扣上衬衫扣子。" },
+    target: { vi: "Tuổi: >50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: >50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: >50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "koro-syndrome",
+    name: { vi: "Hội chứng Koro", en: "Koro Syndrome", zh: "缩阳症" },
+    description: { vi: "Ảo tưởng cơ quan sinh dục bị co rút.", en: "Delusion of genital shrinkage.", zh: "生殖器收缩的幻觉。" },
+    example: { vi: "Sợ bộ phận sinh dục biến mất.", en: "Fear of genitals disappearing.", zh: "害怕生殖器消失。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Nam, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-40, Gender: Male, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-40, 性别: 男, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "wendigo-psychosis",
+    name: { vi: "Hội chứng Wendigo", en: "Wendigo Psychosis", zh: "温迪戈精神病" },
+    description: { vi: "Ảo tưởng muốn ăn thịt người.", en: "Delusion of wanting to eat human flesh.", zh: "想要吃人肉的幻觉。" },
+    example: { vi: "Nghĩ mình là quái vật ăn thịt.", en: "Thinking one is a flesh-eating monster.", zh: "认为自己是吃肉的怪物。" },
+    target: { vi: "Tuổi: 20-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Không, Tôn giáo: Không, Chế độ: Bộ lạc", en: "Age: 20-50, Gender: All, Interests: None, Profession: None, Religion: None, Regime: Tribal", zh: "年龄: 20-50, 性别: 全部, 兴趣: 无, 职业: 无, 宗教: 无, 制度: 部落" }
+  },
+  {
+    id: "latah-syndrome",
+    name: { vi: "Hội chứng Latah", en: "Latah Syndrome", zh: "拉塔综合症" },
+    description: { vi: "Phản ứng thái quá khi bị giật mình.", en: "Exaggerated reaction when startled.", zh: "受惊时的夸张反应。" },
+    example: { vi: "Lặp lại từ ngữ khi bị giật mình.", en: "Repeating words when startled.", zh: "受惊时重复词语。" },
+    target: { vi: "Tuổi: 30-50, Giới tính: Nữ, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 30-50, Gender: Female, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 30-50, 性别: 女, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "hikikomori",
+    name: { vi: "Hội chứng Hikikomori", en: "Hikikomori", zh: "蛰居族" },
+    description: { vi: "Tự cô lập bản thân trong thời gian dài.", en: "Self-isolation for a long time.", zh: "长期自我隔离。" },
+    example: { vi: "Không ra khỏi phòng trong nhiều năm.", en: "Not leaving the room for years.", zh: "多年不出房间。" },
+    target: { vi: "Tuổi: 15-30, Giới tính: Tất cả, Sở thích: Công nghệ, Nghề nghiệp: Không, Tôn giáo: Không, Chế độ: Tư bản", en: "Age: 15-30, Gender: All, Interests: Tech, Profession: None, Religion: None, Regime: Capitalist", zh: "年龄: 15-30, 性别: 全部, 兴趣: 科技, 职业: 无, 宗教: 无, 制度: 资本主义" }
+  },
+  {
+    id: "taijin-kyofusho",
+    name: { vi: "Hội chứng Taijin Kyofusho", en: "Taijin Kyofusho", zh: "对人恐怖症" },
+    description: { vi: "Sợ làm người khác khó chịu.", en: "Fear of offending others.", zh: "害怕冒犯他人。" },
+    example: { vi: "Sợ hơi thở mình làm người khác khó chịu.", en: "Fear of one's breath offending others.", zh: "害怕自己的呼吸冒犯他人。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-40, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-40, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "dissociative-identity-disorder",
+    name: { vi: "Hội chứng Đa nhân cách", en: "Dissociative Identity Disorder", zh: "多重人格障碍" },
+    description: { vi: "Có nhiều nhân cách trong một cơ thể.", en: "Having multiple personalities in one body.", zh: "一个身体内有多种人格。" },
+    example: { vi: "Thay đổi nhân cách hoàn toàn.", en: "Changing personalities completely.", zh: "完全改变人格。" },
+    target: { vi: "Tuổi: 20-40, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 20-40, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 20-40, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "trypophobia",
+    name: { vi: "Hội chứng Sợ lỗ", en: "Trypophobia", zh: "密集恐惧症" },
+    description: { vi: "Sợ các lỗ nhỏ li ti.", en: "Fear of small holes.", zh: "对小孔的恐惧。" },
+    example: { vi: "Sợ tổ ong.", en: "Fear of beehives.", zh: "害怕蜂巢。" },
+    target: { vi: "Tuổi: 10-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 10-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 10-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
   }
 ];

@@ -11,6 +11,7 @@ export interface InfluenceTechnique {
     professions: string[];
     religions: string[];
     politicalSystems: string[];
+    interests?: string[];
   };
   defensiveStrategy: string | LocalizedString;
 }
@@ -1185,5 +1186,305 @@ export const influenceTechniques: InfluenceTechnique[] = [
       en: "Identify personal values and passions. Understand that your life belongs to you, not an extension of the previous generation.",
       zh: "确定个人价值和激情。明白你的生活属于你，而不是上一代的延伸。"
     }
+  },
+  {
+    id: "new-technique-1",
+    title: { vi: "Kỹ thuật 1", en: "Technique 1", zh: "技术 1" },
+    description: { vi: "Mô tả 1", en: "Description 1", zh: "描述 1" },
+    sourceBook: "Source 1",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Tech"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 1", en: "Strategy 1", zh: "策略 1" }
+  },
+  {
+    id: "new-technique-2",
+    title: { vi: "Kỹ thuật 2", en: "Technique 2", zh: "技术 2" },
+    description: { vi: "Mô tả 2", en: "Description 2", zh: "描述 2" },
+    sourceBook: "Source 2",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Art"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 2", en: "Strategy 2", zh: "策略 2" }
+  },
+  {
+    id: "new-technique-3",
+    title: { vi: "Kỹ thuật 3", en: "Technique 3", zh: "技术 3" },
+    description: { vi: "Mô tả 3", en: "Description 3", zh: "描述 3" },
+    sourceBook: "Source 3",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Sport"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 3", en: "Strategy 3", zh: "策略 3" }
+  },
+  {
+    id: "new-technique-4",
+    title: { vi: "Kỹ thuật 4", en: "Technique 4", zh: "技术 4" },
+    description: { vi: "Mô tả 4", en: "Description 4", zh: "描述 4" },
+    sourceBook: "Source 4",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Music"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 4", en: "Strategy 4", zh: "策略 4" }
+  },
+  {
+    id: "new-technique-5",
+    title: { vi: "Kỹ thuật 5", en: "Technique 5", zh: "技术 5" },
+    description: { vi: "Mô tả 5", en: "Description 5", zh: "描述 5" },
+    sourceBook: "Source 5",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Food"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 5", en: "Strategy 5", zh: "策略 5" }
+  },
+  {
+    id: "new-technique-6",
+    title: { vi: "Kỹ thuật 6", en: "Technique 6", zh: "技术 6" },
+    description: { vi: "Mô tả 6", en: "Description 6", zh: "描述 6" },
+    sourceBook: "Source 6",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Gaming"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 6", en: "Strategy 6", zh: "策略 6" }
+  },
+  {
+    id: "new-technique-7",
+    title: { vi: "Kỹ thuật 7", en: "Technique 7", zh: "技术 7" },
+    description: { vi: "Mô tả 7", en: "Description 7", zh: "描述 7" },
+    sourceBook: "Source 7",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Science"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 7", en: "Strategy 7", zh: "策略 7" }
+  },
+  {
+    id: "new-technique-8",
+    title: { vi: "Kỹ thuật 8", en: "Technique 8", zh: "技术 8" },
+    description: { vi: "Mô tả 8", en: "Description 8", zh: "描述 8" },
+    sourceBook: "Source 8",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["History"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 8", en: "Strategy 8", zh: "策略 8" }
+  },
+  {
+    id: "new-technique-9",
+    title: { vi: "Kỹ thuật 9", en: "Technique 9", zh: "技术 9" },
+    description: { vi: "Mô tả 9", en: "Description 9", zh: "描述 9" },
+    sourceBook: "Source 9",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Politics"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 9", en: "Strategy 9", zh: "策略 9" }
+  },
+  {
+    id: "new-technique-10",
+    title: { vi: "Kỹ thuật 10", en: "Technique 10", zh: "技术 10" },
+    description: { vi: "Mô tả 10", en: "Description 10", zh: "描述 10" },
+    sourceBook: "Source 10",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Business"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 10", en: "Strategy 10", zh: "策略 10" }
+  },
+  {
+    id: "new-technique-11",
+    title: { vi: "Kỹ thuật 11", en: "Technique 11", zh: "技术 11" },
+    description: { vi: "Mô tả 11", en: "Description 11", zh: "描述 11" },
+    sourceBook: "Source 11",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Movies"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 11", en: "Strategy 11", zh: "策略 11" }
+  },
+  {
+    id: "new-technique-12",
+    title: { vi: "Kỹ thuật 12", en: "Technique 12", zh: "技术 12" },
+    description: { vi: "Mô tả 12", en: "Description 12", zh: "描述 12" },
+    sourceBook: "Source 12",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Books"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 12", en: "Strategy 12", zh: "策略 12" }
+  },
+  {
+    id: "new-technique-13",
+    title: { vi: "Kỹ thuật 13", en: "Technique 13", zh: "技术 13" },
+    description: { vi: "Mô tả 13", en: "Description 13", zh: "描述 13" },
+    sourceBook: "Source 13",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Nature"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 13", en: "Strategy 13", zh: "策略 13" }
+  },
+  {
+    id: "new-technique-14",
+    title: { vi: "Kỹ thuật 14", en: "Technique 14", zh: "技术 14" },
+    description: { vi: "Mô tả 14", en: "Description 14", zh: "描述 14" },
+    sourceBook: "Source 14",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Fashion"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 14", en: "Strategy 14", zh: "策略 14" }
+  },
+  {
+    id: "new-technique-15",
+    title: { vi: "Kỹ thuật 15", en: "Technique 15", zh: "技术 15" },
+    description: { vi: "Mô tả 15", en: "Description 15", zh: "描述 15" },
+    sourceBook: "Source 15",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Pets"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 15", en: "Strategy 15", zh: "策略 15" }
+  },
+  {
+    id: "new-technique-16",
+    title: { vi: "Kỹ thuật 16", en: "Technique 16", zh: "技术 16" },
+    description: { vi: "Mô tả 16", en: "Description 16", zh: "描述 16" },
+    sourceBook: "Source 16",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Health"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 16", en: "Strategy 16", zh: "策略 16" }
+  },
+  {
+    id: "new-technique-17",
+    title: { vi: "Kỹ thuật 17", en: "Technique 17", zh: "技术 17" },
+    description: { vi: "Mô tả 17", en: "Description 17", zh: "描述 17" },
+    sourceBook: "Source 17",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Finance"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 17", en: "Strategy 17", zh: "策略 17" }
+  },
+  {
+    id: "new-technique-18",
+    title: { vi: "Kỹ thuật 18", en: "Technique 18", zh: "技术 18" },
+    description: { vi: "Mô tả 18", en: "Description 18", zh: "描述 18" },
+    sourceBook: "Source 18",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Travel"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 18", en: "Strategy 18", zh: "策略 18" }
+  },
+  {
+    id: "new-technique-19",
+    title: { vi: "Kỹ thuật 19", en: "Technique 19", zh: "技术 19" },
+    description: { vi: "Mô tả 19", en: "Description 19", zh: "描述 19" },
+    sourceBook: "Source 19",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Coding"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 19", en: "Strategy 19", zh: "策略 19" }
+  },
+  {
+    id: "new-technique-20",
+    title: { vi: "Kỹ thuật 20", en: "Technique 20", zh: "技术 20" },
+    description: { vi: "Mô tả 20", en: "Description 20", zh: "描述 20" },
+    sourceBook: "Source 20",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Photography"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 20", en: "Strategy 20", zh: "策略 20" }
   }
 ];
