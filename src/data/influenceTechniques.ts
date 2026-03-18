@@ -2388,5 +2388,450 @@ export const influenceTechniques: InfluenceTechnique[] = [
       politicalSystems: ['All'],
       interests: ['All']
     }
+  },
+  {
+    id: 't-31',
+    title: { vi: 'Hiệu ứng Ben Franklin', en: 'The Ben Franklin Effect', zh: '本杰明·富兰克量效应' },
+    description: { 
+      vi: 'Yêu cầu đối phương làm một việc nhỏ cho bạn để khiến họ tự thuyết phục rằng họ thích bạn.', 
+      en: 'Asking someone for a small favor to make them convince themselves that they like you.', 
+      zh: '请求某人帮个小忙，让他们说服自己他们喜欢你。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Nhận diện khi ai đó liên tục nhờ vả những việc nhỏ nhặt để xây dựng mối quan hệ giả tạo.', 
+      en: 'Recognize when someone repeatedly asks for small favors to build a fake relationship.', 
+      zh: '识别某人何时反复请求小忙以建立虚假关系。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['socializing', 'networking']
+    }
+  },
+  {
+    id: 't-32',
+    title: { vi: 'Kỹ thuật "Bóng thấp" (Low-Ball)', en: 'Low-Ball Technique', zh: '低球技术' },
+    description: { 
+      vi: 'Đạt được sự đồng ý với một mức giá hoặc cam kết thấp, sau đó tăng chi phí lên khi đối phương đã cam kết.', 
+      en: 'Getting agreement with a low price or commitment, then increasing the cost once the person is committed.', 
+      zh: '以低价或低承诺达成协议，一旦对方承诺，就增加成本。' 
+    },
+    sourceBook: 'Influence: The Psychology of Persuasion',
+    defensiveStrategy: { 
+      vi: 'Luôn kiểm tra lại các điều khoản cuối cùng và sẵn sàng rút lui nếu thỏa thuận ban đầu thay đổi.', 
+      en: 'Always re-check final terms and be ready to walk away if the initial deal changes.', 
+      zh: '始终重新检查最终条款，如果最初的交易发生变化，请准备好离开。' 
+    },
+    targetDemographics: {
+      ageGroups: ['18-60'],
+      genders: ['All'],
+      professions: ['sales', 'retail', 'real estate'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'finance']
+    }
+  },
+  {
+    id: 't-33',
+    title: { vi: 'Kỹ thuật "Chưa hết đâu" (That\'s-Not-All)', en: 'That\'s-Not-All Technique', zh: '“还没完呢”技术' },
+    description: { 
+      vi: 'Thêm các "phần thưởng" hoặc giảm giá ngay trước khi đối phương đưa ra quyết định để tăng giá trị cảm nhận.', 
+      en: 'Adding "bonuses" or discounts right before the person makes a decision to increase perceived value.', 
+      zh: '在对方做出决定之前增加“奖金”或折扣，以增加感知价值。' 
+    },
+    sourceBook: 'Influence: The Psychology of Persuasion',
+    defensiveStrategy: { 
+      vi: 'Đánh giá giá trị của sản phẩm chính mà không tính đến các phần quà đi kèm.', 
+      en: 'Evaluate the value of the main product without considering the included gifts.', 
+      zh: '评估主要产品的价值，而不考虑包含的礼品。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['marketing', 'sales'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'gadgets']
+    }
+  },
+  {
+    id: 't-34',
+    title: { vi: 'Kỹ thuật "Gây tò mò" (Pique Technique)', en: 'Pique Technique', zh: '激起好奇心技术' },
+    description: { 
+      vi: 'Đưa ra một yêu cầu bất thường hoặc kỳ quặc để phá vỡ sự từ chối tự động của đối phương.', 
+      en: 'Making an unusual or quirky request to break the person\'s automatic refusal.', 
+      zh: '提出一个不寻常或古怪的请求，以打破对方的自动拒绝。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Nhận diện khi ai đó đang cố gắng làm bạn mất tập trung bằng sự kỳ quặc để đưa ra yêu cầu.', 
+      en: 'Recognize when someone is trying to distract you with quirkiness to make a request.', 
+      zh: '识别某人何时试图用古怪的行为分散你的注意力以提出请求。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['charity', 'socializing']
+    }
+  },
+  {
+    id: 't-35',
+    title: { vi: 'Kỹ thuật "Sợ hãi rồi nhẹ nhõm" (Fear-then-Relief)', en: 'Fear-then-Relief Technique', zh: '恐惧后解脱技术' },
+    description: { 
+      vi: 'Làm đối phương sợ hãi, sau đó đột ngột loại bỏ mối đe dọa để họ dễ dàng đồng ý với yêu cầu tiếp theo.', 
+      en: 'Scaring the person, then suddenly removing the threat so they easily agree to the next request.', 
+      zh: '让对方感到恐惧，然后突然消除威胁，使他们容易同意下一个请求。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Dành thời gian để bình tĩnh lại sau một tình huống căng thẳng trước khi đưa ra bất kỳ quyết định nào.', 
+      en: 'Take time to calm down after a stressful situation before making any decisions.', 
+      zh: '在压力大的情况后花时间冷静下来，然后再做出任何决定。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['security', 'management', 'parenting'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['safety', 'family']
+    }
+  },
+  {
+    id: 't-36',
+    title: { vi: 'Kỹ thuật "Nhưng bạn có quyền tự do" (But-You-Are-Free)', en: 'But-You-Are-Free Technique', zh: '“但你有自由”技术' },
+    description: { 
+      vi: 'Đưa ra yêu cầu và kết thúc bằng việc nhắc nhở đối phương rằng họ có quyền từ chối để giảm bớt sự phản kháng.', 
+      en: 'Making a request and ending by reminding the person they have the right to refuse to reduce resistance.', 
+      zh: '提出请求，并在结束时提醒对方他们有权拒绝，以减少阻力。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Nhận ra rằng lời nhắc về sự tự do thường là một công cụ tâm lý để khiến bạn cảm thấy thoải mái hơn khi nói "có".', 
+      en: 'Realize that the reminder of freedom is often a psychological tool to make you feel more comfortable saying "yes".', 
+      zh: '意识到自由的提醒通常是一种心理工具，让你在说“是”时感到更舒服。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['sales', 'fundraising'],
+      religions: ['All'],
+      politicalSystems: ['liberalism'],
+      interests: ['autonomy', 'social causes']
+    }
+  },
+  {
+    id: 't-37',
+    title: { vi: 'Kỹ thuật "Dán nhãn" (Labeling)', en: 'Labeling Technique', zh: '标签技术' },
+    description: { 
+      vi: 'Gán cho đối phương một đặc điểm tích cực để họ cảm thấy phải hành động theo đặc điểm đó.', 
+      en: 'Assigning a positive trait to the person so they feel they must act according to that trait.', 
+      zh: '给对方贴上一个积极的标签，让他们觉得必须根据那个特征行事。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Đừng để những lời khen ngợi về tính cách ép buộc bạn phải làm những việc bạn không muốn.', 
+      en: 'Don\'t let compliments about your character force you to do things you don\'t want to.', 
+      zh: '不要让对你性格的赞美强迫你做你不想做的事情。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['education', 'management', 'parenting'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['reputation', 'ethics']
+    }
+  },
+  {
+    id: 't-38',
+    title: { vi: 'Kỹ thuật "Phản chiếu" (Mirroring)', en: 'Mirroring Technique', zh: '镜像技术' },
+    description: { 
+      vi: 'Bắt chước ngôn ngữ cơ thể, giọng nói hoặc thái độ của đối phương để tạo sự tin tưởng vô thức.', 
+      en: 'Mimicking the person\'s body language, voice, or attitude to create unconscious trust.', 
+      zh: '模仿对方的肢体语言、声音或态度，以建立无意识的信任。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Chú ý nếu ai đó đang sao chép cử chỉ của bạn một cách quá mức hoặc không tự nhiên.', 
+      en: 'Notice if someone is copying your gestures excessively or unnaturally.', 
+      zh: '注意是否有人过度或不自然地模仿你的手势。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['sales', 'negotiation', 'dating'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['socializing', 'psychology']
+    }
+  },
+  {
+    id: 't-39',
+    title: { vi: 'Kỹ thuật "Lựa chọn giả" (False Choice)', en: 'False Choice Technique', zh: '虚假选择技术' },
+    description: { 
+      vi: 'Đưa ra hai hoặc nhiều lựa chọn mà tất cả đều dẫn đến kết quả mà kẻ thao túng mong muốn.', 
+      en: 'Providing two or more options that all lead to the result the manipulator desires.', 
+      zh: '提供两个或更多选项，所有这些选项都会导致操纵者想要的结果。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Luôn tìm kiếm lựa chọn thứ ba hoặc từ chối tất cả các lựa chọn được đưa ra nếu chúng không phù hợp.', 
+      en: 'Always look for a third option or reject all options provided if they are not suitable.', 
+      zh: '如果提供的选项不合适，请始终寻找第三个选项或拒绝所有提供的选项。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['sales', 'management', 'parenting'],
+      religions: ['All'],
+      politicalSystems: ['authoritarianism'],
+      interests: ['control', 'efficiency']
+    }
+  },
+  {
+    id: 't-40',
+    title: { vi: 'Kỹ thuật "Tàu lượn cảm xúc" (Emotional Rollercoaster)', en: 'Emotional Rollercoaster', zh: '情感过山车' },
+    description: { 
+      vi: 'Luân phiên giữa việc đối xử cực kỳ tốt và cực kỳ tệ để làm đối phương mất phương hướng và phụ thuộc.', 
+      en: 'Alternating between treating the person extremely well and extremely poorly to disorient and create dependency.', 
+      zh: '在对人极好和极坏之间交替，以使人迷失方向并产生依赖。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Nhận diện sự thiếu ổn định trong hành vi của đối phương và thiết lập ranh giới bảo vệ bản thân.', 
+      en: 'Recognize the instability in the other person\'s behavior and set boundaries to protect yourself.', 
+      zh: '识别对方行为的不稳定性，并设定界限以保护自己。' 
+    },
+    targetDemographics: {
+      ageGroups: ['18-45'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['relationships', 'romance']
+    }
+  },
+  {
+    id: 't-41',
+    title: { vi: 'Kỹ thuật "Sự độc quyền" (Exclusivity)', en: 'Exclusivity Technique', zh: '独特性技术' },
+    description: { 
+      vi: 'Làm đối phương cảm thấy họ là một phần của một nhóm đặc quyền hoặc bí mật để tăng lòng trung thành.', 
+      en: 'Making the person feel they are part of a privileged or secret group to increase loyalty.', 
+      zh: '让人觉得他们是一个特权或秘密团体的一部分，以增加忠诚度。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Đánh giá các yêu cầu dựa trên đạo đức cá nhân thay vì cảm giác "đặc biệt" khi thuộc về một nhóm.', 
+      en: 'Evaluate requests based on personal ethics rather than the "special" feeling of belonging to a group.', 
+      zh: '根据个人道德评估请求，而不是属于某个团体的“特殊”感觉。' 
+    },
+    targetDemographics: {
+      ageGroups: ['15-40'],
+      genders: ['All'],
+      professions: ['marketing', 'clubs', 'cults'],
+      religions: ['All'],
+      politicalSystems: ['elitism'],
+      interests: ['status', 'belonging']
+    }
+  },
+  {
+    id: 't-42',
+    title: { vi: 'Kỹ thuật "Kẻ thù chung" (Common Enemy)', en: 'Common Enemy Technique', zh: '共同敌人技术' },
+    description: { 
+      vi: 'Tạo ra hoặc nhấn mạnh một mối đe dọa chung để đoàn kết mọi người dưới sự dẫn dắt của kẻ thao túng.', 
+      en: 'Creating or emphasizing a common threat to unite people under the manipulator\'s leadership.', 
+      zh: '创造或强调一个共同的威胁，将人们团结在操纵者的领导下。' 
+    },
+    sourceBook: 'The 48 Laws of Power',
+    defensiveStrategy: { 
+      vi: 'Phân tích xem "kẻ thù" đó có thực sự là mối đe dọa hay chỉ là một công cụ để kiểm soát đám đông.', 
+      en: 'Analyze whether that "enemy" is truly a threat or just a tool to control the crowd.', 
+      zh: '分析那个“敌人”是真的威胁，还是只是控制人群的工具。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['politics', 'management'],
+      religions: ['All'],
+      politicalSystems: ['populism', 'nationalism'],
+      interests: ['politics', 'security']
+    }
+  },
+  {
+    id: 't-43',
+    title: { vi: 'Sự đáp trả của các nhượng bộ (Reciprocity of Concessions)', en: 'Reciprocity of Concessions', zh: '让步互惠' },
+    description: { 
+      vi: 'Thực hiện một nhượng bộ nhỏ để ép buộc đối phương cũng phải nhượng bộ lại.', 
+      en: 'Making a small concession to force the other party to also concede in return.', 
+      zh: '做出一个小让步，强迫对方也做出让步作为回报。' 
+    },
+    sourceBook: 'Influence: The Psychology of Persuasion',
+    defensiveStrategy: { 
+      vi: 'Đừng cảm thấy có nghĩa vụ phải nhượng bộ nếu sự nhượng bộ của đối phương là có tính toán hoặc không cần thiết.', 
+      en: 'Don\'t feel obligated to concede if the other party\'s concession is calculated or unnecessary.', 
+      zh: '如果对方的让步是经过计算的或不必要的，不要觉得有义务让步。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['negotiation', 'sales', 'legal'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['business', 'diplomacy']
+    }
+  },
+  {
+    id: 't-44',
+    title: { vi: 'Uy quyền bằng sự liên kết (Authority by Association)', en: 'Authority by Association', zh: '关联权威' },
+    description: { 
+      vi: 'Nhắc đến tên những người nổi tiếng hoặc có quyền lực để tạo vẻ ngoài uy tín cho bản thân.', 
+      en: 'Mentioning names of famous or powerful people to create a prestigious appearance for oneself.', 
+      zh: '提及名人或有权势的人的名字，为自己营造一种有声望的形象。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Đánh giá năng lực thực tế của cá nhân đó thay vì những mối quan hệ mà họ tuyên bố có.', 
+      en: 'Evaluate the individual\'s actual competence rather than the relationships they claim to have.', 
+      zh: '评估个人的实际能力，而不是他们声称拥有的关系。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['networking', 'consulting'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['status', 'celebrities']
+    }
+  },
+  {
+    id: 't-45',
+    title: { vi: 'Kỹ thuật "Tam giác hóa" (Triangulation)', en: 'Triangulation Technique', zh: '三角化技术' },
+    description: { 
+      vi: 'Sử dụng một người thứ ba để tạo ra sự cạnh tranh, ghen tuông hoặc để xác nhận thông tin sai lệch.', 
+      en: 'Using a third person to create competition, jealousy, or to confirm misinformation.', 
+      zh: '利用第三人制造竞争、嫉妒或确认错误信息。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Giao tiếp trực tiếp với tất cả các bên liên quan để kiểm chứng thông tin và tránh bị chia rẽ.', 
+      en: 'Communicate directly with all parties involved to verify information and avoid being divided.', 
+      zh: '与所有相关方直接沟通以验证信息，避免被分裂。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['relationships', 'social dynamics']
+    }
+  },
+  {
+    id: 't-46',
+    title: { vi: 'Kỹ thuật "Phóng chiếu" (Projection)', en: 'Projection Technique', zh: '投射技术' },
+    description: { 
+      vi: 'Buộc tội đối phương về những hành vi hoặc ý định xấu mà chính kẻ thao túng đang thực hiện.', 
+      en: 'Accusing the other person of bad behaviors or intentions that the manipulator themselves is performing.', 
+      zh: '指责对方有操纵者自己正在实施的不良行为或意图。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Giữ vững sự tự tin vào hành động của bản thân và nhận diện khi ai đó đang cố gắng đổ lỗi vô căn cứ.', 
+      en: 'Maintain confidence in your own actions and recognize when someone is trying to blame you groundlessly.', 
+      zh: '对自己的行为保持信心，并识别某人何时试图无缘无故地指责你。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['psychology', 'conflict']
+    }
+  },
+  {
+    id: 't-47',
+    title: { vi: 'Kỹ thuật "Dời cột môn" (Shifting Goalposts)', en: 'Shifting Goalposts', zh: '移动球门柱' },
+    description: { 
+      vi: 'Thay đổi các yêu cầu hoặc tiêu chuẩn thành công ngay khi đối phương vừa đạt được chúng.', 
+      en: 'Changing requirements or standards of success as soon as the other person has achieved them.', 
+      zh: '一旦对方达到要求或成功标准，就立即更改它们。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Xác lập các mục tiêu và tiêu chuẩn bằng văn bản ngay từ đầu và từ chối chấp nhận các thay đổi tùy tiện.', 
+      en: 'Establish goals and standards in writing from the start and refuse to accept arbitrary changes.', 
+      zh: '从一开始就以书面形式确立目标和标准，并拒绝接受随意的更改。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['management', 'corporate', 'sports'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['achievement', 'career']
+    }
+  },
+  {
+    id: 't-48',
+    title: { vi: 'Kỹ thuật "Ràng buộc kép" (Double Bind)', en: 'Double Bind Technique', zh: '双重束缚技术' },
+    description: { 
+      vi: 'Đưa đối phương vào tình thế mà bất kể họ chọn gì thì họ cũng đều sai hoặc đều có lợi cho kẻ thao túng.', 
+      en: 'Putting the person in a situation where no matter what they choose, they are wrong or it benefits the manipulator.', 
+      zh: '让人陷入一种境地，无论他们选择什么，他们都是错的，或者对操纵者有利。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Nhận diện tình thế tiến thoái lưỡng nan giả tạo và từ chối tham gia vào trò chơi của họ.', 
+      en: 'Recognize the artificial dilemma and refuse to participate in their game.', 
+      zh: '识别虚假困境并拒绝参与他们的游戏。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['logic', 'communication']
+    }
+  },
+  {
+    id: 't-49',
+    title: { vi: 'Kỹ thuật "Treo đầu dê bán thịt chó" (Bait and Switch)', en: 'Bait and Switch', zh: '诱导转向' },
+    description: { 
+      vi: 'Thu hút đối phương bằng một đề nghị cực kỳ hấp dẫn, sau đó thay thế bằng một thứ kém hơn khi họ đã quan tâm.', 
+      en: 'Attracting the person with an extremely attractive offer, then replacing it with something inferior once they are interested.', 
+      zh: '用极具吸引力的提议吸引人，一旦他们感兴趣，就用次品取而代之。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Luôn yêu cầu đúng sản phẩm hoặc dịch vụ đã được quảng cáo ban đầu hoặc hủy bỏ giao dịch.', 
+      en: 'Always demand the exact product or service originally advertised or cancel the transaction.', 
+      zh: '始终要求最初广告的精确产品或服务，否则取消交易。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['retail', 'sales', 'marketing'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'deals']
+    }
+  },
+  {
+    id: 't-50',
+    title: { vi: 'Kỹ thuật "Bánh mì kẹp" (Sandwich Method)', en: 'Sandwich Method', zh: '三明治法' },
+    description: { 
+      vi: 'Kẹp một lời chỉ trích hoặc yêu cầu khó khăn giữa hai lời khen ngợi để làm giảm sự phản kháng.', 
+      en: 'Sandwiching a criticism or difficult request between two compliments to reduce resistance.', 
+      zh: '将批评或困难的请求夹在两个赞美之间，以减少阻力。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Tập trung vào thông điệp cốt lõi (phần giữa) và đừng để những lời khen ngợi làm mờ đi vấn đề thực sự.', 
+      en: 'Focus on the core message (the middle part) and don\'t let the compliments blur the real issue.', 
+      zh: '关注核心信息（中间部分），不要让赞美模糊了真正的问题。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['management', 'hr', 'education'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['feedback', 'career']
+    }
   }
 ];
+
