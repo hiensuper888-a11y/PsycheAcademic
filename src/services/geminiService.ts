@@ -4,7 +4,7 @@ const apiKey = process.env.GEMINI_API_KEY;
 
 export const summarizeArticle = async (content: string, language: string) => {
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not defined");
+    throw new Error("GEMINI_API_KEY_MISSING");
   }
 
   const ai = new GoogleGenAI({ apiKey });

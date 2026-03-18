@@ -272,7 +272,11 @@ export const Article: React.FC = () => {
       const result = await summarizeArticle(content, currentLang);
       setSummary(result || null);
     } catch (error) {
-      setSummaryError(t('article.summaryError'));
+      if (error instanceof Error && error.message === "GEMINI_API_KEY_MISSING") {
+        setSummaryError(t('article.apiKeyMissingError'));
+      } else {
+        setSummaryError(t('article.summaryError'));
+      }
     } finally {
       setIsSummarizing(false);
     }
