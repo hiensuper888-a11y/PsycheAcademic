@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { PsychologyArticle, psychologyData } from '../data/psychologyData';
+import { PsychologyArticle } from '../data/psychologyData';
+import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ArrowLeft, BookOpen, Search, User, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
 import Markdown from 'react-markdown';
@@ -23,22 +24,17 @@ export const Article: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchArticle = () => {
+    const fetchArticle = async () => {
       if (!id) return;
       try {
         setLoading(true);
-        console.log('id from params:', id);
-        console.log('psychologyData length:', psychologyData.length);
-        console.log('first 5 ids in psychologyData:', psychologyData.slice(0, 5).map(a => a.id));
-        
-        const data = psychologyData.find(a => a.id === id);
-        console.log('found article:', data);
-        
-        if (!data) {
-          console.error('Article not found for id:', id);
-          throw new Error('Article not found');
-        }
-        setArticle(data);
+        const { data, error } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('id', id)
+          .single();
+        if (error) throw error;
+        setArticle(data as PsychologyArticle);
         setError(null);
       } catch (err: any) {
         console.error('Error fetching article:', err);
@@ -49,7 +45,6 @@ export const Article: React.FC = () => {
     };
 
     fetchArticle();
-    window.scrollTo(0, 0);
   }, [id]);
 
   if (loading) {
