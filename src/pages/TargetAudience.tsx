@@ -222,38 +222,57 @@ export const TargetAudience: React.FC = () => {
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
             
-            {newTarget.name && newTarget.age && newTarget.gender && newTarget.profession && newTarget.hobbies && newTarget.religion && newTarget.politicalSystem && (
-              <>
-                <div className="flex flex-col gap-2">
-                  <label>{t('targetAnalysis.selectTechniques')}</label>
-                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
-                    {influenceTechniques.map(t => (
-                      <label key={t.id} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={newTarget.savedTechniques.includes(t.id)}
-                          onChange={e => {
-                            const techniques = e.target.checked
-                              ? [...newTarget.savedTechniques, t.id]
-                              : newTarget.savedTechniques.filter(id => id !== t.id);
-                            setNewTarget({...newTarget, savedTechniques: techniques});
-                          }}
-                        />
-                        {getLocalized(t.title)}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-                  <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-                  {syndromes.map(s => (
-                    <option key={s.id} value={s.id}>
-                      {getLocalized(s.name)}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
+            <div className="flex flex-col gap-2">
+              <label>{t('targetAnalysis.selectTechniques')}</label>
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
+                {influenceTechniques
+                  .filter(t => {
+                    const matchAge = !newTarget.age || t.targetDemographics.ageGroups.includes("All") || t.targetDemographics.ageGroups.includes(newTarget.age);
+                    const matchGender = !newTarget.gender || t.targetDemographics.genders.includes("All") || t.targetDemographics.genders.includes(newTarget.gender);
+                    const matchProfession = !newTarget.profession || t.targetDemographics.professions.includes("All") || t.targetDemographics.professions.includes(newTarget.profession);
+                    const matchReligion = !newTarget.religion || t.targetDemographics.religions.includes("All") || t.targetDemographics.religions.includes(newTarget.religion);
+                    const matchPolitical = !newTarget.politicalSystem || t.targetDemographics.politicalSystems.includes("All") || t.targetDemographics.politicalSystems.includes(newTarget.politicalSystem);
+                    
+                    return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
+                  })
+                  .map(t => (
+                  <label key={t.id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={newTarget.savedTechniques.includes(t.id)}
+                      onChange={e => {
+                        const techniques = e.target.checked
+                          ? [...newTarget.savedTechniques, t.id]
+                          : newTarget.savedTechniques.filter(id => id !== t.id);
+                        setNewTarget({...newTarget, savedTechniques: techniques});
+                      }}
+                    />
+                    {getLocalized(t.title)}
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
+              <option value="">{t('targetAnalysis.selectSyndrome')}</option>
+              {syndromes
+                .filter(s => {
+                  const targetText = getLocalized(s.target).toLowerCase();
+                  const matchAge = !newTarget.age || targetText.includes(newTarget.age.toLowerCase());
+                  const matchGender = !newTarget.gender || targetText.includes(newTarget.gender.toLowerCase());
+                  const matchProfession = !newTarget.profession || targetText.includes(newTarget.profession.toLowerCase());
+                  const matchReligion = !newTarget.religion || targetText.includes(newTarget.religion.toLowerCase());
+                  const matchPolitical = !newTarget.politicalSystem || targetText.includes(newTarget.politicalSystem.toLowerCase());
+                  
+                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
+                })
+                .map(s => (
+                <option key={s.id} value={s.id}>
+                  {getLocalized(s.name)}
+                </option>
+              ))}
+            </select>
+            
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
             </button>
