@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { PsychologyArticle } from '../data/psychologyData';
-import { supabase } from '../lib/supabase';
+import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X, Loader2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -24,14 +23,10 @@ export const Home: React.FC = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchArticles = () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
-          .from('articles')
-          .select('*');
-        if (error) throw error;
-        setArticles(data as PsychologyArticle[]);
+        setArticles(psychologyData);
         setError(null);
       } catch (err: any) {
         console.error('Error fetching articles:', err);
@@ -40,22 +35,8 @@ export const Home: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchArticles();
-
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('articles_channel')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'articles' }, (payload) => {
-        console.log('Change received!', payload);
-        fetchArticles();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+  }, [t]);
 
   const getLocalized = (field: any) => {
     if (typeof field === 'string') return field;
