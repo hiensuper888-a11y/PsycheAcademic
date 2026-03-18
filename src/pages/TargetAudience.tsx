@@ -83,11 +83,26 @@ export const TargetAudience: React.FC = () => {
     const hobbies = (target.hobbies || '').toLowerCase();
     const gender = target.gender || '';
 
-    const techniques = influenceTechniques.filter(tech => 
-      (tech.targetDemographics.professions.some(p => p.toLowerCase() === profession) || tech.targetDemographics.professions.includes('All')) &&
-      (tech.targetDemographics.religions.some(r => r.toLowerCase() === religion.toLowerCase()) || tech.targetDemographics.religions.includes('All')) &&
-      (tech.targetDemographics.politicalSystems.some(p => p.toLowerCase() === politicalSystem.toLowerCase()) || tech.targetDemographics.politicalSystems.includes('All'))
-    );
+    const techniques = influenceTechniques.filter(tech => {
+      const matchProfession = !profession || tech.targetDemographics.professions.includes('All') || tech.targetDemographics.professions.some(p => p.toLowerCase() === profession);
+      const matchReligion = !religion || tech.targetDemographics.religions.includes('All') || tech.targetDemographics.religions.some(r => r.toLowerCase() === religion);
+      const matchPoliticalSystem = !politicalSystem || tech.targetDemographics.politicalSystems.includes('All') || tech.targetDemographics.politicalSystems.some(p => p.toLowerCase() === politicalSystem);
+      const matchGender = !gender || tech.targetDemographics.genders.includes('All') || tech.targetDemographics.genders.some(g => g.toLowerCase() === gender);
+      
+      const matchAge = !age || tech.targetDemographics.ageGroups.includes('All') || tech.targetDemographics.ageGroups.some(ag => {
+          if (ag === "All") return true;
+          const parts = ag.split('-');
+          if (parts.length === 2) {
+              const [min, max] = parts.map(Number);
+              return age >= min && age <= max;
+          }
+          return false;
+      });
+
+      const matchHobbies = !hobbies || !tech.targetDemographics.interests || tech.targetDemographics.interests.includes('All') || tech.targetDemographics.interests.some(h => hobbies.includes(h.toLowerCase()));
+
+      return matchProfession && matchReligion && matchPoliticalSystem && matchGender && matchAge && matchHobbies;
+    });
 
     // Automatic Syndrome Suggestion Logic
     const suggestedSyndromes: { name: string, instruction: string }[] = [];
