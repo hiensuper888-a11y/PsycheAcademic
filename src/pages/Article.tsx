@@ -15,9 +15,6 @@ import { summarizeArticle } from '../services/geminiService';
 
 export const Article: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  console.log('Article id from params:', id);
-  console.log('psychologyData length:', psychologyData.length);
-  console.log('All article IDs:', psychologyData.map(a => a.id));
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
   
@@ -30,12 +27,7 @@ export const Article: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        console.log('Fetching article with id:', id);
-        const data = psychologyData.find(a => {
-          console.log(`Comparing '${JSON.stringify(a.id)}' with '${JSON.stringify(id)}'`);
-          return a.id.toLowerCase() === id?.toLowerCase();
-        });
-        console.log('Found article:', data);
+        const data = psychologyData.find(a => a.id.toLowerCase() === id.toLowerCase());
         if (!data) {
           throw new Error('Article not found');
         }
