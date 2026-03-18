@@ -4,6 +4,7 @@ import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, 
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
 import { syndromes } from '../data/syndromes';
+import { influenceTechniques } from '../data/influenceTechniques';
 
 interface TargetProfile {
   id: string;
@@ -70,13 +71,14 @@ export const TargetAnalysis: React.FC = () => {
       vulnerability: t('targetAnalysis.strategy.noInfo'),
       technique: t('targetAnalysis.strategy.undefined'),
       plan: [] as string[],
-      suggestedSyndromes: [] as { name: string, instruction: string }[]
+      suggestedSyndromes: [] as { name: string, instruction: string }[],
+      suggestedTechniques: [] as { title: string, description: string, defensive: string }[]
     };
 
     if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
 
     // Automatic Syndrome Suggestion Logic
-    const suggest = (id: string, instruction?: string) => {
+    const suggestSyndrome = (id: string, instruction?: string) => {
       const syndromeObj = syndromes.find(s => s.id === id || s.name.en === id);
       if (!syndromeObj) return;
       
@@ -88,35 +90,58 @@ export const TargetAnalysis: React.FC = () => {
       }
     };
 
-    // Dynamic Syndrome Suggestion based on keywords in target profile
+    // Automatic Technique Suggestion Logic
+    const suggestTechnique = (id: string) => {
+      const techObj = influenceTechniques.find(t => t.id === id || t.title.en === id);
+      if (!techObj) return;
+      
+      const localizedTitle = getLocalized(techObj.title);
+      const localizedDesc = getLocalized(techObj.description);
+      const localizedDefensive = getLocalized(techObj.defensiveStrategy);
+      
+      if (!strategy.suggestedTechniques.find(t => t.title === localizedTitle)) {
+        strategy.suggestedTechniques.push({ title: localizedTitle, description: localizedDesc, defensive: localizedDefensive });
+      }
+    };
+
+    // Dynamic Syndrome and Technique Suggestion based on keywords in target profile
+    const profileText = `${job} ${hobbies} ${gender} ${age} ${religion} ${politicalSystem}`.toLowerCase();
+    
     syndromes.forEach(s => {
       const targetKeywords = getLocalized(s.target).toLowerCase();
-      const profileText = `${job} ${hobbies} ${gender} ${age}`.toLowerCase();
-      
-      // Check if any keyword from syndrome target matches profile
       const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
       if (keywords.some(k => profileText.includes(k))) {
-        suggest(s.id);
+        suggestSyndrome(s.id);
+      }
+    });
+
+    influenceTechniques.forEach(t => {
+      const targetKeywords = `${t.targetDemographics.professions.join(' ')} ${t.targetDemographics.interests?.join(' ') || ''} ${t.targetDemographics.religions.join(' ')} ${t.targetDemographics.politicalSystems.join(' ')}`.toLowerCase();
+      const keywords = targetKeywords.split(/[,.;\s]/).map(k => k.trim()).filter(k => k.length > 3);
+      if (keywords.some(k => profileText.includes(k))) {
+        suggestTechnique(t.id);
       }
     });
 
     // Age-based suggestions
     if (age > 0 && age < 25) {
-      suggest("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
+      suggestSyndrome("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
+      suggestSyndrome("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
     } else if (age >= 25 && age <= 45) {
-      suggest("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
-      suggest("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
+      suggestSyndrome("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
+      suggestSyndrome("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
     }
 
     // Job-based suggestions
     if (job.includes('quản lý') || job.includes('lãnh đạo') || job.includes('management') || job.includes('leader')) {
-      suggest("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
-      suggest("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
+      suggestSyndrome("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
+      suggestSyndrome("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
+      suggestTechnique("social-proof");
     } else if (job.includes('kỹ thuật') || job.includes('it') || job.includes('tech')) {
-      suggest("barnum-effect", t('targetAnalysis.strategy.barnumInstruction'));
+      suggestSyndrome("barnum-effect", t('targetAnalysis.strategy.barnumInstruction'));
+      suggestTechnique("scarcity");
     } else if (job.includes('nghệ thuật') || job.includes('sáng tạo') || job.includes('art') || job.includes('creative')) {
-      suggest("stendhal-syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
+      suggestSyndrome("stendhal-syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
     }
 
     // Religion-based suggestions
@@ -530,6 +555,24 @@ export const TargetAnalysis: React.FC = () => {
                           <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
                             <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">{s.name}</p>
                             <p className="text-sm text-slate-600 dark:text-slate-400 italic">{t('targetAnalysis.instructionLabel')} {s.instruction}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {liveStrategy.suggestedTechniques.length > 0 && (
+                    <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl p-8 border border-indigo-100 dark:border-indigo-800/30">
+                      <h4 className="font-bold text-indigo-900 dark:text-indigo-300 mb-6 flex items-center gap-2">
+                        <Target size={20} />
+                        {t('targetAnalysis.suggestedTechniquesTitle')}
+                      </h4>
+                      <div className="space-y-6">
+                        {liveStrategy.suggestedTechniques.map((t, idx) => (
+                          <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                            <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-2">{t.title}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{t.description}</p>
+                            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium italic">{t.defensive}</p>
                           </div>
                         ))}
                       </div>

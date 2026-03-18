@@ -280,44 +280,69 @@ export const TargetAudience: React.FC = () => {
         )}
       </div>
 
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
-        <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectTechniques')}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
-          {influenceTechniques.map(t => (
-            <label key={t.id} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={newTarget.savedTechniques.includes(t.id)}
-                onChange={e => {
-                  const techniques = e.target.checked
-                    ? [...newTarget.savedTechniques, t.id]
-                    : newTarget.savedTechniques.filter(id => id !== t.id);
-                  setNewTarget({...newTarget, savedTechniques: techniques});
-                }}
-              />
-              {getLocalized(t.title).replace(/^\d+\.\s*/, '')}
-            </label>
-          ))}
-        </div>
-      </div>
+      {newTarget.name && newTarget.age && newTarget.gender && newTarget.profession && newTarget.hobbies && newTarget.religion && newTarget.politicalSystem && (
+        <>
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
+            <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectTechniques')}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
+              {influenceTechniques
+                .filter(t => {
+                  const matchAge = !newTarget.age || t.targetDemographics.ageGroups.includes("All") || t.targetDemographics.ageGroups.includes(newTarget.age);
+                  const matchGender = !newTarget.gender || t.targetDemographics.genders.includes("All") || t.targetDemographics.genders.includes(newTarget.gender);
+                  const matchProfession = !newTarget.profession || t.targetDemographics.professions.includes("All") || t.targetDemographics.professions.includes(newTarget.profession);
+                  const matchReligion = !newTarget.religion || t.targetDemographics.religions.includes("All") || t.targetDemographics.religions.includes(newTarget.religion);
+                  const matchPolitical = !newTarget.politicalSystem || t.targetDemographics.politicalSystems.includes("All") || t.targetDemographics.politicalSystems.includes(newTarget.politicalSystem);
+                  
+                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
+                })
+                .map(t => (
+                <label key={t.id} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={newTarget.savedTechniques.includes(t.id)}
+                    onChange={e => {
+                      const techniques = e.target.checked
+                        ? [...newTarget.savedTechniques, t.id]
+                        : newTarget.savedTechniques.filter(id => id !== t.id);
+                      setNewTarget({...newTarget, savedTechniques: techniques});
+                    }}
+                  />
+                  {getLocalized(t.title).replace(/^\d+\.\s*/, '')}
+                </label>
+              ))}
+            </div>
+          </div>
 
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
-        <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectSyndrome')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
-          {syndromes.map(s => (
-            <label key={s.id} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="syndrome"
-                value={s.id}
-                checked={newTarget.syndrome === s.id}
-                onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}
-              />
-              {getLocalized(s.name)}
-            </label>
-          ))}
-        </div>
-      </div>
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
+            <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectSyndrome')}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
+              {syndromes
+                .filter(s => {
+                  const targetText = getLocalized(s.target).toLowerCase();
+                  const matchAge = !newTarget.age || targetText.includes(newTarget.age.toLowerCase());
+                  const matchGender = !newTarget.gender || targetText.includes(newTarget.gender.toLowerCase());
+                  const matchProfession = !newTarget.profession || targetText.includes(newTarget.profession.toLowerCase());
+                  const matchReligion = !newTarget.religion || targetText.includes(newTarget.religion.toLowerCase());
+                  const matchPolitical = !newTarget.politicalSystem || targetText.includes(newTarget.politicalSystem.toLowerCase());
+                  
+                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
+                })
+                .map(s => (
+                <label key={s.id} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="radio"
+                    name="syndrome"
+                    value={s.id}
+                    checked={newTarget.syndrome === s.id}
+                    onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}
+                  />
+                  {getLocalized(s.name)}
+                </label>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="grid grid-cols-1 gap-6">
         {targets.map(target => {
