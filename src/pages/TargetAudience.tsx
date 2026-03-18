@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
-import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
+import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List } from 'lucide-react';
 
 interface TargetAudience {
   id: string;
@@ -32,6 +32,7 @@ export const TargetAudience: React.FC = () => {
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '' });
+  const [showLibrary, setShowLibrary] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
@@ -156,8 +157,33 @@ export const TargetAudience: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8">
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">{t('targetAudience.title')}</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{t('targetAudience.title')}</h1>
+        <button onClick={() => setShowLibrary(!showLibrary)} className="bg-slate-200 dark:bg-slate-700 p-3 rounded-xl flex items-center gap-2">
+          <List size={20} /> {showLibrary ? t('targetAudience.hideLibrary') : t('targetAudience.showLibrary')}
+        </button>
+      </div>
       
+      {showLibrary && (
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
+          <h2 className="text-xl font-semibold mb-4">{t('targetAudience.library')}</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-bold mb-3">{t('targetAudience.syndromes')}</h3>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {syndromes.map(s => <div key={s.id} className="p-2 bg-slate-50 rounded text-sm">{getLocalized(s.name)}</div>)}
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold mb-3">{t('targetAudience.techniques')}</h3>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {influenceTechniques.map(t => <div key={t.id} className="p-2 bg-slate-50 rounded text-sm">{getLocalized(t.title)}</div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
         <h2 className="text-xl font-semibold mb-4">{t('targetAudience.addNew')}</h2>
         {loading ? (
