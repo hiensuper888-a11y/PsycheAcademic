@@ -20,7 +20,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   {
     id: "social-proof",
     title: {
-      vi: "Bằng chứng xã hội (Social Proof)",
+      vi: "Bằng chứng xã hội",
       en: "Social Proof",
       zh: "社会认同"
     },
@@ -46,7 +46,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   {
     id: "scarcity",
     title: {
-      vi: "Sự khan hiếm (Scarcity)",
+      vi: "Sự khan hiếm",
       en: "Scarcity",
       zh: "稀缺性"
     },
@@ -1789,7 +1789,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-41",
-    title: { vi: "Kỹ thuật 41", en: "Technique 41", zh: "技术 41" },
+    title: { vi: "Kỹ thuật 41: Khai thác sự tự ti", en: "Technique 41: Exploiting Self-Doubt", zh: "技术 41: 利用自卑" },
     description: { vi: "Mô tả 41", en: "Description 41", zh: "描述 41" },
     sourceBook: "Source 41",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Reading"] },
@@ -1797,7 +1797,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-42",
-    title: { vi: "Kỹ thuật 42", en: "Technique 42", zh: "技术 42" },
+    title: { vi: "Kỹ thuật 42: Tâng bốc trí tuệ", en: "Technique 42: Flattering Intellect", zh: "技术 42: 奉承智慧" },
     description: { vi: "Mô tả 42", en: "Description 42", zh: "描述 42" },
     sourceBook: "Source 42",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Music"] },
@@ -1805,7 +1805,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-43",
-    title: { vi: "Kỹ thuật 43", en: "Technique 43", zh: "技术 43" },
+    title: { vi: "Kỹ thuật 43: Xây dựng hình ảnh hào quang", en: "Technique 43: Building Halo Image", zh: "技术 43: 建立光环形象" },
     description: { vi: "Mô tả 43", en: "Description 43", zh: "描述 43" },
     sourceBook: "Source 43",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Sports"] },
@@ -1813,7 +1813,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-44",
-    title: { vi: "Kỹ thuật 44", en: "Technique 44", zh: "技术 44" },
+    title: { vi: "Kỹ thuật 44: Cung cấp thông tin thiên kiến", en: "Technique 44: Providing Biased Info", zh: "技术 44: 提供偏见信息" },
     description: { vi: "Mô tả 44", en: "Description 44", zh: "描述 44" },
     sourceBook: "Source 44",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Art"] },
@@ -1821,7 +1821,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-45",
-    title: { vi: "Kỹ thuật 45", en: "Technique 45", zh: "技术 45" },
+    title: { vi: "Kỹ thuật 45: Thiết lập mỏ neo", en: "Technique 45: Establishing Anchor", zh: "技术 45: 建立锚点" },
     description: { vi: "Mô tả 45", en: "Description 45", zh: "描述 45" },
     sourceBook: "Source 45",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Cooking"] },
@@ -1829,7 +1829,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-46",
-    title: { vi: "Kỹ thuật 46", en: "Technique 46", zh: "技术 46" },
+    title: { vi: "Kỹ thuật 46: Tạo sự khan hiếm", en: "Technique 46: Creating Scarcity", zh: "技术 46: 创造稀缺性" },
     description: { vi: "Mô tả 46", en: "Description 46", zh: "描述 46" },
     sourceBook: "Source 46",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Travel"] },
@@ -1837,7 +1837,7 @@ export const influenceTechniques: InfluenceTechnique[] = [
   },
   {
     id: "technique-47",
-    title: { vi: "Kỹ thuật 47", en: "Technique 47", zh: "技术 47" },
+    title: { vi: "Kỹ thuật 47: Tạo sự phụ thuộc cảm xúc", en: "Technique 47: Creating Emotional Dependency", zh: "技术 47: 创造情感依赖" },
     description: { vi: "Mô tả 47", en: "Description 47", zh: "描述 47" },
     sourceBook: "Source 47",
     targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Gaming"] },

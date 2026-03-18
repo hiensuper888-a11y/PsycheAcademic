@@ -221,34 +221,39 @@ export const TargetAudience: React.FC = () => {
               {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
-            <div className="flex flex-col gap-2">
-              <label>{t('targetAnalysis.selectTechniques')}</label>
-              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
-                {influenceTechniques.map(t => (
-                  <label key={t.id} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={newTarget.savedTechniques.includes(t.id)}
-                      onChange={e => {
-                        const techniques = e.target.checked
-                          ? [...newTarget.savedTechniques, t.id]
-                          : newTarget.savedTechniques.filter(id => id !== t.id);
-                        setNewTarget({...newTarget, savedTechniques: techniques});
-                      }}
-                    />
-                    {getLocalized(t.title)}
-                  </label>
-                ))}
-              </div>
-            </div>
-            <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-              <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-              {syndromes.map(s => (
-                <option key={s.id} value={s.id}>
-                  {getLocalized(s.name)}
-                </option>
-              ))}
-            </select>
+            
+            {newTarget.name && newTarget.age && newTarget.gender && newTarget.profession && newTarget.hobbies && newTarget.religion && newTarget.politicalSystem && (
+              <>
+                <div className="flex flex-col gap-2">
+                  <label>{t('targetAnalysis.selectTechniques')}</label>
+                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
+                    {influenceTechniques.map(t => (
+                      <label key={t.id} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={newTarget.savedTechniques.includes(t.id)}
+                          onChange={e => {
+                            const techniques = e.target.checked
+                              ? [...newTarget.savedTechniques, t.id]
+                              : newTarget.savedTechniques.filter(id => id !== t.id);
+                            setNewTarget({...newTarget, savedTechniques: techniques});
+                          }}
+                        />
+                        {getLocalized(t.title)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
+                  <option value="">{t('targetAnalysis.selectSyndrome')}</option>
+                  {syndromes.map(s => (
+                    <option key={s.id} value={s.id}>
+                      {getLocalized(s.name)}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
             </button>
