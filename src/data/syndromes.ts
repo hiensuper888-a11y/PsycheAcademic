@@ -4,6 +4,14 @@ export interface Syndrome {
   description: { vi: string; en: string; zh: string };
   example: { vi: string; en: string; zh: string };
   target: { vi: string; en: string; zh: string };
+  targetDemographics?: {
+    ageGroups: string[];
+    genders: string[];
+    professions: string[];
+    religions: string[];
+    politicalSystems: string[];
+    interests?: string[];
+  };
 }
 
 export const syndromes: Syndrome[] = [
@@ -24,6 +32,13 @@ export const syndromes: Syndrome[] = [
       vi: "Những người thành đạt, sinh viên giỏi, người mới bắt đầu sự nghiệp.",
       en: "High achievers, students, early-career professionals.",
       zh: "高成就者、学生、职业生涯早期的专业人士。"
+    },
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"]
     }
   },
   {
@@ -2307,5 +2322,450 @@ export const syndromes: Syndrome[] = [
     description: { vi: "Thích phóng hỏa.", en: "Enjoying setting fires.", zh: "喜欢纵火。" },
     example: { vi: "Đốt đồ vật để giải tỏa.", en: "Setting things on fire to relieve stress.", zh: "纵火以缓解压力。" },
     target: { vi: "Tuổi: 15-50, Giới tính: Tất cả, Sở thích: Không, Nghề nghiệp: Tất cả, Tôn giáo: Không, Chế độ: Tất cả", en: "Age: 15-50, Gender: All, Interests: None, Profession: All, Religion: None, Regime: All", zh: "年龄: 15-50, 性别: 全部, 兴趣: 无, 职业: 全部, 宗教: 无, 制度: 全部" }
+  },
+  {
+    id: "syndrome-61",
+    name: { vi: "Hội chứng 61", en: "Syndrome 61", zh: "综合症 61" },
+    description: { vi: "Mô tả 61", en: "Description 61", zh: "描述 61" },
+    example: { vi: "Ví dụ 61", en: "Example 61", zh: "例子 61" },
+    target: { vi: "Mục tiêu 61", en: "Target 61", zh: "目标 61" },
+    targetDemographics: { ageGroups: ["18-25"], genders: ["All"], professions: ["Student"], religions: ["None"], politicalSystems: ["Capitalism"], interests: ["Gaming"] }
+  },
+  {
+    id: 's-11',
+    name: { vi: 'Hội chứng Cháy sạch (Burnout)', en: 'Burnout Syndrome', zh: '职业倦怠综合征' },
+    description: { 
+      vi: 'Kiệt sức về thể chất và tinh thần do căng thẳng kéo dài trong công việc.', 
+      en: 'Physical and mental exhaustion caused by prolonged stress at work.', 
+      zh: '由于工作中长期压力导致的身体和精神疲惫。' 
+    },
+    example: { 
+      vi: 'Một lập trình viên cảm thấy vô hồn và không muốn chạm vào bàn phím sau 6 tháng làm dự án quá tải.', 
+      en: 'A programmer feels soulless and doesn\'t want to touch the keyboard after 6 months of an overloaded project.', 
+      zh: '一名程序员在经历了 6 个月的超负荷项目后感到无精打采，不想碰键盘。' 
+    },
+    target: { vi: 'Người làm việc cường độ cao, quản lý, y bác sĩ', en: 'High-intensity workers, managers, medical staff', zh: '高强度工作者、经理、医务人员' },
+    targetDemographics: {
+      ageGroups: ['25-45', '46-60'],
+      genders: ['All'],
+      professions: ['tech', 'medical', 'management', 'education'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-12',
+    name: { vi: 'Hội chứng Hikikomori', en: 'Hikikomori Syndrome', zh: '隐蔽青年综合征' },
+    description: { 
+      vi: 'Rút lui hoàn toàn khỏi xã hội, tự giam mình trong phòng trong thời gian dài.', 
+      en: 'Complete withdrawal from society, self-confinement in a room for a long period.', 
+      zh: '完全退出社会，长期把自己关在房间里。' 
+    },
+    example: { 
+      vi: 'Một thanh niên 20 tuổi không ra khỏi phòng trong 2 năm, chỉ giao tiếp qua mạng.', 
+      en: 'A 20-year-old man has not left his room for 2 years, communicating only online.', 
+      zh: '一名 20 岁的年轻人两年没出过房间，只通过网络交流。' 
+    },
+    target: { vi: 'Thanh niên, người thất nghiệp, người sợ giao tiếp', en: 'Youth, unemployed, people afraid of communication', zh: '青年、失业者、害怕交流的人' },
+    targetDemographics: {
+      ageGroups: ['15-24', '25-34'],
+      genders: ['male'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['gaming', 'anime', 'internet']
+    }
+  },
+  {
+    id: 's-13',
+    name: { vi: 'Hội chứng Peter Pan', en: 'Peter Pan Syndrome', zh: '彼得潘综合征' },
+    description: { 
+      vi: 'Người trưởng thành nhưng không muốn lớn lên, né tránh trách nhiệm.', 
+      en: 'Adults who do not want to grow up, avoiding responsibilities.', 
+      zh: '不想长大的成年人，逃避责任。' 
+    },
+    example: { 
+      vi: 'Một người đàn ông 35 tuổi vẫn sống dựa vào cha mẹ và chỉ thích chơi đồ chơi.', 
+      en: 'A 35-year-old man still lives with his parents and only likes playing with toys.', 
+      zh: '一名 35 岁的男子仍然依靠父母生活，只喜欢玩玩具。' 
+    },
+    target: { vi: 'Nam giới trưởng thành, người được nuông chiều', en: 'Adult males, pampered people', zh: '成年男性、受宠的人' },
+    targetDemographics: {
+      ageGroups: ['25-45'],
+      genders: ['male'],
+      professions: ['creative', 'other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['toys', 'gaming', 'entertainment']
+    }
+  },
+  {
+    id: 's-14',
+    name: { vi: 'Hội chứng Alice ở Xứ sở Thần tiên', en: 'Alice in Wonderland Syndrome', zh: '爱丽丝梦游仙境综合征' },
+    description: { 
+      vi: 'Rối loạn tri giác khiến vật thể trông to hơn hoặc nhỏ hơn thực tế.', 
+      en: 'Perceptual disorder causing objects to look larger or smaller than they actually are.', 
+      zh: '知觉障碍导致物体看起来比实际更大或更小。' 
+    },
+    example: { 
+      vi: 'Một đứa trẻ cảm thấy bàn tay mình to bằng cả căn phòng.', 
+      en: 'A child feels their hand is as big as the whole room.', 
+      zh: '一个孩子觉得自己的手和整个房间一样大。' 
+    },
+    target: { vi: 'Trẻ em, người bị đau nửa đầu', en: 'Children, people with migraines', zh: '儿童、偏头痛患者' },
+    targetDemographics: {
+      ageGroups: ['5-14', '15-24'],
+      genders: ['All'],
+      professions: ['education'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-15',
+    name: { vi: 'Hội chứng Diogenes', en: 'Diogenes Syndrome', zh: '第欧根尼综合征' },
+    description: { 
+      vi: 'Bỏ bê bản thân cực độ, sống bẩn thỉu và tích trữ rác.', 
+      en: 'Extreme self-neglect, living in filth and hoarding trash.', 
+      zh: '极端自我忽视，生活在污秽中并囤积垃圾。' 
+    },
+    example: { 
+      vi: 'Một cụ già sống trong căn hộ đầy rác thải và không tắm rửa trong nhiều tháng.', 
+      en: 'An elderly person lives in an apartment full of trash and hasn\'t bathed for months.', 
+      zh: '一位老人住在堆满垃圾的公寓里，好几个月没洗澡。' 
+    },
+    target: { vi: 'Người già, người sống cô độc', en: 'Elderly, lonely people', zh: '老人、孤独的人' },
+    targetDemographics: {
+      ageGroups: ['60-100'],
+      genders: ['All'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-16',
+    name: { vi: 'Hội chứng Jerusalem', en: 'Jerusalem Syndrome', zh: '耶路撒冷综合征' },
+    description: { 
+      vi: 'Ảo tưởng tôn giáo cực đoan khi đến thăm thành phố Jerusalem.', 
+      en: 'Extreme religious delusions when visiting the city of Jerusalem.', 
+      zh: '访问耶路撒冷市时产生的极端宗教幻想。' 
+    },
+    example: { 
+      vi: 'Một du khách tin rằng mình là một vị tiên tri sau khi đến Jerusalem.', 
+      en: 'A tourist believes they are a prophet after arriving in Jerusalem.', 
+      zh: '一名游客在到达耶路撒冷后相信自己是一位先知。' 
+    },
+    target: { vi: 'Người sùng đạo, du khách', en: 'Religious people, tourists', zh: '虔诚的人、游客' },
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['christianity', 'judaism', 'islam'],
+      politicalSystems: ['All'],
+      interests: ['travel', 'religion']
+    }
+  },
+  {
+    id: 's-17',
+    name: { vi: 'Hội chứng Paris', en: 'Paris Syndrome', zh: '巴黎综合征' },
+    description: { 
+      vi: 'Sốc văn hóa cực độ khi thực tế ở Paris không đẹp như kỳ vọng.', 
+      en: 'Extreme culture shock when the reality in Paris is not as beautiful as expected.', 
+      zh: '当巴黎的现实不如预期般美好时，产生的极端文化冲击。' 
+    },
+    example: { 
+      vi: 'Một du khách Nhật Bản bị suy sụp tinh thần khi thấy Paris bẩn và ồn ào.', 
+      en: 'A Japanese tourist has a mental breakdown when they see Paris is dirty and noisy.', 
+      zh: '一名日本游客在看到巴黎又脏又吵时精神崩溃。' 
+    },
+    target: { vi: 'Du khách, người mơ mộng', en: 'Tourists, dreamers', zh: '游客、梦想家' },
+    targetDemographics: {
+      ageGroups: ['18-35'],
+      genders: ['female'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['travel', 'fashion', 'art']
+    }
+  },
+  {
+    id: 's-18',
+    name: { vi: 'Hội chứng Stendhal', en: 'Stendhal Syndrome', zh: '司汤达综合征' },
+    description: { 
+      vi: 'Choáng váng, tim đập nhanh khi tiếp xúc với các tác phẩm nghệ thuật quá đẹp.', 
+      en: 'Dizziness, rapid heartbeat when exposed to artworks that are too beautiful.', 
+      zh: '接触到过于美丽的艺术品时感到头晕、心跳加快。' 
+    },
+    example: { 
+      vi: 'Một người ngất xỉu khi đứng trước bức tranh của Michelangelo.', 
+      en: 'A person faints while standing in front of a Michelangelo painting.', 
+      zh: '一个人在米开朗基罗的画作前晕倒。' 
+    },
+    target: { vi: 'Người yêu nghệ thuật, người nhạy cảm', en: 'Art lovers, sensitive people', zh: '艺术爱好者、敏感的人' },
+    targetDemographics: {
+      ageGroups: ['18-60'],
+      genders: ['All'],
+      professions: ['creative', 'education'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['art', 'museum', 'history']
+    }
+  },
+  {
+    id: 's-19',
+    name: { vi: 'Hội chứng Capgras', en: 'Capgras Syndrome', zh: '卡普格拉综合征' },
+    description: { 
+      vi: 'Ảo tưởng rằng người thân đã bị thay thế bởi một kẻ mạo danh giống hệt.', 
+      en: 'Delusion that a relative has been replaced by an identical impostor.', 
+      zh: '幻想亲人已被一个一模一样的冒充者取代。' 
+    },
+    example: { 
+      vi: 'Một người tin rằng vợ mình là một robot đóng giả.', 
+      en: 'A person believes their wife is a robot posing as her.', 
+      zh: '一个人相信他的妻子是一个冒充她的机器人。' 
+    },
+    target: { vi: 'Người bị tâm thần phân liệt, người già', en: 'People with schizophrenia, elderly', zh: '精神分裂症患者、老人' },
+    targetDemographics: {
+      ageGroups: ['45-100'],
+      genders: ['All'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-21',
+    name: { vi: 'Hội chứng Munchausen', en: 'Munchausen Syndrome', zh: '孟乔森综合征' },
+    description: { 
+      vi: 'Giả vờ bị bệnh hoặc tự gây thương tích để thu hút sự chú ý và lòng thương hại.', 
+      en: 'Pretending to be ill or self-inflicting injury to attract attention and sympathy.', 
+      zh: '假装生病或自残以吸引注意和同情。' 
+    },
+    example: { 
+      vi: 'Một người liên tục đi cấp cứu với các triệu chứng giả tạo mà bác sĩ không tìm ra nguyên nhân.', 
+      en: 'A person repeatedly goes to the ER with fake symptoms that doctors can\'t find a cause for.', 
+      zh: '一个人因医生找不到原因的虚假症状反复去急诊室。' 
+    },
+    target: { vi: 'Người thiếu thốn tình cảm, người muốn được quan tâm', en: 'People lacking affection, people wanting attention', zh: '缺乏感情的人、想要关注的人' },
+    targetDemographics: {
+      ageGroups: ['18-45'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['social media', 'health']
+    }
+  },
+  {
+    id: 's-22',
+    name: { vi: 'Hội chứng Munchausen qua người đại diện', en: 'Munchausen by Proxy', zh: '代理性孟乔森综合征' },
+    description: { 
+      vi: 'Người chăm sóc cố tình làm cho người khác (thường là con cái) bị bệnh để được khen ngợi là người tận tụy.', 
+      en: 'A caregiver intentionally makes another person (usually a child) ill to be praised as a dedicated person.', 
+      zh: '照顾者故意让另一个人（通常是孩子）生病，以便被称赞为尽职尽责的人。' 
+    },
+    example: { 
+      vi: 'Một người mẹ lén cho con uống thuốc độc để con phải nhập viện liên tục.', 
+      en: 'A mother secretly gives her child poison so the child has to be hospitalized repeatedly.', 
+      zh: '一位母亲偷偷给孩子下毒，导致孩子不得不反复住院。' 
+    },
+    target: { vi: 'Cha mẹ, người chăm sóc', en: 'Parents, caregivers', zh: '父母、照顾者' },
+    targetDemographics: {
+      ageGroups: ['25-50'],
+      genders: ['female'],
+      professions: ['housewife', 'medical'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['family', 'parenting']
+    }
+  },
+  {
+    id: 's-23',
+    name: { vi: 'Hội chứng Tourette', en: 'Tourette Syndrome', zh: '妥瑞氏综合征' },
+    description: { 
+      vi: 'Rối loạn hệ thần kinh gây ra các cử động hoặc âm thanh không tự chủ (tật máy giật).', 
+      en: 'Nervous system disorder causing involuntary movements or sounds (tics).', 
+      zh: '导致不自主运动或声音（抽动）的神经系统疾病。' 
+    },
+    example: { 
+      vi: 'Một người đột nhiên nháy mắt liên tục hoặc phát ra tiếng kêu lạ khi đang nói chuyện.', 
+      en: 'A person suddenly blinks repeatedly or makes strange noises while talking.', 
+      zh: '一个人在说话时突然反复眨眼或发出奇怪的声音。' 
+    },
+    target: { vi: 'Trẻ em, thanh thiếu niên', en: 'Children, teenagers', zh: '儿童、青少年' },
+    targetDemographics: {
+      ageGroups: ['5-14', '15-24'],
+      genders: ['male'],
+      professions: ['student'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-24',
+    name: { vi: 'Hội chứng Savant (Bác học)', en: 'Savant Syndrome', zh: '学者综合征' },
+    description: { 
+      vi: 'Người bị khuyết tật trí tuệ nhưng lại có khả năng thiên tài trong một lĩnh vực cụ thể.', 
+      en: 'People with intellectual disabilities who have genius abilities in a specific field.', 
+      zh: '在特定领域具有天才能力的智力障碍者。' 
+    },
+    example: { 
+      vi: 'Một người tự kỷ có thể vẽ lại toàn bộ thành phố chỉ sau một lần nhìn từ trên cao.', 
+      en: 'An autistic person can redraw an entire city after just one look from above.', 
+      zh: '一个自闭症患者只要从上面看一眼，就能画出整个城市。' 
+    },
+    target: { vi: 'Người tự kỷ, người bị tổn thương não', en: 'Autistic people, people with brain damage', zh: '自闭症患者、脑损伤者' },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['creative', 'tech'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['art', 'math', 'music']
+    }
+  },
+  {
+    id: 's-25',
+    name: { vi: 'Hội chứng Cotard (Xác sống)', en: 'Cotard Syndrome', zh: '科塔尔综合征' },
+    description: { 
+      vi: 'Ảo tưởng rằng mình đã chết, không tồn tại hoặc các bộ phận cơ thể đang thối rữa.', 
+      en: 'Delusion that one is dead, non-existent, or that body parts are rotting.', 
+      zh: '幻想自己已经死了、不存在，或者身体部位正在腐烂。' 
+    },
+    example: { 
+      vi: 'Một bệnh nhân từ chối ăn vì tin rằng mình không có dạ dày.', 
+      en: 'A patient refuses to eat because they believe they don\'t have a stomach.', 
+      zh: '一名患者拒绝进食，因为他们相信自己没有胃。' 
+    },
+    target: { vi: 'Người bị trầm cảm nặng, người bị tâm thần', en: 'People with severe depression, people with mental illness', zh: '患有严重抑郁症的人、精神病患者' },
+    targetDemographics: {
+      ageGroups: ['45-100'],
+      genders: ['All'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-26',
+    name: { vi: 'Hội chứng Lima', en: 'Lima Syndrome', zh: '利马综合征' },
+    description: { 
+      vi: 'Kẻ bắt cóc nảy sinh lòng thương cảm và đồng cảm với nạn nhân (ngược lại với Stockholm).', 
+      en: 'Kidnappers develop sympathy and empathy for their victims (opposite of Stockholm).', 
+      zh: '绑架者对受害者产生同情和共情（与斯德哥尔摩相反）。' 
+    },
+    example: { 
+      vi: 'Một nhóm phiến quân bắt đầu chăm sóc và thả tự do cho các con tin vì thấy tội nghiệp.', 
+      en: 'A group of rebels starts caring for and releasing hostages because they feel sorry for them.', 
+      zh: '一群叛军因为觉得人质可怜而开始照顾并释放他们。' 
+    },
+    target: { vi: 'Kẻ bắt cóc, người có quyền lực', en: 'Kidnappers, people in power', zh: '绑架者、有权力的人' },
+    targetDemographics: {
+      ageGroups: ['25-50'],
+      genders: ['male'],
+      professions: ['security', 'rebel'],
+      religions: ['All'],
+      politicalSystems: ['rebel'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-27',
+    name: { vi: 'Hội chứng Diogenes (Tích trữ)', en: 'Diogenes Syndrome', zh: '第欧根尼综合征' },
+    description: { 
+      vi: 'Bỏ bê bản thân cực độ, sống bẩn thỉu và tích trữ rác.', 
+      en: 'Extreme self-neglect, living in filth and hoarding trash.', 
+      zh: '极端自我忽视，生活在污秽中并囤积垃圾。' 
+    },
+    example: { 
+      vi: 'Một cụ già sống trong căn hộ đầy rác thải và không tắm rửa trong nhiều tháng.', 
+      en: 'An elderly person lives in an apartment full of trash and hasn\'t bathed for months.', 
+      zh: '一位老人住在堆满垃圾的公寓里，好几个月没洗澡。' 
+    },
+    target: { vi: 'Người già, người sống cô độc', en: 'Elderly, lonely people', zh: '老人、孤独的人' },
+    targetDemographics: {
+      ageGroups: ['60-100'],
+      genders: ['All'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-28',
+    name: { vi: 'Hội chứng Othello', en: 'Othello Syndrome', zh: '奥赛罗综合征' },
+    description: { 
+      vi: 'Ghen tuông bệnh lý, luôn tin rằng bạn đời đang phản bội mình mà không có bằng chứng.', 
+      en: 'Pathological jealousy, always believing that their partner is betraying them without evidence.', 
+      zh: '病态的嫉妒，在没有证据的情况下始终相信伴侣背叛了自己。' 
+    },
+    example: { 
+      vi: 'Một người đàn ông kiểm tra điện thoại và theo dõi vợ mọi lúc vì nghi ngờ ngoại tình.', 
+      en: 'A man checks his wife\'s phone and stalks her all the time because he suspects an affair.', 
+      zh: '一名男子怀疑妻子有外遇，于是不停地检查她的手机并跟踪她。' 
+    },
+    target: { vi: 'Người có lòng tự trọng thấp, người hay lo âu', en: 'People with low self-esteem, anxious people', zh: '自尊心低的人、焦虑的人' },
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['family', 'relationships']
+    }
+  },
+  {
+    id: 's-29',
+    name: { vi: 'Hội chứng Ganser', en: 'Ganser Syndrome', zh: '甘瑟综合征' },
+    description: { 
+      vi: 'Đưa ra những câu trả lời sai một cách ngớ ngẩn cho những câu hỏi đơn giản (thường gặp ở tù nhân).', 
+      en: 'Giving absurdly wrong answers to simple questions (commonly found in prisoners).', 
+      zh: '对简单的问题给出荒谬的错误回答（常见于囚犯）。' 
+    },
+    example: { 
+      vi: 'Khi được hỏi 2+2 bằng mấy, bệnh nhân trả lời là 5.', 
+      en: 'When asked what 2+2 equals, the patient answers 5.', 
+      zh: '当被问及 2+2 等于多少时，患者回答 5。' 
+    },
+    target: { vi: 'Tù nhân, người đang bị xét xử', en: 'Prisoners, people on trial', zh: '囚犯、受审人员' },
+    targetDemographics: {
+      ageGroups: ['18-60'],
+      genders: ['male'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 's-30',
+    name: { vi: 'Hội chứng Charles Bonnet', en: 'Charles Bonnet Syndrome', zh: '查尔斯·邦内综合征' },
+    description: { 
+      vi: 'Người bị suy giảm thị lực gặp phải những ảo giác thị giác phức tạp.', 
+      en: 'People with visual impairment experience complex visual hallucinations.', 
+      zh: '视力受损的人会经历复杂的视觉幻觉。' 
+    },
+    example: { 
+      vi: 'Một người mù nhìn thấy những khuôn mặt hoặc hoa văn rực rỡ trước mắt.', 
+      en: 'A blind person sees faces or vibrant patterns before their eyes.', 
+      zh: '一个盲人看到眼前有脸或鲜艳的图案。' 
+    },
+    target: { vi: 'Người khiếm thị, người già', en: 'Visually impaired, elderly', zh: '视力受损者、老人' },
+    targetDemographics: {
+      ageGroups: ['60-100'],
+      genders: ['All'],
+      professions: ['other'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
   }
 ];

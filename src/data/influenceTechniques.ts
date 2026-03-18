@@ -4,7 +4,7 @@ export interface InfluenceTechnique {
   id: string;
   title: string | LocalizedString;
   description: string | LocalizedString;
-  sourceBook: string;
+  sourceBook?: string;
   targetDemographics: {
     ageGroups: string[];
     genders: string[];
@@ -1940,11 +1940,453 @@ export const influenceTechniques: InfluenceTechnique[] = [
     defensiveStrategy: { vi: "Chiến lược 59", en: "Strategy 59", zh: "策略 59" }
   },
   {
-    id: "technique-60",
-    title: { vi: "Kỹ thuật 60", en: "Technique 60", zh: "技术 60" },
-    description: { vi: "Mô tả 60", en: "Description 60", zh: "描述 60" },
-    sourceBook: "Source 60",
-    targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["All"], religions: ["All"], politicalSystems: ["All"], interests: ["Running"] },
-    defensiveStrategy: { vi: "Chiến lược 60", en: "Strategy 60", zh: "策略 60" }
+    id: "technique-61",
+    title: { vi: "Kỹ thuật 61", en: "Technique 61", zh: "技术 61" },
+    description: { vi: "Mô tả 61", en: "Description 61", zh: "描述 61" },
+    sourceBook: "Source 61",
+    targetDemographics: { ageGroups: ["18-25"], genders: ["All"], professions: ["Student"], religions: ["None"], politicalSystems: ["Capitalism"], interests: ["Gaming"] },
+    defensiveStrategy: { vi: "Chiến lược 61", en: "Strategy 61", zh: "策略 61" }
+  },
+  {
+    id: "technique-62",
+    title: { vi: "Kỹ thuật 62", en: "Technique 62", zh: "技术 62" },
+    description: { vi: "Mô tả 62", en: "Description 62", zh: "描述 62" },
+    sourceBook: "Source 62",
+    targetDemographics: { ageGroups: ["26-40"], genders: ["Female"], professions: ["Marketing"], religions: ["Buddhism"], politicalSystems: ["Socialism"], interests: ["Yoga"] },
+    defensiveStrategy: { vi: "Chiến lược 62", en: "Strategy 62", zh: "策略 62" }
+  },
+  {
+    id: "technique-63",
+    title: { vi: "Kỹ thuật 63", en: "Technique 63", zh: "技术 63" },
+    description: { vi: "Mô tả 63", en: "Description 63", zh: "描述 63" },
+    sourceBook: "Source 63",
+    targetDemographics: { ageGroups: ["41-60"], genders: ["Male"], professions: ["Management"], religions: ["Christianity"], politicalSystems: ["Capitalism"], interests: ["Investing"] },
+    defensiveStrategy: { vi: "Chiến lược 63", en: "Strategy 63", zh: "策略 63" }
+  },
+  {
+    id: "technique-64",
+    title: { vi: "Kỹ thuật 64", en: "Technique 64", zh: "技术 64" },
+    description: { vi: "Mô tả 64", en: "Description 64", zh: "描述 64" },
+    sourceBook: "Source 64",
+    targetDemographics: { ageGroups: ["All"], genders: ["All"], professions: ["Tech"], religions: ["None"], politicalSystems: ["Capitalism"], interests: ["Tech"] },
+    defensiveStrategy: { vi: "Chiến lược 64", en: "Strategy 64", zh: "策略 64" }
+  },
+  {
+    id: "technique-65",
+    title: { vi: "Kỹ thuật 65", en: "Technique 65", zh: "技术 65" },
+    description: { vi: "Mô tả 65", en: "Description 65", zh: "描述 65" },
+    sourceBook: "Source 65",
+    targetDemographics: { ageGroups: ["18-25"], genders: ["All"], professions: ["Student"], religions: ["None"], politicalSystems: ["Socialism"], interests: ["Social Media"] },
+    defensiveStrategy: { vi: "Chiến lược 65", en: "Strategy 65", zh: "策略 65" }
+  },
+  {
+    id: 't-11',
+    title: { vi: 'Kỹ thuật "Mỏ neo" (Anchoring)', en: 'Anchoring Technique', zh: '锚定技术' },
+    description: { 
+      vi: 'Đưa ra một con số hoặc thông tin đầu tiên để làm mốc so sánh cho các thông tin sau.', 
+      en: 'Providing the first piece of information to serve as a reference point for subsequent info.', 
+      zh: '提供第一条信息作为后续信息的参考点。' 
+    },
+    sourceBook: 'Thinking, Fast and Slow',
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['sales', 'management', 'tech'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['finance', 'shopping']
+    },
+    defensiveStrategy: { vi: 'Luôn tự hỏi giá trị thực tế của vật phẩm trước khi nghe giá đề xuất.', en: 'Always ask yourself the actual value of the item before hearing the proposed price.', zh: '在听到建议价格之前，始终询问自己物品的实际价值。' }
+  },
+  {
+    id: 't-12',
+    title: { vi: 'Kỹ thuật "Mưa dầm thấm lâu"', en: 'Drip Feed Technique', zh: '滴灌技术' },
+    description: { 
+      vi: 'Lặp đi lặp lại một thông điệp nhỏ trong thời gian dài để thay đổi tư duy.', 
+      en: 'Repeating a small message over a long period to change mindset.', 
+      zh: '长期重复一条小信息以改变心态。' 
+    },
+    sourceBook: 'Propaganda',
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['socialism', 'capitalism'],
+      interests: ['social media', 'news']
+    },
+    defensiveStrategy: { vi: 'Đa dạng hóa nguồn tin và kiểm chứng thông tin độc lập.', en: 'Diversify news sources and verify information independently.', zh: '多元化新闻来源并独立验证信息。' }
+  },
+  {
+    id: 't-13',
+    title: { vi: 'Kỹ thuật "Tạo sự khan hiếm giả"', en: 'Artificial Scarcity', zh: '人为稀缺' },
+    description: { 
+      vi: 'Tạo ra cảm giác hàng hóa hoặc cơ hội sắp hết để thúc đẩy quyết định nhanh.', 
+      en: 'Creating a sense that goods or opportunities are running out to prompt quick decisions.', 
+      zh: '营造商品或机会即将耗尽的感觉，以促使快速做出决定。' 
+    },
+    sourceBook: 'Influence: The Psychology of Persuasion',
+    targetDemographics: {
+      ageGroups: ['18-45'],
+      genders: ['All'],
+      professions: ['sales', 'marketing'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'fashion', 'tech']
+    },
+    defensiveStrategy: { vi: 'Dừng lại 5 phút để suy nghĩ xem mình có thực sự cần nó không.', en: 'Stop for 5 minutes to think if you really need it.', zh: '停下来 5 分钟，想想你是否真的需要它。' }
+  },
+  {
+    id: 't-14',
+    title: { vi: 'Kỹ thuật "Đánh vào lòng trắc ẩn"', en: 'Appeal to Compassion', zh: '诉诸同情' },
+    description: { 
+      vi: 'Sử dụng những câu chuyện cảm động để làm yếu đi sự phòng thủ logic.', 
+      en: 'Using touching stories to weaken logical defenses.', 
+      zh: '利用感人的故事来削弱逻辑防御。' 
+    },
+    sourceBook: 'The Art of Seduction',
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['female'],
+      professions: ['education', 'medical', 'customerService'],
+      religions: ['christianity', 'buddhism'],
+      politicalSystems: ['All'],
+      interests: ['charity', 'family']
+    },
+    defensiveStrategy: { vi: 'Tách biệt cảm xúc và hành động thực tế cần thực hiện.', en: 'Separate emotions from the actual actions that need to be taken.', zh: '将情绪与需要采取的实际行动分开。' }
+  },
+  {
+    id: 't-15',
+    title: { vi: 'Kỹ thuật "Gây nhiễu thông tin"', en: 'Information Overload', zh: '信息过载' },
+    description: { 
+      vi: 'Cung cấp quá nhiều thông tin khiến đối tượng mệt mỏi và dễ chấp nhận đề nghị.', 
+      en: 'Providing too much information makes the subject tired and more likely to accept the offer.', 
+      zh: '提供过多的信息会使受试者感到疲倦，并更有可能接受提议。' 
+    },
+    sourceBook: 'The 48 Laws of Power',
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['tech', 'management', 'finance'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['news', 'business']
+    },
+    defensiveStrategy: { vi: 'Yêu cầu tóm tắt các điểm chính và xin thêm thời gian suy nghĩ.', en: 'Ask for a summary of key points and request more time to think.', zh: '要求总结要点并请求更多时间思考。' }
+  },
+  {
+    id: 't-16',
+    title: { vi: 'Kỹ thuật "Tự thú giả"', en: 'False Confession', zh: '虚假自白' },
+    description: { 
+      vi: 'Chia sẻ một bí mật nhỏ (giả) để tạo sự tin tưởng và yêu cầu đối phương đáp lại.', 
+      en: 'Sharing a small (false) secret to build trust and ask the other party to reciprocate.', 
+      zh: '分享一个小的（虚假的）秘密以建立信任，并要求对方给予回报。' 
+    },
+    sourceBook: 'Spy the Lie',
+    targetDemographics: {
+      ageGroups: ['18-45'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['socializing', 'dating']
+    },
+    defensiveStrategy: { vi: 'Cẩn thận với những thông tin cá nhân quá sớm trong mối quan hệ.', en: 'Be careful with personal information too early in a relationship.', zh: '在一段关系中过早地注意个人信息。' }
+  },
+  {
+    id: 't-17',
+    title: { vi: 'Kỹ thuật "Đóng vai nạn nhân"', en: 'Playing the Victim', zh: '扮演受害者' },
+    description: { 
+      vi: 'Tự nhận mình là nạn nhân để khơi gợi sự bảo vệ và nhượng bộ từ đối phương.', 
+      en: 'Claiming to be a victim to evoke protection and concessions from the other party.', 
+      zh: '声称自己是受害者，以引起对方的保护和让步。' 
+    },
+    sourceBook: 'Emotional Blackmail',
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['family', 'relationships']
+    },
+    defensiveStrategy: { vi: 'Đánh giá sự việc dựa trên bằng chứng khách quan thay vì cảm xúc.', en: 'Evaluate the situation based on objective evidence rather than emotions.', zh: '根据客观证据而非情绪评估情况。' }
+  },
+  {
+    id: 't-18',
+    title: { vi: 'Kỹ thuật "Khen ngợi thái quá"', en: 'Love Bombing', zh: '爱心轰炸' },
+    description: { 
+      vi: 'Dồn dập khen ngợi và quan tâm để làm đối tượng mất cảnh giác.', 
+      en: 'Overwhelming praise and attention to make the subject lower their guard.', 
+      zh: '压倒性的赞美和关注，使受试者放松警惕。' 
+    },
+    sourceBook: 'Cults in Our Midst',
+    targetDemographics: {
+      ageGroups: ['15-30'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['socializing', 'spirituality']
+    },
+    defensiveStrategy: { vi: 'Giữ khoảng cách an toàn và quan sát hành động thực tế thay vì lời nói.', en: 'Keep a safe distance and observe actual actions instead of words.', zh: '保持安全距离，观察实际行动而非言语。' }
+  },
+  {
+    id: 't-19',
+    title: { vi: 'Kỹ thuật "Sử dụng uy tín giả"', en: 'Appeal to False Authority', zh: '诉诸虚假权威' },
+    description: { 
+      vi: 'Mượn danh nghĩa các chuyên gia hoặc tổ chức không liên quan để tăng sức thuyết phục.', 
+      en: 'Borrowing the names of unrelated experts or organizations to increase persuasiveness.', 
+      zh: '借用无关专家或组织的名字来增加说服力。' 
+    },
+    sourceBook: 'Bad Science',
+    targetDemographics: {
+      ageGroups: ['35-70'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['health', 'investment']
+    },
+    defensiveStrategy: { vi: 'Kiểm tra trình độ chuyên môn thực tế của người được trích dẫn.', en: 'Check the actual professional qualifications of the person cited.', zh: '检查被引用者的实际专业资格。' }
+  },
+  {
+    id: 't-20',
+    title: { vi: 'Kỹ thuật "Đe dọa ngầm"', en: 'Implicit Threat', zh: '隐性威胁' },
+    description: { 
+      vi: 'Gợi ý về những hậu quả xấu nếu không đồng ý mà không nói thẳng ra.', 
+      en: 'Suggesting bad consequences if one does not agree without saying it directly.', 
+      zh: '暗示如果不达成一致会产生不良后果，而不直接说明。' 
+    },
+    sourceBook: 'The Art of War',
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['male'],
+      professions: ['management', 'business'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['power', 'competition']
+    },
+    defensiveStrategy: { vi: 'Yêu cầu làm rõ các hậu quả và chuẩn bị phương án dự phòng.', en: 'Ask for clarification of consequences and prepare backup plans.', zh: '要求澄清后果并准备备份计划。' }
+  },
+  {
+    id: 't-21',
+    title: { vi: 'Kỹ thuật "Mồi nhử" (Decoy Effect)', en: 'Decoy Effect', zh: '诱饵效应' },
+    description: { 
+      vi: 'Đưa ra một lựa chọn thứ ba kém hấp dẫn để làm cho một trong hai lựa chọn ban đầu trở nên nổi bật hơn.', 
+      en: 'Presenting a third, less attractive option to make one of the original two options stand out more.', 
+      zh: '提供第三个不太吸引人的选项，使原来的两个选项之一更加突出。' 
+    },
+    defensiveStrategy: { 
+      vi: 'So sánh trực tiếp các giá trị cốt lõi của hai lựa chọn chính, bỏ qua mồi nhử.', 
+      en: 'Directly compare the core values of the two main options, ignoring the decoy.', 
+      zh: '直接比较两个主要选项的核心价值，忽略诱饵。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['sales', 'marketing'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'finance']
+    }
+  },
+  {
+    id: 't-22',
+    title: { vi: 'Kỹ thuật "Đóng khung" (Framing)', en: 'Framing', zh: '框架效应' },
+    description: { 
+      vi: 'Trình bày thông tin theo cách nhấn mạnh vào lợi ích hoặc mất mát để thay đổi nhận thức.', 
+      en: 'Presenting information in a way that emphasizes gains or losses to change perception.', 
+      zh: '以强调收益或损失的方式呈现信息，以改变认知。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Thử diễn đạt lại thông tin theo cách ngược lại để xem cảm xúc có thay đổi không.', 
+      en: 'Try rephrasing the information in the opposite way to see if emotions change.', 
+      zh: '尝试以相反的方式重新表述信息，看看情绪是否会发生变化。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['media', 'legal', 'management'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['politics', 'news']
+    }
+  },
+  {
+    id: 't-23',
+    title: { vi: 'Kỹ thuật "Sự khan hiếm giả tạo" (Artificial Scarcity)', en: 'Artificial Scarcity', zh: '人为稀缺' },
+    description: { 
+      vi: 'Tạo ra cảm giác rằng một thứ gì đó sắp hết hoặc chỉ có trong thời gian ngắn để thúc đẩy hành động nhanh.', 
+      en: 'Creating a sense that something is running out or only available for a short time to prompt quick action.', 
+      zh: '营造出某种东西即将耗尽或仅在短时间内可用的感觉，以促使快速行动。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Tự hỏi: "Nếu thứ này có sẵn mãi mãi, mình có thực sự cần nó ngay bây giờ không?"', 
+      en: 'Ask yourself: "If this were available forever, would I really need it right now?"', 
+      zh: '问问自己：“如果这个东西永远可用，我现在真的需要它吗？”' 
+    },
+    targetDemographics: {
+      ageGroups: ['18-45'],
+      genders: ['All'],
+      professions: ['sales', 'marketing'],
+      religions: ['All'],
+      politicalSystems: ['capitalism'],
+      interests: ['shopping', 'tech']
+    }
+  },
+  {
+    id: 't-24',
+    title: { vi: 'Kỹ thuật "Thẩm quyền giả" (False Authority)', en: 'False Authority', zh: '虚假权威' },
+    description: { 
+      vi: 'Sử dụng hình ảnh hoặc danh xưng có vẻ uy tín (nhưng không liên quan) để thuyết phục.', 
+      en: 'Using images or titles that seem prestigious (but are irrelevant) to persuade.', 
+      zh: '使用看起来很有声望（但无关紧要）的图像或头衔来劝说。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Kiểm tra chuyên môn thực sự của người đó trong lĩnh vực họ đang nói.', 
+      en: 'Check the person\'s actual expertise in the field they are talking about.', 
+      zh: '检查该人在其所谈论领域的实际专业知识。' 
+    },
+    targetDemographics: {
+      ageGroups: ['45-100'],
+      genders: ['All'],
+      professions: ['All'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['health', 'finance']
+    }
+  },
+  {
+    id: 't-25',
+    title: { vi: 'Kỹ thuật "Gây nhiễu" (Information Overload)', en: 'Information Overload', zh: '信息过载' },
+    description: { 
+      vi: 'Cung cấp quá nhiều thông tin phức tạp để làm đối phương mệt mỏi và dễ dàng chấp nhận đề nghị.', 
+      en: 'Providing too much complex information to tire the opponent and make them easily accept the offer.', 
+      zh: '提供过多的复杂信息，使对方感到疲劳，从而轻易接受提议。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Yêu cầu tóm tắt các điểm chính và xin thêm thời gian để nghiên cứu kỹ.', 
+      en: 'Ask for a summary of the main points and request more time to study carefully.', 
+      zh: '要求总结要点，并请求更多时间仔细研究。' 
+    },
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['legal', 'finance', 'tech'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
+  },
+  {
+    id: 't-26',
+    title: { vi: 'Kỹ thuật "Tình bạn giả tạo" (False Friendship)', en: 'False Friendship', zh: '虚假友谊' },
+    description: { 
+      vi: 'Cố tình tìm điểm chung hoặc khen ngợi quá mức để tạo lòng tin nhanh chóng.', 
+      en: 'Intentionally finding common ground or over-praising to build trust quickly.', 
+      zh: '故意寻找共同点或过度称赞，以快速建立信任。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Phân biệt giữa sự lịch thiệp và ý đồ thực sự đằng sau những lời khen.', 
+      en: 'Distinguish between politeness and the real intent behind the compliments.', 
+      zh: '区分礼貌和赞美背后的真实意图。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['service', 'sales'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['socializing']
+    }
+  },
+  {
+    id: 't-27',
+    title: { vi: 'Kỹ thuật "Hào quang" (Halo Effect)', en: 'Halo Effect', zh: '光环效应' },
+    description: { 
+      vi: 'Sử dụng một đặc điểm tích cực (như vẻ ngoài đẹp) để làm lu mờ các khuyết điểm khác.', 
+      en: 'Using a positive trait (like good looks) to overshadow other flaws.', 
+      zh: '利用一个积极的特征（如长得好看）来掩盖其他缺陷。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Đánh giá từng khía cạnh của vấn đề một cách độc lập, không để vẻ ngoài đánh lừa.', 
+      en: 'Evaluate each aspect of the issue independently, don\'t let looks deceive you.', 
+      zh: '独立评估问题的各个方面，不要让外表欺骗你。' 
+    },
+    targetDemographics: {
+      ageGroups: ['15-35'],
+      genders: ['All'],
+      professions: ['media', 'creative'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['fashion', 'entertainment']
+    }
+  },
+  {
+    id: 't-28',
+    title: { vi: 'Kỹ thuật "Lời tiên tri tự ứng nghiệm" (Self-Fulfilling Prophecy)', en: 'Self-Fulfilling Prophecy', zh: '自我实现预言' },
+    description: { 
+      vi: 'Gieo rắc một niềm tin vào tâm trí đối phương cho đến khi họ tự hành động để biến nó thành sự thật.', 
+      en: 'Planting a belief in the opponent\'s mind until they act to make it come true.', 
+      zh: '在对方心中播下一种信念，直到他们采取行动使其成真。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Luôn giữ tư duy phản biện về những nhận xét mang tính định kiến của người khác.', 
+      en: 'Always maintain critical thinking about the biased comments of others.', 
+      zh: '始终对他人的偏见言论保持批判性思维。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['education', 'management'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['psychology']
+    }
+  },
+  {
+    id: 't-29',
+    title: { vi: 'Kỹ thuật "Sự im lặng đáng sợ" (Strategic Silence)', en: 'Strategic Silence', zh: '战略性沉默' },
+    description: { 
+      vi: 'Im lặng sau khi đưa ra một đề nghị để đối phương cảm thấy lúng túng và tự đưa ra nhượng bộ.', 
+      en: 'Remaining silent after making an offer to make the opponent feel awkward and offer concessions.', 
+      zh: '在提出提议后保持沉默，使对方感到尴尬并做出让步。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Học cách chấp nhận sự im lặng và chờ đợi đối phương nói trước.', 
+      en: 'Learn to accept silence and wait for the other person to speak first.', 
+      zh: '学会接受沉默，等待对方先开口。' 
+    },
+    targetDemographics: {
+      ageGroups: ['25-60'],
+      genders: ['All'],
+      professions: ['legal', 'management', 'sales'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['business']
+    }
+  },
+  {
+    id: 't-30',
+    title: { vi: 'Kỹ thuật "Gây hấn thụ động" (Passive Aggression)', en: 'Passive Aggression', zh: '被动攻击' },
+    description: { 
+      vi: 'Sử dụng sự im lặng, trì hoãn hoặc mỉa mai để trừng phạt đối phương mà không cần đối đầu trực tiếp.', 
+      en: 'Using silence, delay, or sarcasm to punish the opponent without direct confrontation.', 
+      zh: '利用沉默、延迟或讽刺来惩罚对方，而无需直接对抗。' 
+    },
+    defensiveStrategy: { 
+      vi: 'Yêu cầu đối thoại trực tiếp và rõ ràng về những gì đang xảy ra.', 
+      en: 'Request direct and clear dialogue about what is happening.', 
+      zh: '要求就正在发生的事情进行直接而清晰的对话。' 
+    },
+    targetDemographics: {
+      ageGroups: ['All'],
+      genders: ['All'],
+      professions: ['office', 'hr'],
+      religions: ['All'],
+      politicalSystems: ['All'],
+      interests: ['All']
+    }
   }
 ];

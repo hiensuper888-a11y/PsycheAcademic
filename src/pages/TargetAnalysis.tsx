@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -15,16 +15,21 @@ interface TargetProfile {
   religion: string;
   politicalSystem: string;
   hobbies: string;
-  habits: string;
-  syndrome: string;
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
 const politicalSystems = ['socialism', 'capitalism', 'constitutionalMonarchy', 'rebel'];
 
+import { PsychologyArticle, psychologyData } from '../data/psychologyData';
+
 export const TargetAnalysis: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [targets, setTargets] = useState<TargetProfile[]>([]);
+  const [articles, setArticles] = useState<PsychologyArticle[]>([]);
+  
+  useEffect(() => {
+    setArticles(psychologyData);
+  }, []);
   const [currentTarget, setCurrentTarget] = useState<TargetProfile>({
     id: '',
     name: '',
@@ -33,9 +38,7 @@ export const TargetAnalysis: React.FC = () => {
     job: '',
     religion: '',
     politicalSystem: '',
-    hobbies: '',
-    habits: '',
-    syndrome: ''
+    hobbies: ''
   });
 
   const getLocalized = (obj: any) => {
@@ -44,14 +47,13 @@ export const TargetAnalysis: React.FC = () => {
     return obj[i18n.language] || obj['vi'] || '';
   };
 
-  const selectedSyndromeData = syndromes.find(s => s.id === currentTarget.syndrome || getLocalized(s.name) === currentTarget.syndrome);
   const [showPlan, setShowPlan] = useState<string | null>(null);
 
   const handleSaveTarget = () => {
     if (!currentTarget.name) return;
     const newTarget = { ...currentTarget, id: Date.now().toString() };
     setTargets([...targets, newTarget]);
-    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '', habits: '', syndrome: '' });
+    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '' });
   };
 
   const handleDeleteTarget = (id: string) => {
@@ -72,27 +74,59 @@ export const TargetAnalysis: React.FC = () => {
       technique: t('targetAnalysis.strategy.undefined'),
       plan: [] as string[],
       suggestedSyndromes: [] as { name: string, instruction: string }[],
-      suggestedTechniques: [] as { title: string, description: string, defensive: string }[]
+      suggestedTechniques: [] as { title: string, description: string, defensive: string }[],
+      suggestedArticles: [] as PsychologyArticle[]
     };
 
     if (!age && !gender && !job && !hobbies && !religion && !politicalSystem) return strategy;
 
     // Automatic Syndrome Suggestion Logic
-    const suggestSyndrome = (id: string, instruction?: string) => {
-      const syndromeObj = syndromes.find(s => s.id === id || s.name.en === id);
-      if (!syndromeObj) return;
+    const suggestedSyndromes: { name: string, instruction: string }[] = syndromes.filter(s => {
+      if (!s.targetDemographics) return false;
+      const d = s.targetDemographics;
+      const ageNum = parseInt(target.age || '0');
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
+        const parts = ag.split('-');
+        if (parts.length === 2) {
+          const [min, max] = parts.map(Number);
+          return ageNum >= min && ageNum <= max;
+        }
+        return false;
+      });
+      const genderMatch = d.genders.includes('All') || d.genders.includes(gender);
+      const jobMatch = d.professions.includes('All') || d.professions.some(p => job.includes(p.toLowerCase()));
+      const religionMatch = d.religions.includes('All') || d.religions.includes(religion);
+      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(politicalSystem);
+      const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => hobbies.includes(i.toLowerCase()));
       
-      const localizedName = getLocalized(syndromeObj.name);
-      const finalInstruction = instruction || t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: localizedName });
-      
-      if (!strategy.suggestedSyndromes.find(s => s.name === localizedName)) {
-        strategy.suggestedSyndromes.push({ name: localizedName, instruction: finalInstruction });
+      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
+    }).map(s => ({
+      name: getLocalized(s.name),
+      instruction: getLocalized(s.description)
+    }));
+
+    // Legacy keyword-based matching for syndromes without demographics
+    syndromes.forEach(s => {
+      if (s.targetDemographics) return;
+      const targetKeywords = getLocalized(s.target).toLowerCase();
+      const profileText = `${job} ${hobbies} ${gender} ${age}`.toLowerCase();
+      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
+      if (keywords.some(k => profileText.includes(k))) {
+        const localizedName = getLocalized(s.name);
+        if (!suggestedSyndromes.find(ss => ss.name === localizedName)) {
+          suggestedSyndromes.push({ 
+            name: localizedName, 
+            instruction: getLocalized(s.description) 
+          });
+        }
       }
-    };
+    });
+
+    strategy.suggestedSyndromes = suggestedSyndromes;
 
     // Automatic Technique Suggestion Logic
     const suggestTechnique = (id: string) => {
-      const techObj = influenceTechniques.find(t => t.id === id || t.title.en === id);
+      const techObj = influenceTechniques.find(t => t.id === id || (typeof t.title !== 'string' && t.title.en === id));
       if (!techObj) return;
       
       const localizedTitle = getLocalized(techObj.title);
@@ -104,17 +138,9 @@ export const TargetAnalysis: React.FC = () => {
       }
     };
 
-    // Dynamic Syndrome and Technique Suggestion based on keywords in target profile
+    // Dynamic Technique Suggestion based on keywords in target profile
     const profileText = `${job} ${hobbies} ${gender} ${age} ${religion} ${politicalSystem}`.toLowerCase();
     
-    syndromes.forEach(s => {
-      const targetKeywords = getLocalized(s.target).toLowerCase();
-      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
-      if (keywords.some(k => profileText.includes(k))) {
-        suggestSyndrome(s.id);
-      }
-    });
-
     influenceTechniques.forEach(t => {
       const targetKeywords = `${t.targetDemographics.professions.join(' ')} ${t.targetDemographics.interests?.join(' ') || ''} ${t.targetDemographics.religions.join(' ')} ${t.targetDemographics.politicalSystems.join(' ')}`.toLowerCase();
       const keywords = targetKeywords.split(/[,.;\s]/).map(k => k.trim()).filter(k => k.length > 3);
@@ -122,40 +148,6 @@ export const TargetAnalysis: React.FC = () => {
         suggestTechnique(t.id);
       }
     });
-
-    // Age-based suggestions
-    if (age > 0 && age < 25) {
-      suggestSyndrome("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggestSyndrome("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
-    } else if (age >= 25 && age <= 45) {
-      suggestSyndrome("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
-      suggestSyndrome("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
-    }
-
-    // Job-based suggestions
-    if (job.includes('quản lý') || job.includes('lãnh đạo') || job.includes('management') || job.includes('leader')) {
-      suggestSyndrome("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
-      suggestSyndrome("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
-      suggestTechnique("social-proof");
-    } else if (job.includes('kỹ thuật') || job.includes('it') || job.includes('tech')) {
-      suggestSyndrome("barnum-effect", t('targetAnalysis.strategy.barnumInstruction'));
-      suggestTechnique("scarcity");
-    } else if (job.includes('nghệ thuật') || job.includes('sáng tạo') || job.includes('art') || job.includes('creative')) {
-      suggestSyndrome("stendhal-syndrome", t('targetAnalysis.strategy.stendhalInstruction'));
-    }
-
-    // Religion-based suggestions
-    if (religion && religion !== 'none') {
-      suggest("jerusalem-syndrome", t('targetAnalysis.strategy.jerusalemInstruction'));
-      suggest("authority-bias", t('targetAnalysis.strategy.authorityInstructionFull'));
-    }
-
-    // Political-based suggestions
-    if (politicalSystem === 'socialism') {
-      suggest("bandwagon-effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
-    } else if (politicalSystem === 'capitalism') {
-      suggest("ikea-effect", t('targetAnalysis.strategy.ikeaInstruction'));
-    }
 
     // Age & Gender based logic
     if (age > 0 && age < 25) {
@@ -253,56 +245,65 @@ export const TargetAnalysis: React.FC = () => {
       }
     }
 
-    // Syndrome-based logic
-    if (target.syndrome) {
-      const syndromeName = target.syndrome;
-      const syndromeObj = syndromes.find(s => getLocalized(s.name) === syndromeName || s.id === syndromeName || s.name.en === syndromeName);
+    // Syndrome-based logic integration
+    const matchedSyndromes = syndromes.filter(s => {
+      if (!s.targetDemographics) return false;
+      const d = s.targetDemographics;
+      const ageNum = parseInt(target.age || '0');
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
+        const [min, max] = ag.split('-').map(Number);
+        return ageNum >= min && ageNum <= max;
+      });
+      const genderMatch = d.genders.includes('All') || d.genders.includes(target.gender || '');
+      const jobMatch = d.professions.includes('All') || d.professions.some(p => (target.job || '').toLowerCase().includes(p.toLowerCase()));
+      const religionMatch = d.religions.includes('All') || d.religions.includes(target.religion || '');
+      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(target.politicalSystem || '');
+      const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => (target.hobbies || '').toLowerCase().includes(i.toLowerCase()));
       
-      strategy.vulnerability += ` + ${syndromeObj ? getLocalized(syndromeObj.name) : syndromeName}`;
-      
-      if (syndromeObj) {
-        const id = syndromeObj.id;
-        if (id === "imposter-syndrome") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.imposter.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.imposter.plan'));
-        } else if (id === "dunning-kruger") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.dunningKruger.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.dunningKruger.plan'));
-        } else if (id === "halo-effect") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.halo.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.halo.plan'));
-        } else if (id === "confirmation-bias") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.confirmation.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.confirmation.plan'));
-        } else if (id === "anchoring-effect") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.anchoring.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.anchoring.plan'));
-        } else if (id === "fomo") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.fomo.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.fomo.plan'));
-        } else if (id === "stockholm-syndrome") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.stockholm.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.stockholm.plan'));
-        } else if (id === "barnum-effect") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.barnum.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.barnum.plan'));
-        } else if (id === "ikea-effect") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.ikea.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.ikea.plan'));
-        } else if (id === "sunk-cost") {
-          strategy.technique += " + " + t('targetAnalysis.strategy.syndrome.sunkCost.tech');
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.sunkCost.plan'));
-        } else {
-          strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: syndromeName }));
-        }
-      } else {
-        strategy.plan.push(t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: syndromeName }));
-      }
+      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
+    });
+
+    if (matchedSyndromes.length > 0) {
+      strategy.vulnerability = matchedSyndromes.map(s => getLocalized(s.name)).join(', ');
+      matchedSyndromes.forEach(s => {
+        strategy.plan.push(getLocalized(s.description));
+      });
+    }
+
+    // Influence Technique matching
+    const matchedTechniques = influenceTechniques.filter(tech => {
+      const d = tech.targetDemographics;
+      const ageNum = parseInt(target.age || '0');
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
+        const [min, max] = ag.split('-').map(Number);
+        return ageNum >= min && ageNum <= max;
+      });
+      const genderMatch = d.genders.includes('All') || d.genders.includes(target.gender || '');
+      const jobMatch = d.professions.includes('All') || d.professions.some(p => (target.job || '').toLowerCase().includes(p.toLowerCase()));
+      const religionMatch = d.religions.includes('All') || d.religions.includes(target.religion || '');
+      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(target.politicalSystem || '');
+      const interestMatch = d.interests.includes('All') || d.interests.some(i => (target.hobbies || '').toLowerCase().includes(i.toLowerCase()));
+
+      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
+    });
+
+    if (matchedTechniques.length > 0) {
+      strategy.technique = matchedTechniques.map(t => getLocalized(t.title)).join(' + ');
+      matchedTechniques.forEach(t => {
+        strategy.plan.push(getLocalized(t.description));
+      });
     }
 
     if (strategy.vulnerability === t('targetAnalysis.strategy.noInfo') && (job || hobbies)) {
         strategy.vulnerability = t('targetAnalysis.strategy.vulnerability.basedOnJobHobby');
     }
+    
+    // Article-based suggestions
+    strategy.suggestedArticles = articles.filter(a => 
+      (job && (getLocalized(a.category).toLowerCase().includes(job) || getLocalized(a.title).toLowerCase().includes(job))) || 
+      (hobbies && (getLocalized(a.category).toLowerCase().includes(hobbies) || getLocalized(a.title).toLowerCase().includes(hobbies)))
+    );
+
     return strategy;
   };
 
@@ -418,37 +419,6 @@ export const TargetAnalysis: React.FC = () => {
                     {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
                   </select>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.syndrome')}</label>
-                <select 
-                  value={currentTarget.syndrome}
-                  onChange={(e) => setCurrentTarget({...currentTarget, syndrome: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white"
-                >
-                  <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-                  {syndromes.map(s => <option key={s.id} value={s.id}>{getLocalized(s.name)}</option>)}
-                </select>
-
-                {selectedSyndromeData && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-2xl text-sm"
-                  >
-                    <p className="text-indigo-900 dark:text-indigo-200 font-bold mb-1">{getLocalized(selectedSyndromeData.name)}</p>
-                    <p className="text-indigo-700 dark:text-indigo-300 text-xs mb-3 italic">{getLocalized(selectedSyndromeData.description)}</p>
-                    <div className="space-y-2">
-                      <p className="text-slate-700 dark:text-slate-300 text-xs">
-                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{t('targetAnalysis.syndrome.example')}:</span> {getLocalized(selectedSyndromeData.example)}
-                      </p>
-                      <p className="text-slate-700 dark:text-slate-300 text-xs">
-                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{t('targetAnalysis.syndrome.target')}:</span> {getLocalized(selectedSyndromeData.target)}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
               </div>
 
               <div>
@@ -578,6 +548,23 @@ export const TargetAnalysis: React.FC = () => {
                       </div>
                     </div>
                   )}
+
+                  {liveStrategy.suggestedArticles.length > 0 && (
+                    <div className="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700">
+                      <h4 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <Heart size={20} />
+                        {t('targetAnalysis.suggestedArticlesTitle', { defaultValue: 'Suggested Articles' })}
+                      </h4>
+                      <div className="space-y-4">
+                        {liveStrategy.suggestedArticles.map((a, idx) => (
+                          <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700">
+                            <p className="font-bold text-slate-900 dark:text-white mb-1">{getLocalized(a.title)}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{getLocalized(a.category)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -611,14 +598,51 @@ export const TargetAnalysis: React.FC = () => {
                       <Trash2 size={18} />
                     </button>
                   </div>
-                  <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-                    <p>• {target.gender ? (target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')) : 'N/A'}, {target.age || 'N/A'} {t('targetAnalysis.age')}</p>
-                    <p>• {t('targetAnalysis.job')}: {target.job || 'N/A'}</p>
-                    <p>• {t('targetAnalysis.religion')}: {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'}</p>
-                    <p>• {t('targetAnalysis.politicalSystem')}: {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
-                    <p>• {t('targetAnalysis.hobbies')}: {target.hobbies || 'N/A'}</p>
-                    <p>• {t('targetAnalysis.syndrome')}: {target.syndrome ? (syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome) ? getLocalized(syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome)?.name) : target.syndrome) : 'N/A'}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-6">
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.age')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium">{target.age || 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.gender')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium">{target.gender ? (target.gender === 'male' ? t('targetAnalysis.male') : t('targetAnalysis.female')) : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.job')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.job}>{target.job || 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.religion')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium">{target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.politicalSystem')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium">{target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                      <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.hobbies')}:</span> 
+                      <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.hobbies}>{target.hobbies || 'N/A'}</span>
+                    </div>
                   </div>
+                    
+                    {/* Analysis Results in Card */}
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                      <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-2">
+                        <Activity size={14} />
+                        {t('targetAnalysis.compatibleSyndromes', { defaultValue: 'Compatible Syndromes' })}
+                      </p>
+                      <p className="text-xs italic mb-3">
+                        {getInfluenceStrategy(target).vulnerability}
+                      </p>
+                      
+                      <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-2">
+                        <Target size={14} />
+                        {t('targetAnalysis.suggestedTechniques', { defaultValue: 'Suggested Techniques' })}
+                      </p>
+                      <p className="text-xs italic">
+                        {getInfluenceStrategy(target).technique}
+                      </p>
+                    </div>
                   <button 
                     onClick={() => {
                       setCurrentTarget(target);

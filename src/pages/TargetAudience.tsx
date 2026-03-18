@@ -15,8 +15,6 @@ interface TargetAudience {
   religion: string;
   politicalSystem: string;
   hobbies: string;
-  syndrome: string;
-  savedTechniques: string[];
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam', 'atheism', 'sikhism', 'shintoism'];
@@ -31,7 +29,7 @@ export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '', savedTechniques: [] as string[] });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '' });
   const [showLibrary, setShowLibrary] = useState(false);
 
   useEffect(() => {
@@ -71,7 +69,7 @@ export const TargetAudience: React.FC = () => {
       id: Date.now().toString(),
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', syndrome: '', savedTechniques: [] });
+    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -104,63 +102,46 @@ export const TargetAudience: React.FC = () => {
     });
 
     // Automatic Syndrome Suggestion Logic
-    const suggestedSyndromes: { name: string, instruction: string }[] = [];
-    const suggest = (id: string, instruction?: string) => {
-      const syndromeObj = syndromes.find(s => s.id === id || s.name.en === id);
-      if (!syndromeObj) return;
+    const suggestedSyndromes: { name: string, instruction: string }[] = syndromes.filter(s => {
+      if (!s.targetDemographics) return false;
+      const d = s.targetDemographics;
+      const ageMatch = d.ageGroups.includes('All') || d.ageGroups.some(ag => {
+        const parts = ag.split('-');
+        if (parts.length === 2) {
+          const [min, max] = parts.map(Number);
+          return age >= min && age <= max;
+        }
+        return false;
+      });
+      const genderMatch = d.genders.includes('All') || d.genders.includes(gender);
+      const jobMatch = d.professions.includes('All') || d.professions.some(p => profession.includes(p.toLowerCase()));
+      const religionMatch = d.religions.includes('All') || d.religions.includes(religion);
+      const politicalMatch = d.politicalSystems.includes('All') || d.politicalSystems.includes(politicalSystem);
+      const interestMatch = !d.interests || d.interests.includes('All') || d.interests.some(i => hobbies.includes(i.toLowerCase()));
       
-      const localizedName = getLocalized(syndromeObj.name);
-      const finalInstruction = instruction || t('targetAnalysis.strategy.syndrome.genericPlan', { syndrome: localizedName });
-      
-      if (!suggestedSyndromes.find(s => s.name === localizedName)) {
-        suggestedSyndromes.push({ name: localizedName, instruction: finalInstruction });
-      }
-    };
+      return ageMatch && genderMatch && jobMatch && religionMatch && politicalMatch && interestMatch;
+    }).map(s => ({
+      name: getLocalized(s.name),
+      instruction: getLocalized(s.description)
+    }));
 
-    // Dynamic Syndrome Suggestion based on keywords in target profile
+    // Legacy keyword-based matching for syndromes without demographics
     syndromes.forEach(s => {
+      if (s.targetDemographics) return;
       const targetKeywords = getLocalized(s.target).toLowerCase();
       const profileText = `${profession} ${hobbies} ${gender} ${age}`.toLowerCase();
-      
-      // Check if any keyword from syndrome target matches profile
       const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
       if (keywords.some(k => profileText.includes(k))) {
-        suggest(s.id);
+        const localizedName = getLocalized(s.name);
+        if (!suggestedSyndromes.find(ss => ss.name === localizedName)) {
+          suggestedSyndromes.push({ 
+            name: localizedName, 
+            instruction: getLocalized(s.description) 
+          });
+        }
       }
     });
 
-    if (age > 0 && age < 25) {
-      suggest("imposter-syndrome", t('targetAnalysis.strategy.imposterInstructionFull'));
-      suggest("fomo", t('targetAnalysis.strategy.fomoInstructionFull'));
-    } else if (age >= 25 && age <= 45) {
-      suggest("dunning-kruger", t('targetAnalysis.strategy.dunningKrugerInstructionFull'));
-      suggest("sunk-cost", t('targetAnalysis.strategy.sunkCostInstruction'));
-    }
-
-    if (profession.includes('management') || profession.includes('sales')) {
-      suggest("halo-effect", t('targetAnalysis.strategy.haloInstructionFull'));
-    }
-
-    if (religion && religion !== 'none') {
-      suggest("authority-bias", t('targetAnalysis.strategy.authorityInstructionFull'));
-    }
-
-    if (politicalSystem === 'socialism') {
-      suggest("bandwagon-effect", t('targetAnalysis.strategy.bandwagonInstructionFull'));
-    }
-
-    if (hobbies.includes('game') || hobbies.includes('trò chơi') || hobbies.includes('gaming')) {
-      suggest("zeigarnik-effect", t('targetAnalysis.strategy.zeigarnikInstruction'));
-    }
-
-    if (hobbies.includes('đọc sách') || hobbies.includes('kiến thức') || hobbies.includes('reading')) {
-      suggest("confirmation-bias", t('targetAnalysis.strategy.confirmationInstructionFull'));
-    }
-
-    if (target.syndrome) {
-      suggest(target.syndrome);
-    }
-    
     const relatedArticles = profession ? articles.filter(a => 
       getLocalized(a.category).toLowerCase().includes(profession) || 
       getLocalized(a.title).toLowerCase().includes(profession)
@@ -222,57 +203,6 @@ export const TargetAudience: React.FC = () => {
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
             
-            <div className="flex flex-col gap-2">
-              <label>{t('targetAnalysis.selectTechniques')}</label>
-              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border p-2 rounded-xl">
-                {influenceTechniques
-                  .filter(t => {
-                    const matchAge = !newTarget.age || t.targetDemographics.ageGroups.includes("All") || t.targetDemographics.ageGroups.includes(newTarget.age);
-                    const matchGender = !newTarget.gender || t.targetDemographics.genders.includes("All") || t.targetDemographics.genders.includes(newTarget.gender);
-                    const matchProfession = !newTarget.profession || t.targetDemographics.professions.includes("All") || t.targetDemographics.professions.includes(newTarget.profession);
-                    const matchReligion = !newTarget.religion || t.targetDemographics.religions.includes("All") || t.targetDemographics.religions.includes(newTarget.religion);
-                    const matchPolitical = !newTarget.politicalSystem || t.targetDemographics.politicalSystems.includes("All") || t.targetDemographics.politicalSystems.includes(newTarget.politicalSystem);
-                    
-                    return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
-                  })
-                  .map(t => (
-                  <label key={t.id} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={newTarget.savedTechniques.includes(t.id)}
-                      onChange={e => {
-                        const techniques = e.target.checked
-                          ? [...newTarget.savedTechniques, t.id]
-                          : newTarget.savedTechniques.filter(id => id !== t.id);
-                        setNewTarget({...newTarget, savedTechniques: techniques});
-                      }}
-                    />
-                    {getLocalized(t.title)}
-                  </label>
-                ))}
-              </div>
-            </div>
-            
-            <select className="p-3 rounded-xl border" value={newTarget.syndrome} onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}>
-              <option value="">{t('targetAnalysis.selectSyndrome')}</option>
-              {syndromes
-                .filter(s => {
-                  const targetText = getLocalized(s.target).toLowerCase();
-                  const matchAge = !newTarget.age || targetText.includes(newTarget.age.toLowerCase());
-                  const matchGender = !newTarget.gender || targetText.includes(newTarget.gender.toLowerCase());
-                  const matchProfession = !newTarget.profession || targetText.includes(newTarget.profession.toLowerCase());
-                  const matchReligion = !newTarget.religion || targetText.includes(newTarget.religion.toLowerCase());
-                  const matchPolitical = !newTarget.politicalSystem || targetText.includes(newTarget.politicalSystem.toLowerCase());
-                  
-                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
-                })
-                .map(s => (
-                <option key={s.id} value={s.id}>
-                  {getLocalized(s.name)}
-                </option>
-              ))}
-            </select>
-            
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
             </button>
@@ -280,95 +210,49 @@ export const TargetAudience: React.FC = () => {
         )}
       </div>
 
-      {newTarget.name && newTarget.age && newTarget.gender && newTarget.profession && newTarget.hobbies && newTarget.religion && newTarget.politicalSystem && (
-        <>
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
-            <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectTechniques')}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
-              {influenceTechniques
-                .filter(t => {
-                  const matchAge = !newTarget.age || t.targetDemographics.ageGroups.includes("All") || t.targetDemographics.ageGroups.includes(newTarget.age);
-                  const matchGender = !newTarget.gender || t.targetDemographics.genders.includes("All") || t.targetDemographics.genders.includes(newTarget.gender);
-                  const matchProfession = !newTarget.profession || t.targetDemographics.professions.includes("All") || t.targetDemographics.professions.includes(newTarget.profession);
-                  const matchReligion = !newTarget.religion || t.targetDemographics.religions.includes("All") || t.targetDemographics.religions.includes(newTarget.religion);
-                  const matchPolitical = !newTarget.politicalSystem || t.targetDemographics.politicalSystems.includes("All") || t.targetDemographics.politicalSystems.includes(newTarget.politicalSystem);
-                  
-                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
-                })
-                .map(t => (
-                <label key={t.id} className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={newTarget.savedTechniques.includes(t.id)}
-                    onChange={e => {
-                      const techniques = e.target.checked
-                        ? [...newTarget.savedTechniques, t.id]
-                        : newTarget.savedTechniques.filter(id => id !== t.id);
-                      setNewTarget({...newTarget, savedTechniques: techniques});
-                    }}
-                  />
-                  {getLocalized(t.title).replace(/^\d+\.\s*/, '')}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
-            <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectSyndrome')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
-              {syndromes
-                .filter(s => {
-                  const targetText = getLocalized(s.target).toLowerCase();
-                  const matchAge = !newTarget.age || targetText.includes(newTarget.age.toLowerCase());
-                  const matchGender = !newTarget.gender || targetText.includes(newTarget.gender.toLowerCase());
-                  const matchProfession = !newTarget.profession || targetText.includes(newTarget.profession.toLowerCase());
-                  const matchReligion = !newTarget.religion || targetText.includes(newTarget.religion.toLowerCase());
-                  const matchPolitical = !newTarget.politicalSystem || targetText.includes(newTarget.politicalSystem.toLowerCase());
-                  
-                  return matchAge && matchGender && matchProfession && matchReligion && matchPolitical;
-                })
-                .map(s => (
-                <label key={s.id} className="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name="syndrome"
-                    value={s.id}
-                    checked={newTarget.syndrome === s.id}
-                    onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}
-                  />
-                  {getLocalized(s.name)}
-                </label>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
       <div className="grid grid-cols-1 gap-6">
         {targets.map(target => {
           const { techniques, articles, suggestedSyndromes } = getAnalysis(target);
           return (
-            <div key={target.id} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm">
+            <div key={target.id} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold">{target.name}</h3>
-                <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-red-500"><Trash2 size={20} /></button>
-              </div>
-              <p className="text-sm text-slate-500 mb-2">{target.gender ? t(`targetAnalysis.genders.${target.gender}`) : 'N/A'} | {target.age || 'N/A'} {t('targetAudience.yearsOld')} | {target.profession ? t(`targetAnalysis.professions.${target.profession}`) : 'N/A'} | {target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'} | {target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</p>
-              {target.hobbies && <p className="text-sm text-slate-500 mb-2 italic">{t('targetAnalysis.hobbies')}: {target.hobbies}</p>}
-              {target.syndrome && <p className="text-sm font-bold text-indigo-600 mb-4">{t('targetAudience.manualSyndrome')} {target.syndrome ? (syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome) ? getLocalized(syndromes.find(s => s.id === target.syndrome || getLocalized(s.name) === target.syndrome)?.name) : target.syndrome) : ''}</p>}
-              {target.savedTechniques && target.savedTechniques.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t('targetAnalysis.savedTechniques')}:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {target.savedTechniques.map(techId => {
-                      const tech = influenceTechniques.find(t => t.id === techId);
-                      return tech ? (
-                        <span key={techId} className="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-xs">{getLocalized(tech.title)}</span>
-                      ) : null;
-                    })}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+                    {target.name.charAt(0).toUpperCase()}
                   </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{target.name}</h3>
                 </div>
-              )}
+                <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-slate-300 hover:text-red-500 transition-colors">
+                  <Trash2 size={20} />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 text-sm">
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.age')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{target.age || 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.gender')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{target.gender ? t(`targetAnalysis.genders.${target.gender}`) : 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.job')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{target.profession ? t(`targetAnalysis.professions.${target.profession}`) : 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.religion')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{target.religion ? t(`targetAnalysis.religions.${target.religion}`) : 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.politicalSystem')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{target.politicalSystem ? t(`targetAnalysis.politicalSystems.${target.politicalSystem}`) : 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg sm:col-span-2 lg:col-span-1">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.hobbies')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.hobbies}>{target.hobbies || 'N/A'}</span>
+                </div>
+              </div>
               
               {suggestedSyndromes.length > 0 && (
                 <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
