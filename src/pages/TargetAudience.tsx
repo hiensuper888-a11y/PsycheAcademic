@@ -280,6 +280,45 @@ export const TargetAudience: React.FC = () => {
         )}
       </div>
 
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
+        <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectTechniques')}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
+          {influenceTechniques.map(t => (
+            <label key={t.id} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={newTarget.savedTechniques.includes(t.id)}
+                onChange={e => {
+                  const techniques = e.target.checked
+                    ? [...newTarget.savedTechniques, t.id]
+                    : newTarget.savedTechniques.filter(id => id !== t.id);
+                  setNewTarget({...newTarget, savedTechniques: techniques});
+                }}
+              />
+              {getLocalized(t.title).replace(/^\d+\.\s*/, '')}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
+        <h2 className="text-xl font-semibold mb-4">{t('targetAnalysis.selectSyndrome')}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-4 rounded-xl">
+          {syndromes.map(s => (
+            <label key={s.id} className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="syndrome"
+                value={s.id}
+                checked={newTarget.syndrome === s.id}
+                onChange={e => setNewTarget({...newTarget, syndrome: e.target.value})}
+              />
+              {getLocalized(s.name)}
+            </label>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 gap-6">
         {targets.map(target => {
           const { techniques, articles, suggestedSyndromes } = getAnalysis(target);
