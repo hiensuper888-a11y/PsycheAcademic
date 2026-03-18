@@ -1486,5 +1486,305 @@ export const influenceTechniques: InfluenceTechnique[] = [
       interests: ["Photography"]
     },
     defensiveStrategy: { vi: "Chiến lược 20", en: "Strategy 20", zh: "策略 20" }
+  },
+  {
+    id: "technique-21",
+    title: { vi: "Kỹ thuật 21", en: "Technique 21", zh: "技术 21" },
+    description: { vi: "Mô tả 21", en: "Description 21", zh: "描述 21" },
+    sourceBook: "Source 21",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Reading"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 21", en: "Strategy 21", zh: "策略 21" }
+  },
+  {
+    id: "technique-22",
+    title: { vi: "Kỹ thuật 22", en: "Technique 22", zh: "技术 22" },
+    description: { vi: "Mô tả 22", en: "Description 22", zh: "描述 22" },
+    sourceBook: "Source 22",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Music"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 22", en: "Strategy 22", zh: "策略 22" }
+  },
+  {
+    id: "technique-23",
+    title: { vi: "Kỹ thuật 23", en: "Technique 23", zh: "技术 23" },
+    description: { vi: "Mô tả 23", en: "Description 23", zh: "描述 23" },
+    sourceBook: "Source 23",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Sports"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 23", en: "Strategy 23", zh: "策略 23" }
+  },
+  {
+    id: "technique-24",
+    title: { vi: "Kỹ thuật 24", en: "Technique 24", zh: "技术 24" },
+    description: { vi: "Mô tả 24", en: "Description 24", zh: "描述 24" },
+    sourceBook: "Source 24",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Art"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 24", en: "Strategy 24", zh: "策略 24" }
+  },
+  {
+    id: "technique-25",
+    title: { vi: "Kỹ thuật 25", en: "Technique 25", zh: "技术 25" },
+    description: { vi: "Mô tả 25", en: "Description 25", zh: "描述 25" },
+    sourceBook: "Source 25",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Cooking"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 25", en: "Strategy 25", zh: "策略 25" }
+  },
+  {
+    id: "technique-26",
+    title: { vi: "Kỹ thuật 26", en: "Technique 26", zh: "技术 26" },
+    description: { vi: "Mô tả 26", en: "Description 26", zh: "描述 26" },
+    sourceBook: "Source 26",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Travel"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 26", en: "Strategy 26", zh: "策略 26" }
+  },
+  {
+    id: "technique-27",
+    title: { vi: "Kỹ thuật 27", en: "Technique 27", zh: "技术 27" },
+    description: { vi: "Mô tả 27", en: "Description 27", zh: "描述 27" },
+    sourceBook: "Source 27",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Gaming"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 27", en: "Strategy 27", zh: "策略 27" }
+  },
+  {
+    id: "technique-28",
+    title: { vi: "Kỹ thuật 28", en: "Technique 28", zh: "技术 28" },
+    description: { vi: "Mô tả 28", en: "Description 28", zh: "描述 28" },
+    sourceBook: "Source 28",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Technology"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 28", en: "Strategy 28", zh: "策略 28" }
+  },
+  {
+    id: "technique-29",
+    title: { vi: "Kỹ thuật 29", en: "Technique 29", zh: "技术 29" },
+    description: { vi: "Mô tả 29", en: "Description 29", zh: "描述 29" },
+    sourceBook: "Source 29",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Science"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 29", en: "Strategy 29", zh: "策略 29" }
+  },
+  {
+    id: "technique-30",
+    title: { vi: "Kỹ thuật 30", en: "Technique 30", zh: "技术 30" },
+    description: { vi: "Mô tả 30", en: "Description 30", zh: "描述 30" },
+    sourceBook: "Source 30",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["History"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 30", en: "Strategy 30", zh: "策略 30" }
+  },
+  {
+    id: "technique-31",
+    title: { vi: "Kỹ thuật 31", en: "Technique 31", zh: "技术 31" },
+    description: { vi: "Mô tả 31", en: "Description 31", zh: "描述 31" },
+    sourceBook: "Source 31",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Writing"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 31", en: "Strategy 31", zh: "策略 31" }
+  },
+  {
+    id: "technique-32",
+    title: { vi: "Kỹ thuật 32", en: "Technique 32", zh: "技术 32" },
+    description: { vi: "Mô tả 32", en: "Description 32", zh: "描述 32" },
+    sourceBook: "Source 32",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Painting"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 32", en: "Strategy 32", zh: "策略 32" }
+  },
+  {
+    id: "technique-33",
+    title: { vi: "Kỹ thuật 33", en: "Technique 33", zh: "技术 33" },
+    description: { vi: "Mô tả 33", en: "Description 33", zh: "描述 33" },
+    sourceBook: "Source 33",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Dancing"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 33", en: "Strategy 33", zh: "策略 33" }
+  },
+  {
+    id: "technique-34",
+    title: { vi: "Kỹ thuật 34", en: "Technique 34", zh: "技术 34" },
+    description: { vi: "Mô tả 34", en: "Description 34", zh: "描述 34" },
+    sourceBook: "Source 34",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Yoga"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 34", en: "Strategy 34", zh: "策略 34" }
+  },
+  {
+    id: "technique-35",
+    title: { vi: "Kỹ thuật 35", en: "Technique 35", zh: "技术 35" },
+    description: { vi: "Mô tả 35", en: "Description 35", zh: "描述 35" },
+    sourceBook: "Source 35",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Gardening"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 35", en: "Strategy 35", zh: "策略 35" }
+  },
+  {
+    id: "technique-36",
+    title: { vi: "Kỹ thuật 36", en: "Technique 36", zh: "技术 36" },
+    description: { vi: "Mô tả 36", en: "Description 36", zh: "描述 36" },
+    sourceBook: "Source 36",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Fishing"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 36", en: "Strategy 36", zh: "策略 36" }
+  },
+  {
+    id: "technique-37",
+    title: { vi: "Kỹ thuật 37", en: "Technique 37", zh: "技术 37" },
+    description: { vi: "Mô tả 37", en: "Description 37", zh: "描述 37" },
+    sourceBook: "Source 37",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Hiking"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 37", en: "Strategy 37", zh: "策略 37" }
+  },
+  {
+    id: "technique-38",
+    title: { vi: "Kỹ thuật 38", en: "Technique 38", zh: "技术 38" },
+    description: { vi: "Mô tả 38", en: "Description 38", zh: "描述 38" },
+    sourceBook: "Source 38",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Swimming"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 38", en: "Strategy 38", zh: "策略 38" }
+  },
+  {
+    id: "technique-39",
+    title: { vi: "Kỹ thuật 39", en: "Technique 39", zh: "技术 39" },
+    description: { vi: "Mô tả 39", en: "Description 39", zh: "描述 39" },
+    sourceBook: "Source 39",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Cycling"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 39", en: "Strategy 39", zh: "策略 39" }
+  },
+  {
+    id: "technique-40",
+    title: { vi: "Kỹ thuật 40", en: "Technique 40", zh: "技术 40" },
+    description: { vi: "Mô tả 40", en: "Description 40", zh: "描述 40" },
+    sourceBook: "Source 40",
+    targetDemographics: {
+      ageGroups: ["All"],
+      genders: ["All"],
+      professions: ["All"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Running"]
+    },
+    defensiveStrategy: { vi: "Chiến lược 40", en: "Strategy 40", zh: "策略 40" }
   }
 ];
