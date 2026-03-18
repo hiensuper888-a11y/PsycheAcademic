@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
-const Article = React.lazy(() => import('./pages/Article').then(module => ({ default: module.Article })));
+import { Article } from './pages/Article';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { TargetAnalysis } from './pages/TargetAnalysis';
@@ -48,7 +48,7 @@ export default function App() {
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                <Route path="/article/:id" element={<ProtectedRoute><Suspense fallback={<div>Loading...</div>}><Article /></Suspense></ProtectedRoute>} />
+                <Route path="/article/:id" element={<ProtectedRoute><Article /></ProtectedRoute>} />
                 <Route path="/target-analysis" element={<ProtectedRoute><TargetAnalysis /></ProtectedRoute>} />
                 <Route path="/target-audience" element={<ProtectedRoute><TargetAudience /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
