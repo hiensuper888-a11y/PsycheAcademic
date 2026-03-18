@@ -15,6 +15,9 @@ import { summarizeArticle } from '../services/geminiService';
 
 export const Article: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  console.log('Article id from params:', id);
+  console.log('psychologyData length:', psychologyData.length);
+  console.log('All article IDs:', psychologyData.map(a => a.id));
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
   
@@ -27,7 +30,12 @@ export const Article: React.FC = () => {
       if (!id) return;
       try {
         setLoading(true);
-        const data = psychologyData.find(a => a.id === id);
+        console.log('Fetching article with id:', id);
+        const data = psychologyData.find(a => {
+          console.log(`Comparing '${JSON.stringify(a.id)}' with '${JSON.stringify(id)}'`);
+          return a.id.toLowerCase() === id?.toLowerCase();
+        });
+        console.log('Found article:', data);
         if (!data) {
           throw new Error('Article not found');
         }
@@ -115,8 +123,18 @@ export const Article: React.FC = () => {
     );
   }
 
-  if (error || !article) {
-    return <Navigate to="/" />;
+  if (error) {
+    return <div className="min-h-screen flex items-center justify-center text-red-500">Error: {error}</div>;
+  }
+
+  if (!article) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <h1 className="text-2xl font-bold mb-4">Article not found</h1>
+        <p>ID from params: {id}</p>
+        <p>Available IDs: {psychologyData.map(a => a.id).join(', ')}</p>
+      </div>
+    );
   }
 
   const getLocalized = (field: any) => {
