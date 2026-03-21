@@ -32,6 +32,7 @@ export const TargetAnalysis: React.FC = () => {
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
   const [aiResult, setAiResult] = useState<{ vulnerability: string; technique: string; plan: string[] } | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
+  const [sessionRequests, setSessionRequests] = useState(0);
   
   useEffect(() => {
     setArticles(psychologyData);
@@ -99,6 +100,7 @@ export const TargetAnalysis: React.FC = () => {
       const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
       const parsed = JSON.parse(jsonStr);
       setAiResult(parsed);
+      setSessionRequests(prev => prev + 1);
     } catch (error) {
       console.error("AI Analysis failed:", error);
       alert(t('targetAnalysis.ai.error'));
@@ -464,6 +466,25 @@ export const TargetAnalysis: React.FC = () => {
                 >
                   {t('targetAnalysis.apiKey.save')}
                 </button>
+              </div>
+
+              {/* Quota Info */}
+              <div className="mt-4 pt-4 border-t border-indigo-100 dark:border-indigo-800/30">
+                <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-300 font-bold text-xs mb-2 uppercase tracking-wider">
+                  <Activity size={14} />
+                  {t('targetAnalysis.ai.quota.title')}
+                </div>
+                <div className="grid grid-cols-1 gap-2 text-[11px] text-slate-600 dark:text-slate-400">
+                  <div className="flex justify-between items-center">
+                    <span>{t('targetAnalysis.ai.quota.limit')}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>{t('targetAnalysis.ai.quota.remaining', { count: sessionRequests })}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-indigo-600 dark:text-indigo-400 font-medium">
+                    <span>{t('targetAnalysis.ai.quota.reset')}</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
