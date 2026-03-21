@@ -38,6 +38,37 @@ export const TargetAudience: React.FC = () => {
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
+  // Quota tracking
+  const [dailyCount, setDailyCount] = useState(() => {
+    const saved = localStorage.getItem('gemini_daily_count');
+    const savedDate = localStorage.getItem('gemini_daily_date');
+    const today = new Date().toDateString();
+    if (savedDate === today) return parseInt(saved || '0');
+    return 0;
+  });
+  const [minuteCount, setMinuteCount] = useState(0);
+  const [secondsToReset, setSecondsToReset] = useState(60);
+  const [hoursToReset, setHoursToReset] = useState(24 - new Date().getHours());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsToReset(prev => {
+        if (prev <= 1) {
+          setMinuteCount(0);
+          return 60;
+        }
+        return prev - 1;
+      });
+      setHoursToReset(24 - new Date().getHours());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('gemini_daily_count', dailyCount.toString());
+    localStorage.setItem('gemini_daily_date', new Date().toDateString());
+  }, [dailyCount]);
+
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
     if (saved) setTargets(JSON.parse(saved));
@@ -108,6 +139,8 @@ export const TargetAudience: React.FC = () => {
         ...prev,
         [target.id]: { ...parsed, loading: false }
       }));
+      setDailyCount(prev => prev + 1);
+      setMinuteCount(prev => prev + 1);
     } catch (error) {
       console.error("AI Analysis failed:", error);
       setAiAnalyses(prev => ({
@@ -257,7 +290,7 @@ export const TargetAudience: React.FC = () => {
           </motion.div>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-4">
           <input 
             type="password"
             value={apiKey}
@@ -271,6 +304,31 @@ export const TargetAudience: React.FC = () => {
           >
             {t('targetAnalysis.apiKey.save')}
           </button>
+        </div>
+
+        {/* Quota Info */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-900/30 rounded-xl border border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-500 mb-3">
+            <Sparkles size={14} className="text-indigo-500" />
+            {t('targetAnalysis.ai.quota.title')}
+          </div>
+          <div className="grid grid-cols-1 gap-2 text-[11px] text-slate-600 dark:text-slate-400">
+            <div className="flex justify-between items-center">
+              <span>{t('targetAnalysis.ai.quota.limit')}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className={minuteCount >= 15 ? 'text-red-500 font-bold' : ''}>
+                {t('targetAnalysis.ai.quota.remainingMinute', { count: 15 - minuteCount })}
+              </span>
+              <span className="text-[10px] opacity-70">{t('targetAnalysis.ai.quota.resetMinute', { seconds: secondsToReset })}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className={dailyCount >= 1500 ? 'text-red-500 font-bold' : ''}>
+                {t('targetAnalysis.ai.quota.remainingDay', { count: 1500 - dailyCount })}
+              </span>
+              <span className="text-[10px] opacity-70">{t('targetAnalysis.ai.quota.resetDay', { hours: hoursToReset })}</span>
+            </div>
+          </div>
         </div>
       </div>
       

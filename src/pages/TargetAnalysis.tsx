@@ -32,8 +32,38 @@ export const TargetAnalysis: React.FC = () => {
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
   const [aiResult, setAiResult] = useState<{ vulnerability: string; technique: string; plan: string[] } | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
-  const [sessionRequests, setSessionRequests] = useState(0);
   const [copySuccess, setCopySuccess] = useState(false);
+  
+  // Quota tracking
+  const [dailyCount, setDailyCount] = useState(() => {
+    const saved = localStorage.getItem('gemini_daily_count');
+    const savedDate = localStorage.getItem('gemini_daily_date');
+    const today = new Date().toDateString();
+    if (savedDate === today) return parseInt(saved || '0');
+    return 0;
+  });
+  const [minuteCount, setMinuteCount] = useState(0);
+  const [secondsToReset, setSecondsToReset] = useState(60);
+  const [hoursToReset, setHoursToReset] = useState(24 - new Date().getHours());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsToReset(prev => {
+        if (prev <= 1) {
+          setMinuteCount(0);
+          return 60;
+        }
+        return prev - 1;
+      });
+      setHoursToReset(24 - new Date().getHours());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('gemini_daily_count', dailyCount.toString());
+    localStorage.setItem('gemini_daily_date', new Date().toDateString());
+  }, [dailyCount]);
   
   useEffect(() => {
     setArticles(psychologyData);
@@ -102,7 +132,8 @@ export const TargetAnalysis: React.FC = () => {
       const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
       const parsed = JSON.parse(jsonStr);
       setAiResult(parsed);
-      setSessionRequests(prev => prev + 1);
+      setDailyCount(prev => prev + 1);
+      setMinuteCount(prev => prev + 1);
     } catch (error) {
       console.error("AI Analysis failed:", error);
       alert(t('targetAnalysis.ai.error'));
@@ -484,10 +515,16 @@ export const TargetAnalysis: React.FC = () => {
                     <span>{t('targetAnalysis.ai.quota.limit')}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span>{t('targetAnalysis.ai.quota.remaining', { count: sessionRequests })}</span>
+                    <span className={minuteCount >= 15 ? 'text-red-500 font-bold' : ''}>
+                      {t('targetAnalysis.ai.quota.remainingMinute', { count: 15 - minuteCount })}
+                    </span>
+                    <span className="text-[10px] opacity-70">{t('targetAnalysis.ai.quota.resetMinute', { seconds: secondsToReset })}</span>
                   </div>
-                  <div className="flex justify-between items-center text-indigo-600 dark:text-indigo-400 font-medium">
-                    <span>{t('targetAnalysis.ai.quota.reset')}</span>
+                  <div className="flex justify-between items-center">
+                    <span className={dailyCount >= 1500 ? 'text-red-500 font-bold' : ''}>
+                      {t('targetAnalysis.ai.quota.remainingDay', { count: 1500 - dailyCount })}
+                    </span>
+                    <span className="text-[10px] opacity-70">{t('targetAnalysis.ai.quota.resetDay', { hours: hoursToReset })}</span>
                   </div>
                 </div>
               </div>
