@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen } from 'lucide-react';
+import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen, Copy, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
 import { syndromes } from '../data/syndromes';
@@ -33,6 +33,7 @@ export const TargetAnalysis: React.FC = () => {
   const [aiResult, setAiResult] = useState<{ vulnerability: string; technique: string; plan: string[] } | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [sessionRequests, setSessionRequests] = useState(0);
+  const [copySuccess, setCopySuccess] = useState(false);
   
   useEffect(() => {
     setArticles(psychologyData);
@@ -86,12 +87,13 @@ export const TargetAnalysis: React.FC = () => {
         job: target.job || 'N/A',
         religion: target.religion || 'N/A',
         politicalSystem: target.politicalSystem || 'N/A',
-        hobbies: target.hobbies || 'N/A'
+        hobbies: target.hobbies || 'N/A',
+        lang: i18n.language === 'vi' ? 'Tiếng Việt' : i18n.language === 'zh' ? '中文' : 'English'
       });
 
       const result = await ai.models.generateContent({
         model: "gemini-1.5-flash",
-        contents: [{ parts: [{ text: prompt + " Return only a valid JSON object." }] }]
+        contents: [{ parts: [{ text: prompt }] }]
       });
       
       const text = result.text;
@@ -110,13 +112,16 @@ export const TargetAnalysis: React.FC = () => {
   };
 
   useEffect(() => {
-    if (analysisMode === 'ai' && currentTarget.name && (currentTarget.age || currentTarget.job || currentTarget.hobbies)) {
-      const timer = setTimeout(() => {
-        runAiAnalysis(currentTarget);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
+    // Auto-analysis removed to save quota and allow explicit trigger
   }, [currentTarget, analysisMode, apiKey]);
+
+  const handleCopyResult = () => {
+    if (!aiResult) return;
+    const text = `${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}\n${t('targetAnalysis.technique')}: ${aiResult.technique}\n${t('targetAnalysis.actionPlan')}:\n${aiResult.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    navigator.clipboard.writeText(text);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
 
   const getInfluenceStrategy = (target: Partial<TargetProfile>) => {
     const age = parseInt(target.age || '0');
@@ -620,11 +625,23 @@ export const TargetAnalysis: React.FC = () => {
             </div>
 
             <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-2 bg-indigo-600 rounded-xl text-white">
-                  <Target size={24} />
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-indigo-600 rounded-xl text-white">
+                    <Target size={24} />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('targetAnalysis.analysisResult')}</h2>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('targetAnalysis.analysisResult')}</h2>
+                {analysisMode === 'ai' && (
+                  <button 
+                    onClick={() => runAiAnalysis(currentTarget)}
+                    disabled={isAiAnalyzing || !apiKey || !currentTarget.name}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-200 dark:shadow-none"
+                  >
+                    {isAiAnalyzing ? <Loader2 className="animate-spin" size={18} /> : <Brain size={18} />}
+                    {t('targetAnalysis.ai.analyzeBtn')}
+                  </button>
+                )}
               </div>
 
               {(!currentTarget.age && !currentTarget.gender && !currentTarget.job && !currentTarget.hobbies) ? (
@@ -660,10 +677,21 @@ export const TargetAnalysis: React.FC = () => {
                   </div>
 
                   <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl p-8 border border-indigo-100 dark:border-indigo-800/30">
-                    <h4 className="font-bold text-indigo-900 dark:text-indigo-300 mb-6 flex items-center gap-2">
-                      <ShieldAlert size={20} />
-                      {t('targetAnalysis.actionPlan')}:
-                    </h4>
+                    <div className="flex items-center justify-between mb-6">
+                      <h4 className="font-bold text-indigo-900 dark:text-indigo-300 flex items-center gap-2">
+                        <ShieldAlert size={20} />
+                        {t('targetAnalysis.actionPlan')}:
+                      </h4>
+                      {analysisMode === 'ai' && aiResult && (
+                        <button 
+                          onClick={handleCopyResult}
+                          className="flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                        >
+                          {copySuccess ? <Check size={14} /> : <Copy size={14} />}
+                          {copySuccess ? t('targetAnalysis.ai.copySuccess') : t('targetAnalysis.ai.copyBtn')}
+                        </button>
+                      )}
+                    </div>
                     <ul className="space-y-4">
                       {analysisMode === 'ai' ? (
                         isAiAnalyzing ? (

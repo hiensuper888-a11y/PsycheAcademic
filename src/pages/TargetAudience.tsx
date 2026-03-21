@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
-import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List } from 'lucide-react';
+import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List, Brain, Key, ExternalLink, Info, Copy, Check, Sparkles } from 'lucide-react';
+import { GoogleGenAI } from "@google/genai";
+import { motion, AnimatePresence } from 'motion/react';
 
 interface TargetAudience {
   id: string;
@@ -31,6 +33,10 @@ export const TargetAudience: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '' });
   const [showLibrary, setShowLibrary] = useState(false);
+  const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [aiAnalyses, setAiAnalyses] = useState<Record<string, { vulnerability: string; technique: string; plan: string[]; loading: boolean }>>({});
+  const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
+  const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('target-audiences');
@@ -60,6 +66,64 @@ export const TargetAudience: React.FC = () => {
   const saveTargets = (updatedTargets: TargetAudience[]) => {
     setTargets(updatedTargets);
     localStorage.setItem('target-audiences', JSON.stringify(updatedTargets));
+  };
+
+  const handleSaveApiKey = (key: string) => {
+    localStorage.setItem('gemini_api_key', key);
+    setApiKey(key);
+  };
+
+  const runAiAnalysis = async (target: TargetAudience) => {
+    if (!apiKey) return;
+    
+    setAiAnalyses(prev => ({
+      ...prev,
+      [target.id]: { vulnerability: '', technique: '', plan: [], loading: true }
+    }));
+
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      
+      const prompt = t('targetAnalysis.ai.prompt', {
+        name: target.name || 'N/A',
+        age: target.age || 'N/A',
+        gender: target.gender || 'N/A',
+        job: target.profession || 'N/A',
+        religion: target.religion || 'N/A',
+        politicalSystem: target.politicalSystem || 'N/A',
+        hobbies: target.hobbies || 'N/A',
+        lang: i18nInstance.language === 'vi' ? 'Tiếng Việt' : i18nInstance.language === 'zh' ? '中文' : 'English'
+      });
+
+      const result = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [{ parts: [{ text: prompt }] }]
+      });
+      
+      const text = result.text;
+      const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+      const parsed = JSON.parse(jsonStr);
+      
+      setAiAnalyses(prev => ({
+        ...prev,
+        [target.id]: { ...parsed, loading: false }
+      }));
+    } catch (error) {
+      console.error("AI Analysis failed:", error);
+      setAiAnalyses(prev => ({
+        ...prev,
+        [target.id]: { vulnerability: 'Error', technique: 'Error', plan: [], loading: false }
+      }));
+    }
+  };
+
+  const handleCopyResult = (targetId: string) => {
+    const result = aiAnalyses[targetId];
+    if (!result) return;
+    const text = `${t('targetAnalysis.vulnerability')}: ${result.vulnerability}\n${t('targetAnalysis.technique')}: ${result.technique}\n${t('targetAnalysis.actionPlan')}:\n${result.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    navigator.clipboard.writeText(text);
+    setCopySuccess(targetId);
+    setTimeout(() => setCopySuccess(null), 2000);
   };
 
   const addTarget = () => {
@@ -158,6 +222,57 @@ export const TargetAudience: React.FC = () => {
           <List size={20} /> {showLibrary ? t('targetAudience.hideLibrary') : t('targetAudience.showLibrary')}
         </button>
       </div>
+
+      {/* API Key Section */}
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8 border border-indigo-100 dark:border-indigo-900/30">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-300 font-bold">
+            <Key size={18} />
+            {t('targetAnalysis.apiKey.label')}
+          </div>
+          <button 
+            onClick={() => setShowApiKeyGuide(!showApiKeyGuide)}
+            className="text-xs text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline"
+          >
+            <Info size={14} />
+            {t('targetAnalysis.apiKey.howToGet')}
+          </button>
+        </div>
+
+        {showApiKeyGuide && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            className="mb-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl text-xs text-slate-600 dark:text-slate-400 leading-relaxed"
+          >
+            <p className="mb-2">{t('targetAnalysis.apiKey.guide')}</p>
+            <a 
+              href="https://aistudio.google.com/app/apikey" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1"
+            >
+              Google AI Studio <ExternalLink size={12} />
+            </a>
+          </motion.div>
+        )}
+
+        <div className="flex gap-2">
+          <input 
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder={t('targetAnalysis.apiKey.placeholder')}
+            className="flex-1 px-4 py-2 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700 rounded-xl focus:outline-none focus:border-indigo-500 text-sm"
+          />
+          <button 
+            onClick={() => handleSaveApiKey(apiKey)}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors"
+          >
+            {t('targetAnalysis.apiKey.save')}
+          </button>
+        </div>
+      </div>
       
       {showLibrary && (
         <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm mb-8">
@@ -222,9 +337,19 @@ export const TargetAudience: React.FC = () => {
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">{target.name}</h3>
                 </div>
-                <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-slate-300 hover:text-red-500 transition-colors">
-                  <Trash2 size={20} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => runAiAnalysis(target)}
+                    disabled={!apiKey || aiAnalyses[target.id]?.loading}
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-all disabled:opacity-50"
+                  >
+                    {aiAnalyses[target.id]?.loading ? <Loader2 className="animate-spin" size={14} /> : <Brain size={14} />}
+                    {t('targetAnalysis.mode.ai')}
+                  </button>
+                  <button onClick={() => saveTargets(targets.filter(t => t.id !== target.id))} className="text-slate-300 hover:text-red-500 transition-colors">
+                    <Trash2 size={20} />
+                  </button>
+                </div>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 text-sm">
@@ -254,6 +379,45 @@ export const TargetAudience: React.FC = () => {
                 </div>
               </div>
               
+              {aiAnalyses[target.id] && (
+                <div className="mb-6 p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-bold text-indigo-900 dark:text-indigo-300 text-sm flex items-center gap-2">
+                      <Brain size={18} /> {t('targetAnalysis.mode.ai')}
+                    </h4>
+                    <button 
+                      onClick={() => handleCopyResult(target.id)}
+                      className="flex items-center gap-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                      {copySuccess === target.id ? <Check size={12} /> : <Copy size={12} />}
+                      {copySuccess === target.id ? t('targetAnalysis.ai.copySuccess') : t('targetAnalysis.ai.copyBtn')}
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.vulnerability')}</p>
+                      <p className="text-sm text-red-600 dark:text-red-400 font-medium">{aiAnalyses[target.id].vulnerability}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.technique')}</p>
+                      <p className="text-sm text-indigo-600 dark:text-indigo-400 font-bold">{aiAnalyses[target.id].technique}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.actionPlan')}</p>
+                      <ul className="space-y-2 mt-2">
+                        {aiAnalyses[target.id].plan.map((step, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-300">
+                            <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
+                            {step}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {suggestedSyndromes.length > 0 && (
                 <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
                   <h4 className="font-bold text-emerald-700 dark:text-emerald-400 text-sm mb-3 flex items-center gap-2">
