@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus } from 'lucide-react';
+import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
 import { syndromes } from '../data/syndromes';
 import { influenceTechniques } from '../data/influenceTechniques';
+import { GoogleGenAI } from "@google/genai";
 
 interface TargetProfile {
   id: string;
@@ -26,6 +27,11 @@ export const TargetAnalysis: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [targets, setTargets] = useState<TargetProfile[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
+  const [analysisMode, setAnalysisMode] = useState<'database' | 'ai'>('database');
+  const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
+  const [aiResult, setAiResult] = useState<{ vulnerability: string; technique: string; plan: string[] } | null>(null);
+  const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   
   useEffect(() => {
     setArticles(psychologyData);
@@ -60,6 +66,55 @@ export const TargetAnalysis: React.FC = () => {
     setTargets(targets.filter(t => t.id !== id));
     if (showPlan === id) setShowPlan(null);
   };
+
+  const handleSaveApiKey = (key: string) => {
+    localStorage.setItem('gemini_api_key', key);
+    setApiKey(key);
+  };
+
+  const runAiAnalysis = async (target: TargetProfile) => {
+    if (!apiKey) return;
+    setIsAiAnalyzing(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      
+      const prompt = t('targetAnalysis.ai.prompt', {
+        name: target.name || 'N/A',
+        age: target.age || 'N/A',
+        gender: target.gender || 'N/A',
+        job: target.job || 'N/A',
+        religion: target.religion || 'N/A',
+        politicalSystem: target.politicalSystem || 'N/A',
+        hobbies: target.hobbies || 'N/A'
+      });
+
+      const result = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [{ parts: [{ text: prompt + " Return only a valid JSON object." }] }]
+      });
+      
+      const text = result.text;
+      
+      // Clean JSON if needed
+      const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+      const parsed = JSON.parse(jsonStr);
+      setAiResult(parsed);
+    } catch (error) {
+      console.error("AI Analysis failed:", error);
+      alert(t('targetAnalysis.ai.error'));
+    } finally {
+      setIsAiAnalyzing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (analysisMode === 'ai' && currentTarget.name && (currentTarget.age || currentTarget.job || currentTarget.hobbies)) {
+      const timer = setTimeout(() => {
+        runAiAnalysis(currentTarget);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentTarget, analysisMode, apiKey]);
 
   const getInfluenceStrategy = (target: Partial<TargetProfile>) => {
     const age = parseInt(target.age || '0');
@@ -338,6 +393,81 @@ export const TargetAnalysis: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Input Form */}
         <div className="space-y-8">
+          {/* Analysis Mode Toggle */}
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl">
+            <button 
+              onClick={() => setAnalysisMode('database')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all ${analysisMode === 'database' ? 'bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+            >
+              <BookOpen size={18} />
+              {t('targetAnalysis.mode.database')}
+            </button>
+            <button 
+              onClick={() => setAnalysisMode('ai')}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all ${analysisMode === 'ai' ? 'bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+            >
+              <Brain size={18} />
+              {t('targetAnalysis.mode.ai')}
+            </button>
+          </div>
+
+          {/* API Key Section */}
+          {analysisMode === 'ai' && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-indigo-50 dark:bg-indigo-900/20 rounded-[2rem] p-6 border border-indigo-100 dark:border-indigo-800/30"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-300 font-bold">
+                  <Key size={18} />
+                  {t('targetAnalysis.apiKey.label')}
+                </div>
+                <button 
+                  onClick={() => setShowApiKeyGuide(!showApiKeyGuide)}
+                  className="text-xs text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline"
+                >
+                  <Info size={14} />
+                  {t('targetAnalysis.apiKey.howToGet')}
+                </button>
+              </div>
+
+              {showApiKeyGuide && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  className="mb-4 p-4 bg-white dark:bg-slate-800 rounded-xl text-xs text-slate-600 dark:text-slate-400 leading-relaxed"
+                >
+                  <p className="mb-2">{t('targetAnalysis.apiKey.guide')}</p>
+                  <a 
+                    href="https://aistudio.google.com/app/apikey" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1"
+                  >
+                    Google AI Studio <ExternalLink size={12} />
+                  </a>
+                </motion.div>
+              )}
+
+              <div className="flex gap-2">
+                <input 
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder={t('targetAnalysis.apiKey.placeholder')}
+                  className="flex-1 px-4 py-2 bg-white dark:bg-slate-800 border border-indigo-100 dark:border-indigo-800/50 rounded-xl focus:outline-none focus:border-indigo-500 text-sm"
+                />
+                <button 
+                  onClick={() => handleSaveApiKey(apiKey)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors"
+                >
+                  {t('targetAnalysis.apiKey.save')}
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -494,11 +624,15 @@ export const TargetAnalysis: React.FC = () => {
                       <tbody>
                         <tr className="border-t border-slate-100 dark:border-slate-700">
                           <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.vulnerability')}</td>
-                          <td className="px-6 py-4 text-red-600 dark:text-red-400 font-medium">{liveStrategy.vulnerability}</td>
+                          <td className="px-6 py-4 text-red-600 dark:text-red-400 font-medium">
+                            {analysisMode === 'ai' ? (isAiAnalyzing ? t('targetAnalysis.ai.analyzing') : aiResult?.vulnerability) : liveStrategy.vulnerability}
+                          </td>
                         </tr>
                         <tr className="border-t border-slate-100 dark:border-slate-700">
                           <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.technique')}</td>
-                          <td className="px-6 py-4 text-indigo-600 dark:text-indigo-400 font-bold">{liveStrategy.technique}</td>
+                          <td className="px-6 py-4 text-indigo-600 dark:text-indigo-400 font-bold">
+                            {analysisMode === 'ai' ? (isAiAnalyzing ? t('targetAnalysis.ai.analyzing') : aiResult?.technique) : liveStrategy.technique}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -510,71 +644,97 @@ export const TargetAnalysis: React.FC = () => {
                       {t('targetAnalysis.actionPlan')}:
                     </h4>
                     <ul className="space-y-4">
-                      {liveStrategy.plan.map((step, idx) => (
-                        <motion.li 
-                          key={idx}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          className="flex items-start gap-4 text-indigo-800 dark:text-indigo-200 leading-relaxed"
-                        >
-                          <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-400 flex-shrink-0" />
-                          <span className="text-lg font-medium">{step}</span>
-                        </motion.li>
-                      ))}
+                      {analysisMode === 'ai' ? (
+                        isAiAnalyzing ? (
+                          <div className="flex items-center gap-2 text-indigo-600">
+                            <Loader2 className="animate-spin" />
+                            {t('targetAnalysis.ai.analyzing')}
+                          </div>
+                        ) : (
+                          aiResult?.plan.map((step, idx) => (
+                            <motion.li 
+                              key={idx}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: idx * 0.1 }}
+                              className="flex items-start gap-4 text-indigo-800 dark:text-indigo-200 leading-relaxed"
+                            >
+                              <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-400 flex-shrink-0" />
+                              <span className="text-lg font-medium">{step}</span>
+                            </motion.li>
+                          ))
+                        )
+                      ) : (
+                        liveStrategy.plan.map((step, idx) => (
+                          <motion.li 
+                            key={idx}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                            className="flex items-start gap-4 text-indigo-800 dark:text-indigo-200 leading-relaxed"
+                          >
+                            <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-400 flex-shrink-0" />
+                            <span className="text-lg font-medium">{step}</span>
+                          </motion.li>
+                        ))
+                      )}
                     </ul>
                   </div>
 
-                  {liveStrategy.suggestedSyndromes.length > 0 && (
-                    <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl p-8 border border-emerald-100 dark:border-emerald-800/30">
-                      <h4 className="font-bold text-emerald-900 dark:text-emerald-300 mb-6 flex items-center gap-2">
-                        <Sparkles size={20} />
-                        {t('targetAnalysis.suggestedSyndromesTitle')}
-                      </h4>
-                      <div className="space-y-6">
-                        {liveStrategy.suggestedSyndromes.map((s, idx) => (
-                          <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
-                            <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">{s.name}</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">{t('targetAnalysis.instructionLabel')} {s.instruction}</p>
+                  {analysisMode === 'database' && (
+                    <>
+                      {liveStrategy.suggestedSyndromes.length > 0 && (
+                        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl p-8 border border-emerald-100 dark:border-emerald-800/30">
+                          <h4 className="font-bold text-emerald-900 dark:text-emerald-300 mb-6 flex items-center gap-2">
+                            <Sparkles size={20} />
+                            {t('targetAnalysis.suggestedSyndromesTitle')}
+                          </h4>
+                          <div className="space-y-6">
+                            {liveStrategy.suggestedSyndromes.map((s, idx) => (
+                              <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-emerald-800/50">
+                                <p className="font-bold text-emerald-600 dark:text-emerald-400 mb-2">{s.name}</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-400 italic">{t('targetAnalysis.instructionLabel')} {s.instruction}</p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                        </div>
+                      )}
 
-                  {liveStrategy.suggestedTechniques.length > 0 && (
-                    <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl p-8 border border-indigo-100 dark:border-indigo-800/30">
-                      <h4 className="font-bold text-indigo-900 dark:text-indigo-300 mb-6 flex items-center gap-2">
-                        <Target size={20} />
-                        {t('targetAnalysis.suggestedTechniquesTitle')}
-                      </h4>
-                      <div className="space-y-6">
-                        {liveStrategy.suggestedTechniques.map((t, idx) => (
-                          <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
-                            <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-2">{t.title}</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{t.description}</p>
-                            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium italic">{t.defensive}</p>
+                      {liveStrategy.suggestedTechniques.length > 0 && (
+                        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-3xl p-8 border border-indigo-100 dark:border-indigo-800/30">
+                          <h4 className="font-bold text-indigo-900 dark:text-indigo-300 mb-6 flex items-center gap-2">
+                            <Target size={20} />
+                            {t('targetAnalysis.suggestedTechniquesTitle')}
+                          </h4>
+                          <div className="space-y-6">
+                            {liveStrategy.suggestedTechniques.map((t, idx) => (
+                              <div key={idx} className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                                <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-2">{t.title}</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{t.description}</p>
+                                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium italic">{t.defensive}</p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                        </div>
+                      )}
 
-                  {liveStrategy.suggestedArticles.length > 0 && (
-                    <div className="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700">
-                      <h4 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <Heart size={20} />
-                        {t('targetAnalysis.suggestedArticlesTitle', { defaultValue: 'Suggested Articles' })}
-                      </h4>
-                      <div className="space-y-4">
-                        {liveStrategy.suggestedArticles.map((a, idx) => (
-                          <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700">
-                            <p className="font-bold text-slate-900 dark:text-white mb-1">{getLocalized(a.title)}</p>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">{getLocalized(a.category)}</p>
+                      {liveStrategy.suggestedArticles.length > 0 && (
+                        <div className="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700">
+                          <h4 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <Heart size={20} />
+                            {t('targetAnalysis.suggestedArticlesTitle', { defaultValue: 'Suggested Articles' })}
+                          </h4>
+                          <div className="space-y-4">
+                            {liveStrategy.suggestedArticles.map((a, idx) => (
+                              <div key={idx} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700">
+                                <p className="font-bold text-slate-900 dark:text-white mb-1">{getLocalized(a.title)}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">{getLocalized(a.category)}</p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
