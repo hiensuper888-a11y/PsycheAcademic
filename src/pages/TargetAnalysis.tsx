@@ -121,22 +121,25 @@ export const TargetAnalysis: React.FC = () => {
         lang: i18n.language === 'vi' ? 'Tiếng Việt' : i18n.language === 'zh' ? '中文' : 'English'
       });
 
-      const result = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: [{ parts: [{ text: prompt }] }]
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json"
+        }
       });
       
-      const text = result.text;
+      const text = response.text;
+      if (!text) throw new Error("Empty response from AI");
       
-      // Clean JSON if needed
-      const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-      const parsed = JSON.parse(jsonStr);
+      const parsed = JSON.parse(text);
       setAiResult(parsed);
       setDailyCount(prev => prev + 1);
       setMinuteCount(prev => prev + 1);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Analysis failed:", error);
-      alert(t('targetAnalysis.ai.error'));
+      const errorMsg = error?.message || t('targetAnalysis.ai.error');
+      alert(`${t('targetAnalysis.ai.error')}: ${errorMsg}`);
     } finally {
       setIsAiAnalyzing(false);
     }
