@@ -181,6 +181,7 @@ export const TargetAnalysis: React.FC = () => {
         children: [
           new docx.Paragraph({ text: t('targetAnalysis.analysisResult'), heading: docx.HeadingLevel.HEADING_1 }),
           new docx.Paragraph({ text: `${t('targetAnalysis.name')}: ${currentTarget.name}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.modeLabel')}: ${analysisMode === 'ai' ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.syndrome')}: ${aiResult.syndrome}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.technique')}: ${aiResult.technique}` }),
@@ -205,6 +206,7 @@ export const TargetAnalysis: React.FC = () => {
     const data = [
       [t('targetAnalysis.category'), t('targetAnalysis.proposal')],
       [t('targetAnalysis.name'), currentTarget.name],
+      [t('targetAnalysis.modeLabel'), analysisMode === 'ai' ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')],
       [t('targetAnalysis.vulnerability'), aiResult.vulnerability],
       [t('targetAnalysis.syndrome'), aiResult.syndrome],
       [t('targetAnalysis.technique'), aiResult.technique],
@@ -806,6 +808,14 @@ export const TargetAnalysis: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
+                        <tr className="border-t border-slate-100 dark:border-slate-700">
+                          <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.modeLabel')}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${analysisMode === 'ai' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'}`}>
+                              {analysisMode === 'ai' ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')}
+                            </span>
+                          </td>
+                        </tr>
                         <tr className="border-t border-slate-100 dark:border-slate-700">
                           <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.vulnerability')}</td>
                           <td className="px-6 py-4 text-red-600 dark:text-red-400 font-medium">

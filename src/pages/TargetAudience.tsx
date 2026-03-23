@@ -204,6 +204,7 @@ export const TargetAudience: React.FC = () => {
           }),
           new docx.Paragraph({ text: "" }),
           new docx.Paragraph({ text: `${t('targetAnalysis.name')}: ${target.name}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.modeLabel')}: ${aiAnalyses[targetId] ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.age')}: ${target.age}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.gender')}: ${t(`targetAnalysis.genders.${target.gender}`)}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.job')}: ${t(`targetAnalysis.professions.${target.profession}`)}` }),
@@ -241,6 +242,7 @@ export const TargetAudience: React.FC = () => {
     const data = [
       [t('targetAnalysis.category'), t('targetAnalysis.proposal')],
       [t('targetAnalysis.name'), target.name],
+      [t('targetAnalysis.modeLabel'), aiAnalyses[targetId] ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')],
       [t('targetAnalysis.age'), target.age],
       [t('targetAnalysis.gender'), t(`targetAnalysis.genders.${target.gender}`)],
       [t('targetAnalysis.job'), t(`targetAnalysis.professions.${target.profession}`)],
