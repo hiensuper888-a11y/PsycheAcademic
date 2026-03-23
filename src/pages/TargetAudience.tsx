@@ -39,7 +39,7 @@ export const TargetAudience: React.FC = () => {
   const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '' });
   const [showLibrary, setShowLibrary] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
-  const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; loading: boolean }>>({});
+  const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; studies?: { title: string; url: string }[]; loading: boolean }>>({});
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
@@ -154,6 +154,7 @@ export const TargetAudience: React.FC = () => {
           duration: parsed.duration || 'N/A',
           feasibility: Number(parsed.feasibility) || 0,
           plan: Array.isArray(parsed.plan) ? parsed.plan : [],
+          studies: Array.isArray(parsed.studies) ? parsed.studies : [],
           loading: false 
         }
       }));
@@ -171,6 +172,7 @@ export const TargetAudience: React.FC = () => {
           duration: 'Error',
           feasibility: 0,
           plan: [], 
+          studies: [],
           loading: false 
         }
       }));
@@ -180,7 +182,7 @@ export const TargetAudience: React.FC = () => {
   const handleCopyResult = (targetId: string) => {
     const result = aiAnalyses[targetId];
     if (!result) return;
-    const text = `${t('targetAnalysis.ai.syndrome')}: ${result.syndrome}\n${t('targetAnalysis.vulnerability')}: ${result.vulnerability}\n${t('targetAnalysis.technique')}: ${result.technique}\n${t('targetAnalysis.ai.duration')}: ${result.duration}\n${t('targetAnalysis.ai.feasibility')}: ${result.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${result.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    const text = `${t('targetAnalysis.ai.syndrome')}: ${result.syndrome}\n${t('targetAnalysis.vulnerability')}: ${result.vulnerability}\n${t('targetAnalysis.technique')}: ${result.technique}\n${t('targetAnalysis.ai.duration')}: ${result.duration}\n${t('targetAnalysis.ai.feasibility')}: ${result.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${result.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}${result.studies && result.studies.length > 0 ? `\n\n${t('targetAnalysis.ai.studies')}:\n${result.studies.map(s => `${s.title}: ${s.url}`).join('\n')}` : ''}`;
     navigator.clipboard.writeText(text);
     setCopySuccess(targetId);
     setTimeout(() => setCopySuccess(null), 2000);
@@ -217,6 +219,11 @@ export const TargetAudience: React.FC = () => {
           new docx.Paragraph({ text: "" }),
           new docx.Paragraph({ text: t('targetAnalysis.actionPlan'), heading: docx.HeadingLevel.HEADING_3 }),
           ...result.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } })),
+          ...(result.studies && result.studies.length > 0 ? [
+            new docx.Paragraph({ text: "" }),
+            new docx.Paragraph({ text: t('targetAnalysis.ai.studies'), heading: docx.HeadingLevel.HEADING_3 }),
+            ...result.studies.map(s => new docx.Paragraph({ text: `${s.title}: ${s.url}` }))
+          ] : [])
         ],
       }],
     });
@@ -247,7 +254,12 @@ export const TargetAudience: React.FC = () => {
       [t('targetAnalysis.feasibility'), `${result.feasibility}%`],
       ["", ""],
       [t('targetAnalysis.actionPlan'), ""],
-      ...result.plan.map((step, i) => [`${i + 1}`, step])
+      ...result.plan.map((step, i) => [`${i + 1}`, step]),
+      ...(result.studies && result.studies.length > 0 ? [
+        ["", ""],
+        [t('targetAnalysis.ai.studies'), ""],
+        ...result.studies.map(s => [s.title, s.url])
+      ] : [])
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(data);
@@ -676,6 +688,31 @@ export const TargetAudience: React.FC = () => {
                         ))}
                       </ul>
                     </div>
+
+                    {aiAnalyses[target.id].studies && aiAnalyses[target.id].studies!.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                          <BookOpen size={12} />
+                          {t('targetAnalysis.ai.studies')}
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {aiAnalyses[target.id].studies!.map((study, idx) => (
+                            <a 
+                              key={idx}
+                              href={study.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all group"
+                            >
+                              <div className="flex items-start gap-2">
+                                <ExternalLink size={10} className="mt-0.5 text-slate-400 group-hover:text-indigo-500 flex-shrink-0" />
+                                <span className="text-[10px] text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 line-clamp-1">{study.title}</span>
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

@@ -41,7 +41,8 @@ export const TargetAnalysis: React.FC = () => {
     technique: string; 
     duration: string;
     feasibility: number;
-    plan: string[] 
+    plan: string[];
+    studies?: { title: string; url: string }[];
   } | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -166,7 +167,7 @@ export const TargetAnalysis: React.FC = () => {
 
   const handleCopyResult = () => {
     if (!aiResult) return;
-    const text = `${t('targetAnalysis.ai.syndrome')}: ${aiResult.syndrome}\n${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}\n${t('targetAnalysis.technique')}: ${aiResult.technique}\n${t('targetAnalysis.ai.duration')}: ${aiResult.duration}\n${t('targetAnalysis.ai.feasibility')}: ${aiResult.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${aiResult.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    const text = `${t('targetAnalysis.ai.syndrome')}: ${aiResult.syndrome}\n${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}\n${t('targetAnalysis.technique')}: ${aiResult.technique}\n${t('targetAnalysis.ai.duration')}: ${aiResult.duration}\n${t('targetAnalysis.ai.feasibility')}: ${aiResult.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${aiResult.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}${aiResult.studies && aiResult.studies.length > 0 ? `\n\n${t('targetAnalysis.ai.studies')}:\n${aiResult.studies.map(s => `${s.title}: ${s.url}`).join('\n')}` : ''}`;
     navigator.clipboard.writeText(text);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
@@ -186,7 +187,11 @@ export const TargetAnalysis: React.FC = () => {
           new docx.Paragraph({ text: `${t('targetAnalysis.duration')}: ${aiResult.duration}` }),
           new docx.Paragraph({ text: `${t('targetAnalysis.feasibility')}: ${aiResult.feasibility}%` }),
           new docx.Paragraph({ text: t('targetAnalysis.actionPlan'), heading: docx.HeadingLevel.HEADING_2 }),
-          ...aiResult.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } }))
+          ...aiResult.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } })),
+          ...(aiResult.studies && aiResult.studies.length > 0 ? [
+            new docx.Paragraph({ text: t('targetAnalysis.ai.studies'), heading: docx.HeadingLevel.HEADING_2 }),
+            ...aiResult.studies.map(s => new docx.Paragraph({ text: `${s.title}: ${s.url}` }))
+          ] : [])
         ],
       }],
     });
@@ -205,7 +210,10 @@ export const TargetAnalysis: React.FC = () => {
       [t('targetAnalysis.technique'), aiResult.technique],
       [t('targetAnalysis.duration'), aiResult.duration],
       [t('targetAnalysis.feasibility'), `${aiResult.feasibility}%`],
-      [t('targetAnalysis.actionPlan'), aiResult.plan.join('; ')]
+      [t('targetAnalysis.actionPlan'), aiResult.plan.join('; ')],
+      ...(aiResult.studies && aiResult.studies.length > 0 ? [
+        [t('targetAnalysis.ai.studies'), aiResult.studies.map(s => `${s.title} (${s.url})`).join('; ')]
+      ] : [])
     ];
     const ws = xlsx.utils.aoa_to_sheet(data);
     const wb = xlsx.utils.book_new();
@@ -901,6 +909,34 @@ export const TargetAnalysis: React.FC = () => {
                         ))
                       )}
                     </ul>
+
+                    {analysisMode === 'ai' && aiResult?.studies && aiResult.studies.length > 0 && (
+                      <div className="mt-12 pt-12 border-t border-indigo-100 dark:border-indigo-800/30">
+                        <h4 className="font-bold text-indigo-900 dark:text-indigo-300 flex items-center gap-2 mb-6">
+                          <BookOpen size={24} />
+                          {t('targetAnalysis.ai.studies')}:
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {aiResult.studies.map((study, idx) => (
+                            <motion.a 
+                              key={idx}
+                              href={study.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-lg transition-all group"
+                            >
+                              <div className="flex items-start gap-3">
+                                <ExternalLink size={18} className="mt-0.5 text-slate-400 group-hover:text-indigo-500 flex-shrink-0" />
+                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 leading-snug">{study.title}</span>
+                              </div>
+                            </motion.a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Export & Share Buttons */}
