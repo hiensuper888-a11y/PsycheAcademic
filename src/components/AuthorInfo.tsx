@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Facebook, Phone, CreditCard, X, User, ExternalLink } from 'lucide-react';
+import { Facebook, Phone, Mail, X, User } from 'lucide-react';
 
 export const AuthorInfo: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const profilePic = "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-1/601974923_122114680323098866_7400803319906439911_n.jpg?stp=cp6_dst-jpg_s200x200_tt6&_nc_cat=102&ccb=1-7&_nc_sid=1d2534&_nc_ohc=s-coGrcfvWsQ7kNvwE2mSLp&_nc_oc=AdpzefLP35JZd0Den8Jwn8OpJw0wQ_i7rjrufRbGFoQFoUsYVb4RvBUJvz5_hy77Z90&_nc_zt=24&_nc_ht=scontent.fsgn2-8.fna&_nc_gid=-B9xnsRsJHEnIIa4h5FnKw&_nc_ss=7a32e&oh=00_AfwVRo4YTm0Juun5qMsCuPCyN71GH5hnXWY4-m0hy2KofQ&oe=69C6AEED";
-  const momoQR = "https://files.antigravity.ai/v1/files/42071850-84f9-467f-9988-518f883f309d";
-  const bankQR = "https://files.antigravity.ai/v1/files/43799616-0158-4856-91f3-332308889814";
+  const momoQR = "https://img.vietqr.io/image/MOMO-0973683410-compact.png?accountName=CAO%20MINH%20HIEN";
+  const bankQR = "https://img.vietqr.io/image/BIDV-3142848355-compact.png?accountName=CAO%20MINH%20HIEN";
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start">
@@ -17,7 +17,7 @@ export const AuthorInfo: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8, y: 20, x: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20, x: -20 }}
-            className="mb-4 w-72 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+            className="mb-4 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
           >
             <div className="p-5">
               <div className="flex justify-between items-start mb-4">
@@ -45,6 +45,16 @@ export const AuthorInfo: React.FC = () => {
                 </a>
 
                 <a 
+                  href="mailto:hiensuper888@gmail.com" 
+                  className="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                    <Mail size={16} />
+                  </div>
+                  <span>hiensuper888@gmail.com</span>
+                </a>
+
+                <a 
                   href="https://www.facebook.com/profile.php?id=61582965982019" 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -56,30 +66,36 @@ export const AuthorInfo: React.FC = () => {
                   <span>Facebook Cá Nhân</span>
                 </a>
 
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Ủng hộ tác giả</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="group relative">
-                      <img 
-                        src={momoQR} 
-                        alt="Momo QR" 
-                        className="w-full aspect-square object-cover rounded-lg border border-slate-100 dark:border-slate-700"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                        <span className="text-[10px] text-white font-bold">Momo</span>
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-700">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Ủng hộ tác giả (Donate)</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <div className="group relative overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+                        <img 
+                          src={momoQR} 
+                          alt="Momo QR" 
+                          className="w-full aspect-square object-contain p-1"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <span className="text-[10px] text-white font-bold">Quét Momo</span>
+                        </div>
                       </div>
+                      <p className="text-[9px] text-center font-bold text-slate-500">MOMO</p>
                     </div>
-                    <div className="group relative">
-                      <img 
-                        src={bankQR} 
-                        alt="Bank QR" 
-                        className="w-full aspect-square object-cover rounded-lg border border-slate-100 dark:border-slate-700"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                        <span className="text-[10px] text-white font-bold">BIDV</span>
+                    <div className="space-y-1">
+                      <div className="group relative overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+                        <img 
+                          src={bankQR} 
+                          alt="Bank QR" 
+                          className="w-full aspect-square object-contain p-1"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <span className="text-[10px] text-white font-bold">Quét BIDV</span>
+                        </div>
                       </div>
+                      <p className="text-[9px] text-center font-bold text-slate-500">BIDV</p>
                     </div>
                   </div>
                 </div>
@@ -97,84 +113,30 @@ export const AuthorInfo: React.FC = () => {
            <div className="absolute inset-0 bg-white/40 blur-xl rounded-full scale-110 animate-pulse delay-300"></div>
         </div>
         
-        {/* Dense Sun Rays */}
+        {/* Dense Sun Rays - Exactly 27 rays */}
         <motion.div 
           animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
           className="absolute inset-0 -z-10"
         >
-          {[...Array(32)].map((_, i) => (
+          {[...Array(27)].map((_, i) => (
             <motion.div 
               key={i}
               animate={{ 
-                opacity: [0.2, 0.6, 0.3, 0.7, 0.2],
-                scaleX: [1, 1.3, 1.1, 1.4, 1],
-                width: [120, 160, 140, 180, 120]
+                opacity: [0.3, 0.7, 0.4, 0.8, 0.3],
+                scaleX: [1, 1.4, 1.2, 1.5, 1],
+                width: [140, 180, 160, 200, 140]
               }}
               transition={{ 
-                duration: 4 + Math.random() * 3, 
+                duration: 5 + Math.random() * 3, 
                 repeat: Infinity, 
                 ease: "easeInOut",
-                delay: Math.random() * 2 
+                delay: i * 0.1 
               }}
-              className="absolute top-1/2 left-1/2 h-[1px] bg-gradient-to-r from-yellow-400/80 via-yellow-200/30 to-transparent -translate-y-1/2 origin-left"
+              className="absolute top-1/2 left-1/2 h-[1.5px] bg-gradient-to-r from-yellow-400/90 via-yellow-200/40 to-transparent -translate-y-1/2 origin-left"
               style={{ 
-                transform: `rotate(${i * (360 / 32)}deg) translateX(0px)`,
-                width: `${100 + Math.random() * 60}px`
-              }}
-            />
-          ))}
-        </motion.div>
-        
-        {/* Shimmering Secondary Rays */}
-        <motion.div 
-          animate={{ rotate: -360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 -z-10 opacity-40"
-        >
-          {[...Array(24)].map((_, i) => (
-            <motion.div 
-              key={i}
-              animate={{ 
-                opacity: [0.1, 0.4, 0.1],
-                scaleX: [0.8, 1.1, 0.8]
-              }}
-              transition={{ 
-                duration: 4 + Math.random() * 3, 
-                repeat: Infinity, 
-                delay: Math.random() * 3 
-              }}
-              className="absolute top-1/2 left-1/2 h-[2px] bg-gradient-to-r from-orange-300/40 via-yellow-100/10 to-transparent -translate-y-1/2 origin-left"
-              style={{ 
-                transform: `rotate(${i * (360 / 24) + 7.5}deg) translateX(0px)`,
-                width: `${80 + Math.random() * 100}px`
-              }}
-            />
-          ))}
-        </motion.div>
-
-        {/* Extra Long Sunburst Rays */}
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 -z-10 opacity-20"
-        >
-          {[...Array(8)].map((_, i) => (
-            <motion.div 
-              key={i}
-              animate={{ 
-                opacity: [0.1, 0.3, 0.1],
-                scaleX: [1, 1.5, 1]
-              }}
-              transition={{ 
-                duration: 8, 
-                repeat: Infinity, 
-                delay: i * 1 
-              }}
-              className="absolute top-1/2 left-1/2 h-[4px] bg-gradient-to-r from-yellow-200/50 to-transparent -translate-y-1/2 origin-left"
-              style={{ 
-                transform: `rotate(${i * 45 + 15}deg) translateX(0px)`,
-                width: '300px'
+                transform: `rotate(${i * (360 / 27)}deg) translateX(0px)`,
+                width: `${120 + Math.random() * 80}px`
               }}
             />
           ))}
