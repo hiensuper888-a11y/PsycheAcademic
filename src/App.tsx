@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
+import { AuthorInfo } from './components/AuthorInfo';
 import { Home } from './pages/Home';
 import { Article } from './pages/Article';
 import { Auth } from './pages/Auth';
@@ -54,6 +55,7 @@ export default function App() {
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               </Routes>
             </main>
+            <AuthorInfo />
           </div>
         </Router>
       </AuthProvider>

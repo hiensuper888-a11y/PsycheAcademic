@@ -97,13 +97,57 @@ export const Auth: React.FC = () => {
             {t('auth.heroDesc')}
           </p>
         </div>
+
+        {/* Animated Stars/Particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0.1, scale: 0.5 }}
+              animate={{ 
+                opacity: [0.1, 0.5, 0.1], 
+                scale: [0.5, 1, 0.5],
+                y: [0, -100, 0],
+                x: [0, Math.random() * 50 - 25, 0]
+              }}
+              transition={{ 
+                duration: 5 + Math.random() * 5, 
+                repeat: Infinity, 
+                delay: Math.random() * 5 
+              }}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{ 
+                top: `${Math.random() * 100}%`, 
+                left: `${Math.random() * 100}%` 
+              }}
+            />
+          ))}
+        </div>
         
-        <div className="relative z-10 flex items-center space-x-4 text-sm text-slate-400">
-          <span>© 2026 PsycheAcademic</span>
-          <span>•</span>
-          <Link to="/privacy" className="hover:text-white transition-colors">{t('auth.privacyLink')}</Link>
-          <span>•</span>
-          <Link to="/terms" className="hover:text-white transition-colors">{t('auth.termsLink')}</Link>
+        <div className="relative z-10 flex flex-col space-y-6">
+          <div className="flex items-center space-x-4 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 w-fit">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow-400/50 blur-lg rounded-full animate-pulse"></div>
+              <img 
+                src="https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-1/601974923_122114680323098866_7400803319906439911_n.jpg?stp=cp6_dst-jpg_s200x200_tt6&_nc_cat=102&ccb=1-7&_nc_sid=1d2534&_nc_ohc=s-coGrcfvWsQ7kNvwE2mSLp&_nc_oc=AdpzefLP35JZd0Den8Jwn8OpJw0wQ_i7rjrufRbGFoQFoUsYVb4RvBUJvz5_hy77Z90&_nc_zt=24&_nc_ht=scontent.fsgn2-8.fna&_nc_gid=-B9xnsRsJHEnIIa4h5FnKw&_nc_ss=7a32e&oh=00_AfwVRo4YTm0Juun5qMsCuPCyN71GH5hnXWY4-m0hy2KofQ&oe=69C6AEED" 
+                alt="Cao Minh Hiền" 
+                className="relative w-12 h-12 rounded-full border-2 border-yellow-400 object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div>
+              <p className="text-white font-bold text-sm">Cao Minh Hiền</p>
+              <p className="text-slate-300 text-[10px] uppercase tracking-widest font-bold">Developer & Creator</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4 text-sm text-slate-400">
+            <span>© 2026 PsycheAcademic</span>
+            <span>•</span>
+            <Link to="/privacy" className="hover:text-white transition-colors">{t('auth.privacyLink')}</Link>
+            <span>•</span>
+            <Link to="/terms" className="hover:text-white transition-colors">{t('auth.termsLink')}</Link>
+          </div>
         </div>
       </div>
 
@@ -119,7 +163,11 @@ export const Auth: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="relative"
           >
+            {/* Background Glow for Form */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-emerald-500/5 to-indigo-500/5 blur-3xl rounded-[3rem] -z-10"></div>
+            
             <Stepper
               steps={[t('auth.loginTitle'), t('auth.registerTitle')]}
               currentStep={isLogin ? 0 : 1}
