@@ -40,6 +40,7 @@ export const TargetAudience: React.FC = () => {
   const [showLibrary, setShowLibrary] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
   const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; studies?: { title: string; url: string }[]; loading: boolean }>>({});
+  const [activeShareMenu, setActiveShareMenu] = useState<string | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
@@ -188,50 +189,246 @@ export const TargetAudience: React.FC = () => {
     setTimeout(() => setCopySuccess(null), 2000);
   };
 
-  const exportToWord = (targetId: string) => {
+  const exportToWord = async (targetId: string) => {
     const target = targets.find(t => t.id === targetId);
     const result = aiAnalyses[targetId];
     if (!target || !result) return;
 
     const doc = new docx.Document({
       sections: [{
-        properties: {},
+        properties: {
+          page: {
+            margin: {
+              top: docx.convertInchesToTwip(1),
+              right: docx.convertInchesToTwip(1),
+              bottom: docx.convertInchesToTwip(1),
+              left: docx.convertInchesToTwip(1),
+            },
+          },
+        },
         children: [
           new docx.Paragraph({
-            text: t('targetAnalysis.analysisResult'),
-            heading: docx.HeadingLevel.HEADING_1,
+            children: [
+              new docx.TextRun({
+                text: t('targetAnalysis.analysisResult').toUpperCase(),
+                bold: true,
+                size: 32,
+                color: "1e293b",
+              }),
+            ],
             alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 400 },
           }),
-          new docx.Paragraph({ text: "" }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.name')}: ${target.name}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.modeLabel')}: ${aiAnalyses[targetId] ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.age')}: ${target.age}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.gender')}: ${t(`targetAnalysis.genders.${target.gender}`)}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.job')}: ${t(`targetAnalysis.professions.${target.profession}`)}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.desires')}: ${target.desires}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.successTime')}: ${target.successTime}` }),
-          new docx.Paragraph({ text: "" }),
-          new docx.Paragraph({ text: t('targetAnalysis.ai.resultTitle'), heading: docx.HeadingLevel.HEADING_2 }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.syndrome')}: ${result.syndrome}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.vulnerability')}: ${result.vulnerability}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.technique')}: ${result.technique}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.duration')}: ${result.duration}` }),
-          new docx.Paragraph({ text: `${t('targetAnalysis.feasibility')}: ${result.feasibility}%` }),
-          new docx.Paragraph({ text: "" }),
-          new docx.Paragraph({ text: t('targetAnalysis.actionPlan'), heading: docx.HeadingLevel.HEADING_3 }),
-          ...result.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } })),
+          
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: t('targetAnalysis.category').toUpperCase(),
+                bold: true,
+                size: 24,
+                color: "475569",
+              }),
+            ],
+            spacing: { before: 200, after: 200 },
+          }),
+
+          new docx.Table({
+            width: {
+              size: 100,
+              type: docx.WidthType.PERCENTAGE,
+            },
+            rows: [
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.name'), bold: true })] })],
+                    shading: { fill: "f8fafc" },
+                    width: { size: 30, type: docx.WidthType.PERCENTAGE },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ text: target.name })],
+                    width: { size: 70, type: docx.WidthType.PERCENTAGE },
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.age'), bold: true })] })],
+                    shading: { fill: "f8fafc" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ text: target.age || "N/A" })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.gender'), bold: true })] })],
+                    shading: { fill: "f8fafc" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ text: target.gender ? t(`targetAnalysis.genders.${target.gender}`) : "N/A" })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.job'), bold: true })] })],
+                    shading: { fill: "f8fafc" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ text: target.profession ? t(`targetAnalysis.professions.${target.profession}`) : "N/A" })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.modeLabel'), bold: true })] })],
+                    shading: { fill: "f8fafc" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ text: t('targetAnalysis.mode.ai') })],
+                  }),
+                ],
+              }),
+            ],
+          }),
+
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: t('targetAnalysis.proposal').toUpperCase(),
+                bold: true,
+                size: 24,
+                color: "475569",
+              }),
+            ],
+            spacing: { before: 400, after: 200 },
+          }),
+
+          new docx.Table({
+            width: {
+              size: 100,
+              type: docx.WidthType.PERCENTAGE,
+            },
+            rows: [
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.vulnerability'), bold: true })] })],
+                    shading: { fill: "fef2f2" },
+                    width: { size: 30, type: docx.WidthType.PERCENTAGE },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: result.vulnerability, color: "dc2626" })] })],
+                    width: { size: 70, type: docx.WidthType.PERCENTAGE },
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.technique'), bold: true })] })],
+                    shading: { fill: "eef2ff" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: result.technique, color: "4f46e5", bold: true })] })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.ai.syndrome'), bold: true })] })],
+                    shading: { fill: "fffbeb" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: result.syndrome, color: "d97706" })] })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.ai.duration'), bold: true })] })],
+                    shading: { fill: "eff6ff" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: result.duration, color: "2563eb" })] })],
+                  }),
+                ],
+              }),
+              new docx.TableRow({
+                children: [
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.ai.feasibility'), bold: true })] })],
+                    shading: { fill: "f0fdf4" },
+                  }),
+                  new docx.TableCell({
+                    children: [new docx.Paragraph({ children: [new docx.TextRun({ text: `${result.feasibility}%`, color: "16a34a", bold: true })] })],
+                  }),
+                ],
+              }),
+            ],
+          }),
+
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun({
+                text: t('targetAnalysis.actionPlan').toUpperCase(),
+                bold: true,
+                size: 24,
+                color: "475569",
+              }),
+            ],
+            spacing: { before: 400, after: 200 },
+          }),
+
+          ...result.plan.map((step, i) => 
+            new docx.Paragraph({
+              children: [
+                new docx.TextRun({ text: `${i + 1}. `, bold: true, color: "4f46e5" }),
+                new docx.TextRun({ text: step }),
+              ],
+              indent: { left: 720 },
+              spacing: { before: 120 },
+            })
+          ),
+
           ...(result.studies && result.studies.length > 0 ? [
-            new docx.Paragraph({ text: "" }),
-            new docx.Paragraph({ text: t('targetAnalysis.ai.studies'), heading: docx.HeadingLevel.HEADING_3 }),
-            ...result.studies.map(s => new docx.Paragraph({ text: `${s.title}: ${s.url}` }))
+            new docx.Paragraph({
+              children: [
+                new docx.TextRun({
+                  text: t('targetAnalysis.ai.studies').toUpperCase(),
+                  bold: true,
+                  size: 24,
+                  color: "475569",
+                }),
+              ],
+              spacing: { before: 400, after: 200 },
+            }),
+            ...result.studies.map(s => 
+              new docx.Paragraph({
+                children: [
+                  new docx.TextRun({ text: "• ", bold: true }),
+                  new docx.TextRun({ text: s.title, bold: true }),
+                  new docx.TextRun({ text: ` (${s.url})`, color: "2563eb" }),
+                ],
+                indent: { left: 360 },
+                spacing: { before: 120 },
+              })
+            )
           ] : [])
         ],
       }],
     });
 
-    docx.Packer.toBlob(doc).then(blob => {
-      saveAs(blob, `Analysis_${target.name}.docx`);
-    });
+    const blob = await docx.Packer.toBlob(doc);
+    saveAs(blob, `Analysis_${target.name || 'Report'}.docx`);
   };
 
   const exportToExcel = (targetId: string) => {
@@ -240,34 +437,41 @@ export const TargetAudience: React.FC = () => {
     if (!target || !result) return;
 
     const data = [
-      [t('targetAnalysis.category'), t('targetAnalysis.proposal')],
+      [t('targetAnalysis.analysisResult').toUpperCase()],
+      [],
+      [t('targetAnalysis.category').toUpperCase(), t('targetAnalysis.proposal').toUpperCase()],
       [t('targetAnalysis.name'), target.name],
-      [t('targetAnalysis.modeLabel'), aiAnalyses[targetId] ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')],
-      [t('targetAnalysis.age'), target.age],
-      [t('targetAnalysis.gender'), t(`targetAnalysis.genders.${target.gender}`)],
-      [t('targetAnalysis.job'), t(`targetAnalysis.professions.${target.profession}`)],
-      [t('targetAnalysis.desires'), target.desires],
-      [t('targetAnalysis.successTime'), target.successTime],
-      ["", ""],
-      [t('targetAnalysis.syndrome'), result.syndrome],
+      [t('targetAnalysis.age'), target.age || "N/A"],
+      [t('targetAnalysis.gender'), target.gender ? t(`targetAnalysis.genders.${target.gender}`) : "N/A"],
+      [t('targetAnalysis.job'), target.profession ? t(`targetAnalysis.professions.${target.profession}`) : "N/A"],
+      [t('targetAnalysis.modeLabel'), t('targetAnalysis.mode.ai')],
+      [],
+      [t('targetAnalysis.proposal').toUpperCase()],
       [t('targetAnalysis.vulnerability'), result.vulnerability],
       [t('targetAnalysis.technique'), result.technique],
-      [t('targetAnalysis.duration'), result.duration],
-      [t('targetAnalysis.feasibility'), `${result.feasibility}%`],
-      ["", ""],
-      [t('targetAnalysis.actionPlan'), ""],
+      [t('targetAnalysis.ai.syndrome'), result.syndrome],
+      [t('targetAnalysis.ai.duration'), result.duration],
+      [t('targetAnalysis.ai.feasibility'), `${result.feasibility}%`],
+      [],
+      [t('targetAnalysis.actionPlan').toUpperCase()],
       ...result.plan.map((step, i) => [`${i + 1}`, step]),
+      [],
       ...(result.studies && result.studies.length > 0 ? [
-        ["", ""],
-        [t('targetAnalysis.ai.studies'), ""],
+        [t('targetAnalysis.ai.studies').toUpperCase()],
         ...result.studies.map(s => [s.title, s.url])
       ] : [])
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    ws['!cols'] = [
+      { wch: 30 },
+      { wch: 80 },
+    ];
+
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Analysis");
-    XLSX.writeFile(wb, `Analysis_${target.name}.xlsx`);
+    XLSX.utils.book_append_sheet(wb, ws, "Analysis Report");
+    XLSX.writeFile(wb, `Analysis_${target.name || 'Report'}.xlsx`);
   };
 
   const handlePrint = () => {
@@ -663,19 +867,47 @@ export const TargetAudience: React.FC = () => {
                         <Printer size={14} className="text-slate-600 dark:text-slate-400" />
                         <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.printA4')}</span>
                       </button>
-                      <div className="relative group">
+                      <div className="relative">
                         <button 
-                          className="w-full h-full flex items-center gap-2 p-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                          onClick={() => setActiveShareMenu(activeShareMenu === target.id ? null : target.id)}
+                          className={`w-full h-full flex flex-col items-center justify-center gap-1 p-2 bg-white dark:bg-slate-800 border rounded-xl transition-all ${activeShareMenu === target.id ? 'border-indigo-500 shadow-lg' : 'border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
                         >
                           <Share2 size={14} className="text-indigo-600" />
                           <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.share')}</span>
                         </button>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-xl overflow-hidden z-50 min-w-[100px]">
-                          <button onClick={() => handleShare('fb')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.fb')}</button>
-                          <button onClick={() => handleShare('x')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.x')}</button>
-                          <button onClick={() => handleShare('insta')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.insta')}</button>
-                          <button onClick={() => handleShare('zalo')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left">{t('targetAnalysis.ai.share.zalo')}</button>
-                        </div>
+                        <AnimatePresence>
+                          {activeShareMenu === target.id && (
+                            <>
+                              <div 
+                                className="fixed inset-0 z-40" 
+                                onClick={() => setActiveShareMenu(null)}
+                              />
+                              <motion.div 
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 flex flex-col bg-white dark:bg-slate-800 shadow-2xl border border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden z-50 min-w-[140px]"
+                              >
+                                <button onClick={() => { handleShare('fb'); setActiveShareMenu(null); }} className="px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-left border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                                  {t('targetAnalysis.ai.share.fb')}
+                                </button>
+                                <button onClick={() => { handleShare('x'); setActiveShareMenu(null); }} className="px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-left border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white" />
+                                  {t('targetAnalysis.ai.share.x')}
+                                </button>
+                                <button onClick={() => { handleShare('insta'); setActiveShareMenu(null); }} className="px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-left border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-pink-600" />
+                                  {t('targetAnalysis.ai.share.insta')}
+                                </button>
+                                <button onClick={() => { handleShare('zalo'); setActiveShareMenu(null); }} className="px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-left flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                  {t('targetAnalysis.ai.share.zalo')}
+                                </button>
+                              </motion.div>
+                            </>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </div>
 
