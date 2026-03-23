@@ -4,9 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
-import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List, Brain, Key, ExternalLink, Info, Copy, Check, Sparkles } from 'lucide-react';
+import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List, Brain, Key, ExternalLink, Info, Copy, Check, Sparkles, FileText, Table, Printer, Share2 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
+import * as docx from 'docx';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 interface TargetAudience {
   id: string;
@@ -17,6 +20,8 @@ interface TargetAudience {
   religion: string;
   politicalSystem: string;
   hobbies: string;
+  desires: string;
+  successTime: string;
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam', 'atheism', 'sikhism', 'shintoism'];
@@ -31,10 +36,10 @@ export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '' });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '' });
   const [showLibrary, setShowLibrary] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
-  const [aiAnalyses, setAiAnalyses] = useState<Record<string, { vulnerability: string; technique: string; plan: string[]; loading: boolean }>>({});
+  const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; loading: boolean }>>({});
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
@@ -109,7 +114,7 @@ export const TargetAudience: React.FC = () => {
     
     setAiAnalyses(prev => ({
       ...prev,
-      [target.id]: { vulnerability: '', technique: '', plan: [], loading: true }
+      [target.id]: { syndrome: '', vulnerability: '', technique: '', duration: '', feasibility: 0, plan: [], loading: true }
     }));
 
     try {
@@ -123,6 +128,7 @@ export const TargetAudience: React.FC = () => {
         religion: target.religion || 'N/A',
         politicalSystem: target.politicalSystem || 'N/A',
         hobbies: target.hobbies || 'N/A',
+        desires: target.desires || 'N/A',
         lang: i18nInstance.language === 'vi' ? 'Tiếng Việt' : i18nInstance.language === 'zh' ? '中文' : 'English'
       });
 
@@ -141,7 +147,15 @@ export const TargetAudience: React.FC = () => {
       
       setAiAnalyses(prev => ({
         ...prev,
-        [target.id]: { ...parsed, loading: false }
+        [target.id]: { 
+          syndrome: parsed.syndrome || 'N/A',
+          vulnerability: parsed.vulnerability || 'N/A',
+          technique: parsed.technique || 'N/A',
+          duration: parsed.duration || 'N/A',
+          feasibility: Number(parsed.feasibility) || 0,
+          plan: Array.isArray(parsed.plan) ? parsed.plan : [],
+          loading: false 
+        }
       }));
       setDailyCount(prev => prev + 1);
       setMinuteCount(prev => prev + 1);
@@ -150,7 +164,15 @@ export const TargetAudience: React.FC = () => {
       const errorMsg = error?.message || "Unknown error";
       setAiAnalyses(prev => ({
         ...prev,
-        [target.id]: { vulnerability: `Error: ${errorMsg}`, technique: 'Error', plan: [], loading: false }
+        [target.id]: { 
+          syndrome: 'Error',
+          vulnerability: `Error: ${errorMsg}`, 
+          technique: 'Error', 
+          duration: 'Error',
+          feasibility: 0,
+          plan: [], 
+          loading: false 
+        }
       }));
     }
   };
@@ -158,10 +180,109 @@ export const TargetAudience: React.FC = () => {
   const handleCopyResult = (targetId: string) => {
     const result = aiAnalyses[targetId];
     if (!result) return;
-    const text = `${t('targetAnalysis.vulnerability')}: ${result.vulnerability}\n${t('targetAnalysis.technique')}: ${result.technique}\n${t('targetAnalysis.actionPlan')}:\n${result.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    const text = `${t('targetAnalysis.ai.syndrome')}: ${result.syndrome}\n${t('targetAnalysis.vulnerability')}: ${result.vulnerability}\n${t('targetAnalysis.technique')}: ${result.technique}\n${t('targetAnalysis.ai.duration')}: ${result.duration}\n${t('targetAnalysis.ai.feasibility')}: ${result.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${result.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
     navigator.clipboard.writeText(text);
     setCopySuccess(targetId);
     setTimeout(() => setCopySuccess(null), 2000);
+  };
+
+  const exportToWord = (targetId: string) => {
+    const target = targets.find(t => t.id === targetId);
+    const result = aiAnalyses[targetId];
+    if (!target || !result) return;
+
+    const doc = new docx.Document({
+      sections: [{
+        properties: {},
+        children: [
+          new docx.Paragraph({
+            text: t('targetAnalysis.analysisResult'),
+            heading: docx.HeadingLevel.HEADING_1,
+            alignment: docx.AlignmentType.CENTER,
+          }),
+          new docx.Paragraph({ text: "" }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.name')}: ${target.name}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.age')}: ${target.age}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.gender')}: ${t(`targetAnalysis.genders.${target.gender}`)}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.job')}: ${t(`targetAnalysis.professions.${target.profession}`)}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.desires')}: ${target.desires}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.successTime')}: ${target.successTime}` }),
+          new docx.Paragraph({ text: "" }),
+          new docx.Paragraph({ text: t('targetAnalysis.ai.resultTitle'), heading: docx.HeadingLevel.HEADING_2 }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.syndrome')}: ${result.syndrome}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.vulnerability')}: ${result.vulnerability}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.technique')}: ${result.technique}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.duration')}: ${result.duration}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.feasibility')}: ${result.feasibility}%` }),
+          new docx.Paragraph({ text: "" }),
+          new docx.Paragraph({ text: t('targetAnalysis.actionPlan'), heading: docx.HeadingLevel.HEADING_3 }),
+          ...result.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } })),
+        ],
+      }],
+    });
+
+    docx.Packer.toBlob(doc).then(blob => {
+      saveAs(blob, `Analysis_${target.name}.docx`);
+    });
+  };
+
+  const exportToExcel = (targetId: string) => {
+    const target = targets.find(t => t.id === targetId);
+    const result = aiAnalyses[targetId];
+    if (!target || !result) return;
+
+    const data = [
+      [t('targetAnalysis.category'), t('targetAnalysis.proposal')],
+      [t('targetAnalysis.name'), target.name],
+      [t('targetAnalysis.age'), target.age],
+      [t('targetAnalysis.gender'), t(`targetAnalysis.genders.${target.gender}`)],
+      [t('targetAnalysis.job'), t(`targetAnalysis.professions.${target.profession}`)],
+      [t('targetAnalysis.desires'), target.desires],
+      [t('targetAnalysis.successTime'), target.successTime],
+      ["", ""],
+      [t('targetAnalysis.syndrome'), result.syndrome],
+      [t('targetAnalysis.vulnerability'), result.vulnerability],
+      [t('targetAnalysis.technique'), result.technique],
+      [t('targetAnalysis.duration'), result.duration],
+      [t('targetAnalysis.feasibility'), `${result.feasibility}%`],
+      ["", ""],
+      [t('targetAnalysis.actionPlan'), ""],
+      ...result.plan.map((step, i) => [`${i + 1}`, step])
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Analysis");
+    XLSX.writeFile(wb, `Analysis_${target.name}.xlsx`);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    const text = t('targetAnalysis.ai.share.message', { defaultValue: 'Check out this psychological analysis!' });
+    
+    let shareUrl = '';
+    switch (platform) {
+      case 'fb':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case 'x':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        break;
+      case 'insta':
+        alert(t('targetAnalysis.ai.share.instaNote', { defaultValue: 'Instagram does not support direct link sharing. Please copy the link manually.' }));
+        return;
+      case 'zalo':
+        shareUrl = `https://zalo.me/share?url=${encodeURIComponent(url)}`;
+        break;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank');
+    }
   };
 
   const addTarget = () => {
@@ -171,7 +292,7 @@ export const TargetAudience: React.FC = () => {
       id: Date.now().toString(),
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '' });
+    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -380,6 +501,8 @@ export const TargetAudience: React.FC = () => {
               {politicalSystems.map(p => <option key={p} value={p}>{t(`targetAnalysis.politicalSystems.${p}`)}</option>)}
             </select>
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
+            <input placeholder={t('targetAnalysis.desires')} className="p-3 rounded-xl border" value={newTarget.desires} onChange={e => setNewTarget({...newTarget, desires: e.target.value})} />
+            <input placeholder={t('targetAnalysis.successTime')} className="p-3 rounded-xl border" value={newTarget.successTime} onChange={e => setNewTarget({...newTarget, successTime: e.target.value})} />
             
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
@@ -440,6 +563,14 @@ export const TargetAudience: React.FC = () => {
                   <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.hobbies')}:</span> 
                   <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.hobbies}>{target.hobbies || 'N/A'}</span>
                 </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg sm:col-span-2 lg:col-span-1">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.desires')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.desires}>{target.desires || 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg sm:col-span-2 lg:col-span-1">
+                  <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.successTime')}:</span> 
+                  <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.successTime}>{target.successTime || 'N/A'}</span>
+                </div>
               </div>
               
               {aiAnalyses[target.id] && (
@@ -458,6 +589,34 @@ export const TargetAudience: React.FC = () => {
                   </div>
                   
                   <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.ai.syndrome')}</p>
+                        <p className="text-sm text-indigo-600 dark:text-indigo-400 font-bold">{aiAnalyses[target.id].syndrome}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.ai.duration')}</p>
+                        <p className="text-sm text-indigo-600 dark:text-indigo-400 font-bold">{aiAnalyses[target.id].duration}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.ai.feasibility')}</p>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${aiAnalyses[target.id].feasibility}%` }}
+                            className={`h-full ${
+                              aiAnalyses[target.id].feasibility > 70 ? 'bg-emerald-500' : 
+                              aiAnalyses[target.id].feasibility > 40 ? 'bg-amber-500' : 'bg-red-500'
+                            }`}
+                          />
+                        </div>
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{aiAnalyses[target.id].feasibility}%</span>
+                      </div>
+                    </div>
+
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.vulnerability')}</p>
                       <p className="text-sm text-red-600 dark:text-red-400 font-medium">{aiAnalyses[target.id].vulnerability}</p>
@@ -466,6 +625,46 @@ export const TargetAudience: React.FC = () => {
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.technique')}</p>
                       <p className="text-sm text-indigo-600 dark:text-indigo-400 font-bold">{aiAnalyses[target.id].technique}</p>
                     </div>
+                    
+                    {/* Export & Share Buttons */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-4 border-t border-indigo-100 dark:border-indigo-800/30 print:hidden">
+                      <button 
+                        onClick={() => exportToWord(target.id)}
+                        className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                      >
+                        <FileText size={14} className="text-blue-600" />
+                        <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.exportWord')}</span>
+                      </button>
+                      <button 
+                        onClick={() => exportToExcel(target.id)}
+                        className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                      >
+                        <Table size={14} className="text-emerald-600" />
+                        <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.exportExcel')}</span>
+                      </button>
+                      <button 
+                        onClick={handlePrint}
+                        className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                      >
+                        <Printer size={14} className="text-slate-600 dark:text-slate-400" />
+                        <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.printA4')}</span>
+                      </button>
+                      <div className="relative group">
+                        <button 
+                          className="w-full h-full flex items-center gap-2 p-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                        >
+                          <Share2 size={14} className="text-indigo-600" />
+                          <span className="text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.share')}</span>
+                        </button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-xl overflow-hidden z-50 min-w-[100px]">
+                          <button onClick={() => handleShare('fb')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.fb')}</button>
+                          <button onClick={() => handleShare('x')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.x')}</button>
+                          <button onClick={() => handleShare('insta')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.insta')}</button>
+                          <button onClick={() => handleShare('zalo')} className="px-3 py-1.5 text-[10px] hover:bg-slate-50 dark:hover:bg-slate-700 text-left">{t('targetAnalysis.ai.share.zalo')}</button>
+                        </div>
+                      </div>
+                    </div>
+
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('targetAnalysis.actionPlan')}</p>
                       <ul className="space-y-2 mt-2">

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen, Copy, Check } from 'lucide-react';
+import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen, Copy, Check, Printer, Share2, FileText, Table, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
 import { syndromes } from '../data/syndromes';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { GoogleGenAI } from "@google/genai";
+import * as docx from 'docx';
+import * as xlsx from 'xlsx';
+import { saveAs } from 'file-saver';
 
 interface TargetProfile {
   id: string;
@@ -16,6 +19,8 @@ interface TargetProfile {
   religion: string;
   politicalSystem: string;
   hobbies: string;
+  desires: string;
+  successTime: string;
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
@@ -30,7 +35,14 @@ export const TargetAnalysis: React.FC = () => {
   const [analysisMode, setAnalysisMode] = useState<'database' | 'ai'>('database');
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
-  const [aiResult, setAiResult] = useState<{ vulnerability: string; technique: string; plan: string[] } | null>(null);
+  const [aiResult, setAiResult] = useState<{ 
+    vulnerability: string; 
+    syndrome: string;
+    technique: string; 
+    duration: string;
+    feasibility: number;
+    plan: string[] 
+  } | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   
@@ -76,7 +88,9 @@ export const TargetAnalysis: React.FC = () => {
     job: '',
     religion: '',
     politicalSystem: '',
-    hobbies: ''
+    hobbies: '',
+    desires: '',
+    successTime: ''
   });
 
   const getLocalized = (obj: any) => {
@@ -91,7 +105,7 @@ export const TargetAnalysis: React.FC = () => {
     if (!currentTarget.name) return;
     const newTarget = { ...currentTarget, id: Date.now().toString() };
     setTargets([...targets, newTarget]);
-    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '' });
+    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '', desires: '', successTime: '' });
   };
 
   const handleDeleteTarget = (id: string) => {
@@ -118,6 +132,7 @@ export const TargetAnalysis: React.FC = () => {
         religion: target.religion || 'N/A',
         politicalSystem: target.politicalSystem || 'N/A',
         hobbies: target.hobbies || 'N/A',
+        desires: target.desires || 'N/A',
         lang: i18n.language === 'vi' ? 'Tiếng Việt' : i18n.language === 'zh' ? '中文' : 'English'
       });
 
@@ -151,10 +166,70 @@ export const TargetAnalysis: React.FC = () => {
 
   const handleCopyResult = () => {
     if (!aiResult) return;
-    const text = `${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}\n${t('targetAnalysis.technique')}: ${aiResult.technique}\n${t('targetAnalysis.actionPlan')}:\n${aiResult.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    const text = `${t('targetAnalysis.ai.syndrome')}: ${aiResult.syndrome}\n${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}\n${t('targetAnalysis.technique')}: ${aiResult.technique}\n${t('targetAnalysis.ai.duration')}: ${aiResult.duration}\n${t('targetAnalysis.ai.feasibility')}: ${aiResult.feasibility}%\n${t('targetAnalysis.actionPlan')}:\n${aiResult.plan.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
     navigator.clipboard.writeText(text);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
+  };
+
+  const exportToWord = async () => {
+    if (!aiResult) return;
+    const doc = new docx.Document({
+      sections: [{
+        properties: {},
+        children: [
+          new docx.Paragraph({ text: t('targetAnalysis.analysisResult'), heading: docx.HeadingLevel.HEADING_1 }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.name')}: ${currentTarget.name}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.vulnerability')}: ${aiResult.vulnerability}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.syndrome')}: ${aiResult.syndrome}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.technique')}: ${aiResult.technique}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.duration')}: ${aiResult.duration}` }),
+          new docx.Paragraph({ text: `${t('targetAnalysis.feasibility')}: ${aiResult.feasibility}%` }),
+          new docx.Paragraph({ text: t('targetAnalysis.actionPlan'), heading: docx.HeadingLevel.HEADING_2 }),
+          ...aiResult.plan.map((step, i) => new docx.Paragraph({ text: `${i + 1}. ${step}`, bullet: { level: 0 } }))
+        ],
+      }],
+    });
+
+    const blob = await docx.Packer.toBlob(doc);
+    saveAs(blob, `Analysis_${currentTarget.name}.docx`);
+  };
+
+  const exportToExcel = () => {
+    if (!aiResult) return;
+    const data = [
+      [t('targetAnalysis.category'), t('targetAnalysis.proposal')],
+      [t('targetAnalysis.name'), currentTarget.name],
+      [t('targetAnalysis.vulnerability'), aiResult.vulnerability],
+      [t('targetAnalysis.syndrome'), aiResult.syndrome],
+      [t('targetAnalysis.technique'), aiResult.technique],
+      [t('targetAnalysis.duration'), aiResult.duration],
+      [t('targetAnalysis.feasibility'), `${aiResult.feasibility}%`],
+      [t('targetAnalysis.actionPlan'), aiResult.plan.join('; ')]
+    ];
+    const ws = xlsx.utils.aoa_to_sheet(data);
+    const wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, "Analysis");
+    xlsx.writeFile(wb, `Analysis_${currentTarget.name}.xlsx`);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = (platform: string) => {
+    if (!aiResult) return;
+    const text = encodeURIComponent(`${t('targetAnalysis.analysisResult')} for ${currentTarget.name}: ${aiResult.technique}. ${t('targetAnalysis.feasibility')}: ${aiResult.feasibility}%`);
+    const url = encodeURIComponent(window.location.href);
+    
+    let shareUrl = '';
+    switch (platform) {
+      case 'fb': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`; break;
+      case 'x': shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; break;
+      case 'insta': alert('Instagram sharing is limited to mobile app. Please copy the result and share manually.'); return;
+      case 'zalo': shareUrl = `https://sp.zalo.me/share/base?url=${url}&note=${text}`; break;
+    }
+    if (shareUrl) window.open(shareUrl, '_blank');
   };
 
   const getInfluenceStrategy = (target: Partial<TargetProfile>) => {
@@ -641,6 +716,29 @@ export const TargetAnalysis: React.FC = () => {
                 </Tooltip>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.desires')}</label>
+                  <input 
+                    type="text"
+                    value={currentTarget.desires}
+                    onChange={(e) => setCurrentTarget({...currentTarget, desires: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    placeholder={t('targetAnalysis.desiresPlaceholder')}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.successTime')}</label>
+                  <input 
+                    type="text"
+                    value={currentTarget.successTime}
+                    onChange={(e) => setCurrentTarget({...currentTarget, successTime: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    placeholder={t('targetAnalysis.successTimePlaceholder')}
+                  />
+                </div>
+              </div>
+
               <button 
                 onClick={handleSaveTarget}
                 disabled={!currentTarget.name}
@@ -712,6 +810,41 @@ export const TargetAnalysis: React.FC = () => {
                             {analysisMode === 'ai' ? (isAiAnalyzing ? t('targetAnalysis.ai.analyzing') : aiResult?.technique) : liveStrategy.technique}
                           </td>
                         </tr>
+                        {analysisMode === 'ai' && (
+                          <>
+                            <tr className="border-t border-slate-100 dark:border-slate-700">
+                              <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.ai.syndrome')}</td>
+                              <td className="px-6 py-4 text-amber-600 dark:text-amber-400 font-medium">
+                                {isAiAnalyzing ? t('targetAnalysis.ai.analyzing') : aiResult?.syndrome}
+                              </td>
+                            </tr>
+                            <tr className="border-t border-slate-100 dark:border-slate-700">
+                              <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.ai.duration')}</td>
+                              <td className="px-6 py-4 text-blue-600 dark:text-blue-400 font-medium">
+                                {isAiAnalyzing ? t('targetAnalysis.ai.analyzing') : aiResult?.duration}
+                              </td>
+                            </tr>
+                            <tr className="border-t border-slate-100 dark:border-slate-700">
+                              <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{t('targetAnalysis.ai.feasibility')}</td>
+                              <td className="px-6 py-4">
+                                {isAiAnalyzing ? (
+                                  t('targetAnalysis.ai.analyzing')
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                      <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${aiResult?.feasibility || 0}%` }}
+                                        className={`h-full ${ (aiResult?.feasibility || 0) > 70 ? 'bg-emerald-500' : (aiResult?.feasibility || 0) > 40 ? 'bg-amber-500' : 'bg-red-500' }`}
+                                      />
+                                    </div>
+                                    <span className="font-bold text-slate-700 dark:text-slate-300">{aiResult?.feasibility}%</span>
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          </>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -769,6 +902,47 @@ export const TargetAnalysis: React.FC = () => {
                       )}
                     </ul>
                   </div>
+
+                  {/* Export & Share Buttons */}
+                  {analysisMode === 'ai' && aiResult && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 print:hidden">
+                      <button 
+                        onClick={exportToWord}
+                        className="flex flex-col items-center justify-center gap-2 p-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all group"
+                      >
+                        <FileText className="text-blue-600 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.exportWord')}</span>
+                      </button>
+                      <button 
+                        onClick={exportToExcel}
+                        className="flex flex-col items-center justify-center gap-2 p-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all group"
+                      >
+                        <Table className="text-emerald-600 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.exportExcel')}</span>
+                      </button>
+                      <button 
+                        onClick={handlePrint}
+                        className="flex flex-col items-center justify-center gap-2 p-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all group"
+                      >
+                        <Printer className="text-slate-600 dark:text-slate-400 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.printA4')}</span>
+                      </button>
+                      <div className="relative group">
+                        <button 
+                          className="w-full h-full flex flex-col items-center justify-center gap-2 p-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all"
+                        >
+                          <Share2 className="text-indigo-600 group-hover:scale-110 transition-transform" />
+                          <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{t('targetAnalysis.ai.share')}</span>
+                        </button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-xl overflow-hidden z-50 min-w-[120px]">
+                          <button onClick={() => handleShare('fb')} className="px-4 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.fb')}</button>
+                          <button onClick={() => handleShare('x')} className="px-4 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.x')}</button>
+                          <button onClick={() => handleShare('insta')} className="px-4 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 text-left border-b border-slate-100 dark:border-slate-700">{t('targetAnalysis.ai.share.insta')}</button>
+                          <button onClick={() => handleShare('zalo')} className="px-4 py-2 text-xs hover:bg-slate-50 dark:hover:bg-slate-700 text-left">{t('targetAnalysis.ai.share.zalo')}</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {analysisMode === 'database' && (
                     <>
