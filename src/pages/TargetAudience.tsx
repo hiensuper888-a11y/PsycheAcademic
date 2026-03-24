@@ -947,6 +947,43 @@ export const TargetAudience: React.FC = () => {
                         </div>
                       </div>
                     )}
+
+                    {/* Related Psychology Articles */}
+                    <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700">
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                          <Sparkles size={12} className="text-amber-500" />
+                          {t('common.relatedInsights')}
+                        </p>
+                        <Link to="/" className="text-[10px] font-bold text-indigo-600 hover:underline">
+                          {t('common.viewAll')}
+                        </Link>
+                      </div>
+                      <div className="grid grid-cols-1 gap-3">
+                        {articles.filter(a => {
+                          const titleEn = typeof a.title === 'string' ? a.title : a.title.en;
+                          return a.id === 'adhd-comprehensive-guide' || 
+                          (aiAnalyses[target.id] && titleEn.toLowerCase().includes(aiAnalyses[target.id].syndrome.toLowerCase()));
+                        }).slice(0, 2).map(article => (
+                          <Link 
+                            key={article.id}
+                            to={`/article/${article.id}`}
+                            className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 transition-all group"
+                          >
+                            <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                              <img src={article.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{getLocalized(article.title)}</h4>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">{getLocalized(article.shortDescription)}</p>
+                            </div>
+                            <div className="p-1.5 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                              <BookOpen size={12} className="text-indigo-600" />
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

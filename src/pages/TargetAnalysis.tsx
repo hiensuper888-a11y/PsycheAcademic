@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen, Copy, Check, Printer, Share2, FileText, Table, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -1400,6 +1401,83 @@ export const TargetAnalysis: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Featured Psychology Insight */}
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-16 mb-12"
+      >
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+              <Sparkles className="text-amber-500" size={32} />
+              {t('common.featuredInsight', { defaultValue: 'Featured Psychology Insight' })}
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-2">{t('common.featuredInsightDesc', { defaultValue: 'Deep dive into the latest neurodevelopmental research and management strategies.' })}</p>
+          </div>
+          <Link to="/" className="px-6 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+            {t('common.viewLibrary', { defaultValue: 'View Full Library' })}
+          </Link>
+        </div>
+
+        <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-[3rem] p-1 shadow-2xl shadow-indigo-200 dark:shadow-none">
+          <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] overflow-hidden">
+            {articles.filter(a => a.id === 'adhd-comprehensive-guide').map(article => (
+              <div key={article.id} className="flex flex-col lg:flex-row">
+                <div className="lg:w-2/5 h-64 lg:h-auto relative">
+                  <img src={article.imageUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/20" />
+                  <div className="absolute top-6 left-6">
+                    <span className="px-4 py-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold text-indigo-600 rounded-full shadow-lg uppercase tracking-widest">
+                      {getLocalized(article.category)}
+                    </span>
+                  </div>
+                </div>
+                <div className="lg:w-3/5 p-8 lg:p-12 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 text-amber-500 mb-4">
+                    <ShieldAlert size={18} />
+                    <span className="text-xs font-bold uppercase tracking-widest">{t('common.newResearch', { defaultValue: 'New Research' })}</span>
+                  </div>
+                  <h3 className="text-2xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                    {getLocalized(article.title)}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-8 leading-relaxed line-clamp-3">
+                    {getLocalized(article.shortDescription)}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-4 mb-10">
+                    {article.keyTakeaways.slice(0, 2).map((takeaway, idx) => (
+                      <div key={idx} className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-100 dark:border-indigo-800/50">
+                        <Check size={14} className="text-indigo-600 dark:text-indigo-400" />
+                        <span className="text-xs font-medium text-indigo-900 dark:text-indigo-200">{getLocalized(takeaway)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        {article.author.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{article.author}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{article.date}</p>
+                      </div>
+                    </div>
+                    <Link 
+                      to={`/article/${article.id}`}
+                      className="px-8 py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-600 dark:hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 dark:shadow-none flex items-center gap-2 group"
+                    >
+                      {t('common.readFullArticle', { defaultValue: 'Read Full Article' })}
+                      <ExternalLink size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 };

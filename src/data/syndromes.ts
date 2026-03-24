@@ -2767,5 +2767,31 @@ export const syndromes: Syndrome[] = [
       politicalSystems: ['All'],
       interests: ['All']
     }
+  },
+  {
+    id: "adhd",
+    name: { vi: "Hội chứng tăng động giảm chú ý (ADHD)", en: "Attention Deficit Hyperactivity Disorder (ADHD)", zh: "注意缺陷多动障碍 (ADHD)" },
+    description: {
+      vi: "Một rối loạn phát triển thần kinh đặc trưng bởi sự thiếu tập trung, tăng động và bốc đồng.",
+      en: "A neurodevelopmental disorder characterized by inattention, hyperactivity, and impulsivity.",
+      zh: "一种以注意力不集中、多动和冲动为特征的神经发育障碍。"
+    },
+    example: {
+      vi: "Một người trưởng thành liên tục quên các cuộc hẹn hoặc gặp khó khăn lớn trong việc hoàn thành các nhiệm vụ chi tiết.",
+      en: "An adult who constantly forgets appointments or has significant difficulty completing detailed tasks.",
+      zh: "一个经常忘记约会或在完成详细任务方面有很大困难的成年人。"
+    },
+    target: {
+      vi: "Trẻ em, học sinh, người làm việc trong môi trường áp lực cao, các nhà sáng tạo.",
+      en: "Children, students, high-pressure professionals, creative individuals.",
+      zh: "儿童、学生、高压专业人士、创意人士。"
+    },
+    targetDemographics: {
+      ageGroups: ["Children", "Adolescents", "Adults"],
+      genders: ["All"],
+      professions: ["Students", "Creative", "Tech", "Management"],
+      religions: ["All"],
+      politicalSystems: ["All"]
+    }
   }
 ];
