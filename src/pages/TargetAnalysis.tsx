@@ -22,6 +22,7 @@ interface TargetProfile {
   hobbies: string;
   desires: string;
   successTime: string;
+  customContext: string;
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam'];
@@ -93,7 +94,8 @@ export const TargetAnalysis: React.FC = () => {
     politicalSystem: '',
     hobbies: '',
     desires: '',
-    successTime: ''
+    successTime: '',
+    customContext: ''
   });
 
   const getLocalized = (obj: any) => {
@@ -136,6 +138,7 @@ export const TargetAnalysis: React.FC = () => {
         politicalSystem: target.politicalSystem || 'N/A',
         hobbies: target.hobbies || 'N/A',
         desires: target.desires || 'N/A',
+        customContext: target.customContext || 'N/A',
         lang: i18n.language === 'vi' ? 'Tiếng Việt' : i18n.language === 'zh' ? '中文' : 'English'
       });
 
@@ -279,6 +282,19 @@ export const TargetAnalysis: React.FC = () => {
                   }),
                 ],
               }),
+              ...(currentTarget.customContext ? [
+                new docx.TableRow({
+                  children: [
+                    new docx.TableCell({
+                      children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.customContext'), bold: true })] })],
+                      shading: { fill: "f8fafc" },
+                    }),
+                    new docx.TableCell({
+                      children: [new docx.Paragraph({ text: currentTarget.customContext })],
+                    }),
+                  ],
+                })
+              ] : []),
             ],
           }),
 
@@ -428,6 +444,7 @@ export const TargetAnalysis: React.FC = () => {
       [t('targetAnalysis.gender'), currentTarget.gender ? t(`targetAnalysis.${currentTarget.gender}`) : "N/A"],
       [t('targetAnalysis.job'), currentTarget.job || "N/A"],
       [t('targetAnalysis.modeLabel'), analysisMode === 'ai' ? t('targetAnalysis.mode.ai') : t('targetAnalysis.mode.database')],
+      ...(currentTarget.customContext ? [[t('targetAnalysis.customContext'), currentTarget.customContext]] : []),
       [],
       [t('targetAnalysis.proposal').toUpperCase()],
       [t('targetAnalysis.vulnerability'), aiResult.vulnerability],
@@ -984,6 +1001,18 @@ export const TargetAnalysis: React.FC = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-2">{t('targetAnalysis.customContext')}</label>
+                <Tooltip content={t('targetAnalysis.tooltip.customContext')}>
+                  <textarea 
+                    value={currentTarget.customContext}
+                    onChange={(e) => setCurrentTarget({...currentTarget, customContext: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 min-h-[100px]"
+                    placeholder={t('targetAnalysis.customContextPlaceholder')}
+                  />
+                </Tooltip>
+              </div>
+
               <button 
                 onClick={handleSaveTarget}
                 disabled={!currentTarget.name}
@@ -1366,6 +1395,12 @@ export const TargetAnalysis: React.FC = () => {
                       <span className="font-bold text-slate-400 w-16 uppercase text-[9px] tracking-wider">{t('targetAnalysis.hobbies')}:</span> 
                       <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.hobbies}>{target.hobbies || 'N/A'}</span>
                     </div>
+                    {target.customContext && (
+                      <div className="flex flex-col gap-1 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg sm:col-span-2">
+                        <span className="font-bold text-slate-400 uppercase text-[9px] tracking-wider">{t('targetAnalysis.customContext')}:</span> 
+                        <span className="text-slate-700 dark:text-slate-300 font-medium text-[10px] italic line-clamp-1" title={target.customContext}>{target.customContext}</span>
+                      </div>
+                    )}
                   </div>
                     
                     {/* Analysis Results in Card */}

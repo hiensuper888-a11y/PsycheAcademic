@@ -22,6 +22,7 @@ interface TargetAudience {
   hobbies: string;
   desires: string;
   successTime: string;
+  customContext: string;
 }
 
 const religions = ['buddhism', 'hinduism', 'christianity', 'none', 'taoism', 'judaism', 'islam', 'atheism', 'sikhism', 'shintoism'];
@@ -36,7 +37,7 @@ export const TargetAudience: React.FC = () => {
   const [targets, setTargets] = useState<TargetAudience[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '' });
+  const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '', customContext: '' });
   const [showLibrary, setShowLibrary] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
   const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; studies?: { title: string; url: string }[]; loading: boolean }>>({});
@@ -130,6 +131,7 @@ export const TargetAudience: React.FC = () => {
         politicalSystem: target.politicalSystem || 'N/A',
         hobbies: target.hobbies || 'N/A',
         desires: target.desires || 'N/A',
+        customContext: target.customContext || 'N/A',
         lang: i18nInstance.language === 'vi' ? 'Tiếng Việt' : i18nInstance.language === 'zh' ? '中文' : 'English'
       });
 
@@ -295,6 +297,19 @@ export const TargetAudience: React.FC = () => {
                   }),
                 ],
               }),
+              ...(target.customContext ? [
+                new docx.TableRow({
+                  children: [
+                    new docx.TableCell({
+                      children: [new docx.Paragraph({ children: [new docx.TextRun({ text: t('targetAnalysis.customContext'), bold: true })] })],
+                      shading: { fill: "f8fafc" },
+                    }),
+                    new docx.TableCell({
+                      children: [new docx.Paragraph({ text: target.customContext })],
+                    }),
+                  ],
+                })
+              ] : []),
             ],
           }),
 
@@ -445,6 +460,7 @@ export const TargetAudience: React.FC = () => {
       [t('targetAnalysis.gender'), target.gender ? t(`targetAnalysis.genders.${target.gender}`) : "N/A"],
       [t('targetAnalysis.job'), target.profession ? t(`targetAnalysis.professions.${target.profession}`) : "N/A"],
       [t('targetAnalysis.modeLabel'), t('targetAnalysis.mode.ai')],
+      ...(target.customContext ? [[t('targetAnalysis.customContext'), target.customContext]] : []),
       [],
       [t('targetAnalysis.proposal').toUpperCase()],
       [t('targetAnalysis.vulnerability'), result.vulnerability],
@@ -721,6 +737,12 @@ export const TargetAudience: React.FC = () => {
             <input placeholder={t('targetAudience.hobbies')} className="p-3 rounded-xl border" value={newTarget.hobbies} onChange={e => setNewTarget({...newTarget, hobbies: e.target.value})} />
             <input placeholder={t('targetAnalysis.desires')} className="p-3 rounded-xl border" value={newTarget.desires} onChange={e => setNewTarget({...newTarget, desires: e.target.value})} />
             <input placeholder={t('targetAnalysis.successTime')} className="p-3 rounded-xl border" value={newTarget.successTime} onChange={e => setNewTarget({...newTarget, successTime: e.target.value})} />
+            <textarea 
+              placeholder={t('targetAnalysis.customContextPlaceholder')} 
+              className="p-3 rounded-xl border col-span-1 md:col-span-2 lg:col-span-3 min-h-[100px]" 
+              value={newTarget.customContext} 
+              onChange={e => setNewTarget({...newTarget, customContext: e.target.value})} 
+            />
             
             <button onClick={addTarget} className="bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center gap-2">
               <Plus size={20} /> {t('targetAudience.addBtn')}
@@ -789,6 +811,12 @@ export const TargetAudience: React.FC = () => {
                   <span className="font-bold text-slate-400 w-20 uppercase text-[10px] tracking-wider">{t('targetAnalysis.successTime')}:</span> 
                   <span className="text-slate-700 dark:text-slate-300 font-medium truncate" title={target.successTime}>{target.successTime || 'N/A'}</span>
                 </div>
+                {target.customContext && (
+                  <div className="flex flex-col gap-1 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg sm:col-span-2 lg:col-span-3">
+                    <span className="font-bold text-slate-400 uppercase text-[10px] tracking-wider">{t('targetAnalysis.customContext')}:</span> 
+                    <span className="text-slate-700 dark:text-slate-300 font-medium text-xs italic line-clamp-2" title={target.customContext}>{target.customContext}</span>
+                  </div>
+                )}
               </div>
               
               {aiAnalyses[target.id] && (
