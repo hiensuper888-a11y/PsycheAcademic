@@ -1597,6 +1597,14 @@ export const syndromes: Syndrome[] = [
       vi: "Người hay lo âu, cầu toàn.",
       en: "Anxious, perfectionist individuals.",
       zh: "焦虑、完美主义的人。"
+    },
+    targetDemographics: {
+      ageGroups: ["18-25", "26-45", "46-65", "65+"],
+      genders: ["All"],
+      professions: ["medical", "tech", "education", "engineering", "finance", "legal", "science", "management"],
+      religions: ["All"],
+      politicalSystems: ["All"],
+      interests: ["Perfectionism", "Control", "Order", "Cleanliness", "Safety", "Checking"]
     }
   },
   {

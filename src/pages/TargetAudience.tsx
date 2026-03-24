@@ -601,10 +601,13 @@ export const TargetAudience: React.FC = () => {
 
     const relatedArticles = profession ? articles.filter(a => 
       getLocalized(a.category).toLowerCase().includes(profession) || 
-      getLocalized(a.title).toLowerCase().includes(profession)
-    ) : [];
+      getLocalized(a.title).toLowerCase().includes(profession) ||
+      suggestedSyndromes.some(s => getLocalized(a.title).toLowerCase().includes(s.name.toLowerCase()))
+    ) : articles.filter(a => 
+      suggestedSyndromes.some(s => getLocalized(a.title).toLowerCase().includes(s.name.toLowerCase()))
+    );
 
-    return { techniques, articles: relatedArticles, suggestedSyndromes };
+    return { techniques, relatedArticles, suggestedSyndromes };
   };
 
   return (
@@ -753,7 +756,7 @@ export const TargetAudience: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-6">
         {targets.map(target => {
-          const { techniques, articles, suggestedSyndromes } = getAnalysis(target);
+          const { techniques, relatedArticles, suggestedSyndromes } = getAnalysis(target);
           return (
             <div key={target.id} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
               <div className="flex justify-between items-start mb-4">
@@ -990,8 +993,8 @@ export const TargetAudience: React.FC = () => {
                       <div className="grid grid-cols-1 gap-3">
                         {articles.filter(a => {
                           const titleEn = typeof a.title === 'string' ? a.title : a.title.en;
-                          return a.id === 'adhd-comprehensive-guide' || 
-                          (aiAnalyses[target.id] && titleEn.toLowerCase().includes(aiAnalyses[target.id].syndrome.toLowerCase()));
+                          const syndromeMatch = aiAnalyses[target.id] && titleEn.toLowerCase().includes(aiAnalyses[target.id].syndrome.toLowerCase());
+                          return a.id === 'adhd-comprehensive-guide' || a.id === 'ocd-comprehensive-guide' || syndromeMatch;
                         }).slice(0, 2).map(article => (
                           <Link 
                             key={article.id}
@@ -1048,7 +1051,7 @@ export const TargetAudience: React.FC = () => {
                 <div>
                   <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><BookOpen size={18} /> {t('targetAudience.relatedArticles')}</h4>
                   <div className="space-y-2">
-                    {articles.map(article => (
+                    {relatedArticles.map(article => (
                       <Link key={article.id} to={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
                         {getLocalized(article.title)}
                       </Link>

@@ -742,7 +742,8 @@ export const TargetAnalysis: React.FC = () => {
     // Article-based suggestions
     strategy.suggestedArticles = articles.filter(a => 
       (job && (getLocalized(a.category).toLowerCase().includes(job) || getLocalized(a.title).toLowerCase().includes(job))) || 
-      (hobbies && (getLocalized(a.category).toLowerCase().includes(hobbies) || getLocalized(a.title).toLowerCase().includes(hobbies)))
+      (hobbies && (getLocalized(a.category).toLowerCase().includes(hobbies) || getLocalized(a.title).toLowerCase().includes(hobbies))) ||
+      strategy.suggestedSyndromes.some(s => getLocalized(a.title).toLowerCase().includes(s.name.toLowerCase()))
     );
 
     // Filter for unique plan steps
