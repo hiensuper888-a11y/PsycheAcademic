@@ -740,11 +740,23 @@ export const TargetAnalysis: React.FC = () => {
     }
     
     // Article-based suggestions
-    strategy.suggestedArticles = articles.filter(a => 
-      (job && (getLocalized(a.category).toLowerCase().includes(job) || getLocalized(a.title).toLowerCase().includes(job))) || 
-      (hobbies && (getLocalized(a.category).toLowerCase().includes(hobbies) || getLocalized(a.title).toLowerCase().includes(hobbies))) ||
-      strategy.suggestedSyndromes.some(s => getLocalized(a.title).toLowerCase().includes(s.name.toLowerCase()))
-    );
+    strategy.suggestedArticles = articles.filter(a => {
+      const titleLower = getLocalized(a.title).toLowerCase();
+      const categoryLower = getLocalized(a.category).toLowerCase();
+      
+      const matchJob = job && (categoryLower.includes(job) || titleLower.includes(job));
+      const matchHobby = hobbies && (categoryLower.includes(hobbies) || titleLower.includes(hobbies));
+      const matchSyndromeName = strategy.suggestedSyndromes.some(s => titleLower.includes(s.name.toLowerCase()));
+      
+      // Explicitly match specific articles with syndromes
+      const hasOCDSyndrome = strategy.suggestedSyndromes.some(s => s.name === getLocalized(syndromes.find(syn => syn.id === 'ocd')!.name));
+      const hasADHDSyndrome = strategy.suggestedSyndromes.some(s => s.name === getLocalized(syndromes.find(syn => syn.id === 'adhd')!.name));
+      
+      const matchExplicitOCD = hasOCDSyndrome && a.id === 'ocd-comprehensive-guide';
+      const matchExplicitADHD = hasADHDSyndrome && a.id === 'adhd-comprehensive-guide';
+
+      return matchJob || matchHobby || matchSyndromeName || matchExplicitOCD || matchExplicitADHD;
+    });
 
     // Filter for unique plan steps
     strategy.plan = Array.from(new Set(strategy.plan));
@@ -1456,10 +1468,11 @@ export const TargetAnalysis: React.FC = () => {
           </Link>
         </div>
 
-        <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-[3rem] p-1 shadow-2xl shadow-indigo-200 dark:shadow-none">
-          <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] overflow-hidden">
-            {articles.filter(a => a.id === 'adhd-comprehensive-guide').map(article => (
-              <div key={article.id} className="flex flex-col lg:flex-row">
+        <div className="space-y-8">
+          {articles.filter(a => a.id === 'adhd-comprehensive-guide' || a.id === 'ocd-comprehensive-guide').map(article => (
+            <div key={article.id} className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-[3rem] p-1 shadow-2xl shadow-indigo-200 dark:shadow-none">
+              <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] overflow-hidden">
+                <div className="flex flex-col lg:flex-row">
                 <div className="lg:w-2/5 h-64 lg:h-auto relative">
                   <img src={article.imageUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/20" />
@@ -1510,8 +1523,8 @@ export const TargetAnalysis: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </motion.div>
     </div>

@@ -993,8 +993,16 @@ export const TargetAudience: React.FC = () => {
                       <div className="grid grid-cols-1 gap-3">
                         {articles.filter(a => {
                           const titleEn = typeof a.title === 'string' ? a.title : a.title.en;
-                          const syndromeMatch = aiAnalyses[target.id] && titleEn.toLowerCase().includes(aiAnalyses[target.id].syndrome.toLowerCase());
-                          return a.id === 'adhd-comprehensive-guide' || a.id === 'ocd-comprehensive-guide' || syndromeMatch;
+                          const targetSyndrome = aiAnalyses[target.id]?.syndrome?.toLowerCase() || '';
+                          const syndromeMatch = targetSyndrome && titleEn.toLowerCase().includes(targetSyndrome);
+                          
+                          const isADHD = targetSyndrome.includes('adhd') || targetSyndrome.includes('tăng động');
+                          const isOCD = targetSyndrome.includes('ocd') || targetSyndrome.includes('ám ảnh cưỡng chế');
+                          
+                          const matchExplicitADHD = isADHD && a.id === 'adhd-comprehensive-guide';
+                          const matchExplicitOCD = isOCD && a.id === 'ocd-comprehensive-guide';
+                          
+                          return syndromeMatch || matchExplicitADHD || matchExplicitOCD;
                         }).slice(0, 2).map(article => (
                           <Link 
                             key={article.id}
