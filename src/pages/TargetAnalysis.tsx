@@ -1524,6 +1524,7 @@ export const TargetAnalysis: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
           ))}
         </div>
       </motion.div>
