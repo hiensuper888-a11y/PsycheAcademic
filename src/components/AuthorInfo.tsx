@@ -11,25 +11,19 @@ const AUTHOR_NAME = 'Cao Minh Hiền';
 const FALLBACK_AVATAR = `https://ui-avatars.com/api/?name=Cao+Minh+Hien&size=200&background=4F46E5&color=fff&bold=true&font-size=0.4&rounded=true`;
 
 const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-full object-cover' }) => {
-  const [src, setSrc] = useState(`https://graph.facebook.com/${FACEBOOK_PAGE_ID}/picture?type=large&redirect=true`);
+  // Facebook Graph API yêu cầu access token – không thể dùng cross-origin.
+  // Dùng UI Avatars API làm primary: luôn hoạt động, không cần token.
+  const [src, setSrc] = useState(FALLBACK_AVATAR);
   const [failed, setFailed] = useState(false);
-  const [fallbackLevel, setFallbackLevel] = useState(0);
 
   const handleError = () => {
-    if (fallbackLevel === 0) {
-      // Thử UI Avatars
-      setSrc(FALLBACK_AVATAR);
-      setFallbackLevel(1);
-    } else {
-      // Cuối cùng: CSS letter avatar
-      setFailed(true);
-    }
+    setFailed(true);
   };
 
   if (failed) {
     return (
       <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-        <span className="text-white font-bold text-lg">CMH</span>
+        <span className="text-white font-bold text-base">CMH</span>
       </div>
     );
   }
@@ -39,7 +33,6 @@ const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-
       src={src}
       alt={AUTHOR_NAME}
       className={className}
-      crossOrigin="anonymous"
       onError={handleError}
     />
   );
