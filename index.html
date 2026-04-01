@@ -3,26 +3,83 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PsycheAcademic | Phân tích Tâm lý học dựa trên bằng chứng</title>
-    <meta name="description" content="PsycheAcademic - Ứng dụng nghiên cứu tâm lý học, hội chứng tâm lý và các phương pháp thao túng tâm lý dựa trên bằng chứng khoa học." />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="PsycheAcademic | Phân tích Tâm lý học" />
-    <meta property="og:description" content="Khám phá các hội chứng tâm lý, phương pháp thao túng và nghiên cứu tâm lý học chuyên sâu tại PsycheAcademic." />
-    <meta property="og:image" content="https://picsum.photos/seed/psyche/1200/630" />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="PsycheAcademic | Phân tích Tâm lý học" />
-    <meta property="twitter:description" content="Khám phá các hội chứng tâm lý, phương pháp thao túng và nghiên cứu tâm lý học chuyên sâu tại PsycheAcademic." />
-    <meta property="twitter:image" content="https://picsum.photos/seed/psyche/1200/630" />
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <!-- ===== Primary SEO ===== -->
+    <title>PsycheAcademic | Nghiên cứu Tâm lý học Khoa học</title>
+    <meta name="description" content="PsycheAcademic – Nền tảng nghiên cứu tâm lý học chuyên sâu dựa trên bằng chứng khoa học. Khám phá hội chứng tâm lý, phương pháp thao túng, phân tích hành vi và tư duy phê phán." />
+    <meta name="keywords" content="tâm lý học, psychology, hội chứng tâm lý, thao túng tâm lý, nghiên cứu tâm lý, PsycheAcademic, phân tích hành vi, tư duy phê phán, dark psychology" />
+    <meta name="author" content="PsycheAcademic" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://psyche-academic.vercel.app/" />
+
+    <!-- ===== Open Graph / Facebook ===== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PsycheAcademic" />
+    <meta property="og:url" content="https://psyche-academic.vercel.app/" />
+    <meta property="og:title" content="PsycheAcademic | Nghiên cứu Tâm lý học Khoa học" />
+    <meta property="og:description" content="Nền tảng nghiên cứu tâm lý học chuyên sâu. Khám phá hội chứng tâm lý, phương pháp thao túng và phân tích hành vi dựa trên bằng chứng khoa học." />
+    <meta property="og:image" content="https://psyche-academic.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="vi_VN" />
+
+    <!-- ===== Twitter Card ===== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@PsycheAcademic" />
+    <meta name="twitter:title" content="PsycheAcademic | Nghiên cứu Tâm lý học Khoa học" />
+    <meta name="twitter:description" content="Nền tảng nghiên cứu tâm lý học chuyên sâu dựa trên bằng chứng khoa học." />
+    <meta name="twitter:image" content="https://psyche-academic.vercel.app/og-image.png" />
+
+    <!-- ===== Theme & PWA ===== -->
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="application-name" content="PsycheAcademic" />
+    <meta name="apple-mobile-web-app-title" content="PsycheAcademic" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- ===== Favicon – SVG Psi logo ===== -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+
+    <!-- ===== Schema.org Structured Data ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "PsycheAcademic",
+      "url": "https://psyche-academic.vercel.app/",
+      "description": "Nền tảng nghiên cứu tâm lý học chuyên sâu dựa trên bằng chứng khoa học",
+      "inLanguage": ["vi", "en", "zh"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://psyche-academic.vercel.app/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PsycheAcademic",
+        "url": "https://psyche-academic.vercel.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://psyche-academic.vercel.app/logo.svg",
+          "width": 200,
+          "height": 200
+        }
+      }
+    }
+    </script>
+
+    <!-- ===== Google Fonts ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

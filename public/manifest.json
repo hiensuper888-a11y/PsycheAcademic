@@ -1,0 +1,23 @@
+{
+  "name": "PsycheAcademic",
+  "short_name": "PsycheAcademic",
+  "description": "Nền tảng nghiên cứu tâm lý học chuyên sâu dựa trên bằng chứng khoa học",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F0D2E",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "health", "science"],
+  "lang": "vi",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "psyche-academic-pwa"
+}

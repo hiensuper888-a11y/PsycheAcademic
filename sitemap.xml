@@ -1,45 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage -->
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/</loc>
-    <lastmod>2026-03-18</lastmod>
+    <loc>https://psyche-academic.vercel.app/</loc>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://psyche-academic.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://psyche-academic.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://psyche-academic.vercel.app/" />
+  </url>
+
+  <!-- Articles -->
+  <url>
+    <loc>https://psyche-academic.vercel.app/article/cognitive-bias</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/cognitive-bias</loc>
-    <lastmod>2026-03-18</lastmod>
+    <loc>https://psyche-academic.vercel.app/article/emotional-intelligence</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://psyche-academic.vercel.app/article/psychology-of-money</loc>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/emotional-intelligence</loc>
-    <lastmod>2026-03-18</lastmod>
+    <loc>https://psyche-academic.vercel.app/article/psychology-of-love</loc>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/psychology-of-money</loc>
-    <lastmod>2026-03-18</lastmod>
+    <loc>https://psyche-academic.vercel.app/article/cbt-therapy</loc>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/psychology-of-love</loc>
-    <lastmod>2026-03-18</lastmod>
+    <loc>https://psyche-academic.vercel.app/article/dark-psychology-manipulation</loc>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Feature pages -->
+  <url>
+    <loc>https://psyche-academic.vercel.app/target-analysis</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/cbt-therapy</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://psyche-academic.vercel.app/target-audience</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ais-pre-vklb4e3x35xvuwf7cjmyg7-137783822297.asia-southeast1.run.app/article/dark-psychology-manipulation</loc>
-    <lastmod>2026-03-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://psyche-academic.vercel.app/terms</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://psyche-academic.vercel.app/privacy</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>
