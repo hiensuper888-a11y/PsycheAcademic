@@ -8,16 +8,26 @@ import { Facebook, Phone, Mail, X, User } from 'lucide-react';
 // rồi fallback CSS letter avatar.
 const FACEBOOK_PAGE_ID = '61582965982019';
 const AUTHOR_NAME = 'Cao Minh Hiền';
-const FALLBACK_AVATAR = `https://ui-avatars.com/api/?name=Cao+Minh+Hien&size=200&background=4F46E5&color=fff&bold=true&font-size=0.4&rounded=true`;
+
+// Danh sách nguồn ảnh theo thứ tự ưu tiên:
+// 1. Facebook Graph API (hoạt động với profile public, không cần token)
+// 2. UI Avatars API (luôn hoạt động)
+// 3. CSS initials (fallback cuối)
+const AVATAR_SOURCES = [
+  `https://graph.facebook.com/${FACEBOOK_PAGE_ID}/picture?type=large`,
+  `https://ui-avatars.com/api/?name=Cao+Minh+Hien&size=200&background=4F46E5&color=fff&bold=true&font-size=0.4&rounded=true`,
+];
 
 const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-full object-cover' }) => {
-  // Facebook Graph API yêu cầu access token – không thể dùng cross-origin.
-  // Dùng UI Avatars API làm primary: luôn hoạt động, không cần token.
-  const [src, setSrc] = useState(FALLBACK_AVATAR);
+  const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
 
   const handleError = () => {
-    setFailed(true);
+    if (srcIndex < AVATAR_SOURCES.length - 1) {
+      setSrcIndex(prev => prev + 1);
+    } else {
+      setFailed(true);
+    }
   };
 
   if (failed) {
@@ -30,9 +40,10 @@ const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-
 
   return (
     <img
-      src={src}
+      src={AVATAR_SOURCES[srcIndex]}
       alt={AUTHOR_NAME}
       className={className}
+      referrerPolicy="no-referrer"
       onError={handleError}
     />
   );
