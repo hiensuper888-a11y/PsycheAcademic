@@ -2,10 +2,52 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Facebook, Phone, Mail, X, User } from 'lucide-react';
 
+// ─── Avatar với fallback thông minh ──────────────────────────────────────────
+// Facebook CDN URLs hết hạn token và block cross-origin requests.
+// Giải pháp: thử Facebook Graph API (public), rồi fallback UI Avatars API,
+// rồi fallback CSS letter avatar.
+const FACEBOOK_PAGE_ID = '61582965982019';
+const AUTHOR_NAME = 'Cao Minh Hiền';
+const FALLBACK_AVATAR = `https://ui-avatars.com/api/?name=Cao+Minh+Hien&size=200&background=4F46E5&color=fff&bold=true&font-size=0.4&rounded=true`;
+
+const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-full object-cover' }) => {
+  const [src, setSrc] = useState(`https://graph.facebook.com/${FACEBOOK_PAGE_ID}/picture?type=large&redirect=true`);
+  const [failed, setFailed] = useState(false);
+  const [fallbackLevel, setFallbackLevel] = useState(0);
+
+  const handleError = () => {
+    if (fallbackLevel === 0) {
+      // Thử UI Avatars
+      setSrc(FALLBACK_AVATAR);
+      setFallbackLevel(1);
+    } else {
+      // Cuối cùng: CSS letter avatar
+      setFailed(true);
+    }
+  };
+
+  if (failed) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+        <span className="text-white font-bold text-lg">CMH</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={AUTHOR_NAME}
+      className={className}
+      crossOrigin="anonymous"
+      onError={handleError}
+    />
+  );
+};
+
 export const AuthorInfo: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const profilePic = "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-1/601974923_122114680323098866_7400803319906439911_n.jpg?stp=cp6_dst-jpg_s200x200_tt6&_nc_cat=102&ccb=1-7&_nc_sid=1d2534&_nc_ohc=s-coGrcfvWsQ7kNvwE2mSLp&_nc_oc=AdpzefLP35JZd0Den8Jwn8OpJw0wQ_i7rjrufRbGFoQFoUsYVb4RvBUJvz5_hy77Z90&_nc_zt=24&_nc_ht=scontent.fsgn2-8.fna&_nc_gid=-B9xnsRsJHEnIIa4h5FnKw&_nc_ss=7a32e&oh=00_AfwVRo4YTm0Juun5qMsCuPCyN71GH5hnXWY4-m0hy2KofQ&oe=69C6AEED";
   const momoQR = "https://img.vietqr.io/image/MOMO-0973683410-compact.png?accountName=CAO%20MINH%20HIEN";
   const bankQR = "https://img.vietqr.io/image/BIDV-3142848355-compact.png?accountName=CAO%20MINH%20HIEN";
 
@@ -147,12 +189,7 @@ export const AuthorInfo: React.FC = () => {
           className="relative flex items-center gap-3 p-1.5 pr-4 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-yellow-400/50 hover:border-yellow-400 transition-all hover:scale-105 active:scale-95 group"
         >
           <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-400">
-            <img 
-              src={profilePic} 
-              alt="Cao Minh Hiền" 
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
+            <AuthorAvatar className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col items-start">
             <span className="text-xs font-bold text-slate-900 dark:text-white">Cao Minh Hiền</span>
