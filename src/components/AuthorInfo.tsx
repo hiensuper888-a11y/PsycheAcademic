@@ -10,10 +10,12 @@ const FACEBOOK_PAGE_ID = '61582965982019';
 const AUTHOR_NAME = 'Cao Minh Hiền';
 
 // Danh sách nguồn ảnh theo thứ tự ưu tiên:
-// 1. Facebook Graph API (hoạt động với profile public, không cần token)
-// 2. UI Avatars API (luôn hoạt động)
-// 3. CSS initials (fallback cuối)
+// 1. Local avatar (nếu bạn upload vào thư mục public/avatar.jpg)
+// 2. Facebook Graph API (hoạt động với profile public, không cần token)
+// 3. UI Avatars API (luôn hoạt động)
+// 4. CSS initials (fallback cuối)
 const AVATAR_SOURCES = [
+  `/avatar.jpg`,
   `https://graph.facebook.com/${FACEBOOK_PAGE_ID}/picture?type=large`,
   `https://ui-avatars.com/api/?name=Cao+Minh+Hien&size=200&background=4F46E5&color=fff&bold=true&font-size=0.4&rounded=true`,
 ];
@@ -33,13 +35,14 @@ const AuthorAvatar: React.FC<{ className?: string }> = ({ className = 'w-full h-
   if (failed) {
     return (
       <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-        <span className="text-white font-bold text-base">CMH</span>
+        <span className="text-white font-bold text-base tracking-widest text-shadow-sm">CMH</span>
       </div>
     );
   }
 
   return (
     <img
+      key={AVATAR_SOURCES[srcIndex]}
       src={AVATAR_SOURCES[srcIndex]}
       alt={AUTHOR_NAME}
       className={className}
