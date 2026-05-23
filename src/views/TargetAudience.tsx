@@ -1,11 +1,11 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { influenceTechniques } from '../data/influenceTechniques';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { syndromes } from '../data/syndromes';
 import { User, Plus, Trash2, BookOpen, AlertTriangle, ShieldCheck, Loader2, List, Brain, Key, ExternalLink, Info, Copy, Check, Sparkles, FileText, Table, Printer, Share2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
 import * as docx from 'docx';
 import { saveAs } from 'file-saver';
@@ -39,7 +39,7 @@ export const TargetAudience: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [newTarget, setNewTarget] = useState({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '', customContext: '' });
   const [showLibrary, setShowLibrary] = useState(false);
-  const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') || '' : '');
   const [aiAnalyses, setAiAnalyses] = useState<Record<string, { syndrome: string; vulnerability: string; technique: string; duration: string; feasibility: number; plan: string[]; studies?: { title: string; url: string }[]; loading: boolean }>>({});
   const [activeShareMenu, setActiveShareMenu] = useState<string | null>(null);
   const [showApiKeyGuide, setShowApiKeyGuide] = useState(false);
@@ -47,6 +47,7 @@ export const TargetAudience: React.FC = () => {
 
   // Quota tracking
   const [dailyCount, setDailyCount] = useState(() => {
+    if (typeof window === 'undefined') return 0;
     const saved = localStorage.getItem('gemini_daily_count');
     const savedDate = localStorage.getItem('gemini_daily_date');
     const today = new Date().toDateString();
@@ -120,9 +121,8 @@ export const TargetAudience: React.FC = () => {
     }));
 
     try {
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const prompt = t('targetAnalysis.ai.prompt', {
+      const savedKey = apiKey;
+      const promptText = t('targetAnalysis.ai.prompt', {
         name: target.name || 'N/A',
         age: target.age || 'N/A',
         gender: target.gender || 'N/A',
@@ -135,15 +135,14 @@ export const TargetAudience: React.FC = () => {
         lang: i18nInstance.language === 'vi' ? 'Tiếng Việt' : i18nInstance.language === 'zh' ? '中文' : 'English'
       });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json"
-        }
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: savedKey, prompt: promptText }),
       });
-      
-      const text = response.text;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Analysis failed');
+      const text = data.result;
       if (!text) throw new Error("Empty response from AI");
       
       const parsed = JSON.parse(text);
@@ -526,7 +525,7 @@ export const TargetAudience: React.FC = () => {
       id: Date.now().toString(),
     };
     saveTargets([...targets, target]);
-    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '' });
+    setNewTarget({ name: '', age: '', gender: 'male', profession: 'sales', religion: 'none', politicalSystem: 'capitalism', hobbies: '', desires: '', successTime: '', customContext: '' });
   };
 
   const getAnalysis = (target: TargetAudience) => {
@@ -587,8 +586,8 @@ export const TargetAudience: React.FC = () => {
       if (s.targetDemographics) return;
       const targetKeywords = getLocalized(s.target).toLowerCase();
       const profileText = `${profession} ${hobbies} ${gender} ${age}`.toLowerCase();
-      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
-      if (keywords.some(k => profileText.includes(k))) {
+      const keywords = targetKeywords.split(/[,.;]/).map((k: string) => k.trim()).filter((k: string) => k.length > 3);
+      if (keywords.some((k: string) => profileText.includes(k))) {
         const localizedName = getLocalized(s.name);
         if (!suggestedSyndromes.find(ss => ss.name === localizedName)) {
           suggestedSyndromes.push({ 
@@ -986,7 +985,7 @@ export const TargetAudience: React.FC = () => {
                           <Sparkles size={12} className="text-amber-500" />
                           {t('common.relatedInsights')}
                         </p>
-                        <Link to="/" className="text-[10px] font-bold text-indigo-600 hover:underline">
+                        <Link href="/" className="text-[10px] font-bold text-indigo-600 hover:underline">
                           {t('common.viewAll')}
                         </Link>
                       </div>
@@ -1006,7 +1005,7 @@ export const TargetAudience: React.FC = () => {
                         }).slice(0, 2).map(article => (
                           <Link 
                             key={article.id}
-                            to={`/article/${article.id}`}
+                            href={`/article/${article.id}`}
                             className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 transition-all group"
                           >
                             <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
@@ -1060,7 +1059,7 @@ export const TargetAudience: React.FC = () => {
                   <h4 className="font-semibold mb-3 flex items-center gap-2 text-indigo-600"><BookOpen size={18} /> {t('targetAudience.relatedArticles')}</h4>
                   <div className="space-y-2">
                     {relatedArticles.map(article => (
-                      <Link key={article.id} to={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
+                      <Link key={article.id} href={`/article/${article.id}`} className="block p-3 bg-slate-50 rounded-lg text-sm hover:bg-slate-100">
                         {getLocalized(article.title)}
                       </Link>
                     ))}

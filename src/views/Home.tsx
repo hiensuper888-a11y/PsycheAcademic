@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+'use client';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, BookOpen, Lightbulb, Search, ArrowRight, Filter, User, Calendar, Tag, X, Loader2, AlertCircle } from 'lucide-react';
@@ -8,12 +10,13 @@ import { INFLUENCE_PRINCIPLES } from '../constants';
 
 export const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
+  const router = useRouter();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [selectedTopic, setSelectedTopic] = useState('all');
@@ -38,40 +41,58 @@ export const Home: React.FC = () => {
     fetchArticles();
   }, [t]);
 
-  const getLocalized = (field: any) => {
+  // Debounce search by 300ms
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const getLocalized = useCallback((field: any): string => {
     if (typeof field === 'string') return field;
     if (field && typeof field === 'object') {
       return field[currentLang] || field['en'] || field['vi'] || '';
     }
     return '';
-  };
+  }, [currentLang]);
 
   // Extract unique authors and topics
-  const authors = Array.from(new Set(articles.map(item => item.author))).sort();
-  const topics = Array.from(new Set(articles.map(item => getLocalized(item.category)))).sort();
-  const years = Array.from(new Set(articles.map(item => item.date.split('-')[0]))).sort((a, b) => b.localeCompare(a));
+  const authors = useMemo(() =>
+    Array.from(new Set(articles.map(item => item.author))).sort(),
+    [articles]
+  );
+  const topics = useMemo(() =>
+    Array.from(new Set(articles.map(item => getLocalized(item.category)))).sort(),
+    [articles, getLocalized]
+  );
+  const years = useMemo(() =>
+    Array.from(new Set(articles.map(item => item.date.split('-')[0]))).sort((a, b) => Number(b) - Number(a)),
+    [articles]
+  );
 
-  const filteredArticles = articles.filter(item => {
-    const title = getLocalized(item.title);
-    const shortDesc = getLocalized(item.shortDescription);
-    const category = getLocalized(item.category);
-    const query = searchQuery.toLowerCase();
-    
-    const matchesSearch = title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
-    const matchesAuthor = selectedAuthor === 'all' || item.author === selectedAuthor;
-    const matchesTopic = selectedTopic === 'all' || category === selectedTopic;
-    const matchesDate = selectedDate === 'all' || item.date.startsWith(selectedDate);
-    const matchesPrinciple = selectedPrinciple === 'all' || (item.principles?.includes(selectedPrinciple) || false);
+  const filteredArticles = useMemo(() => {
+    const query = debouncedQuery.toLowerCase();
+    return articles.filter(item => {
+      const title = getLocalized(item.title);
+      const shortDesc = getLocalized(item.shortDescription);
+      const category = getLocalized(item.category);
 
-    return matchesSearch && matchesAuthor && matchesTopic && matchesDate && matchesPrinciple;
-  });
+      const matchesSearch = !query || title.toLowerCase().includes(query) || shortDesc.toLowerCase().includes(query);
+      const matchesAuthor = selectedAuthor === 'all' || item.author === selectedAuthor;
+      const matchesTopic = selectedTopic === 'all' || category === selectedTopic;
+      const matchesDate = selectedDate === 'all' || item.date.startsWith(selectedDate);
+      const matchesPrinciple = selectedPrinciple === 'all' || (item.principles?.includes(selectedPrinciple) ?? false);
 
-  const suggestions = searchQuery.length >= 2 
-    ? articles.filter(item => {
-        const title = getLocalized(item.title);
-        return title.toLowerCase().includes(searchQuery.toLowerCase());
-      }).slice(0, 5)
-    : [];
+      return matchesSearch && matchesAuthor && matchesTopic && matchesDate && matchesPrinciple;
+    });
+  }, [articles, debouncedQuery, selectedAuthor, selectedTopic, selectedDate, selectedPrinciple, getLocalized]);
+
+  const suggestions = useMemo(() => {
+    if (searchQuery.length < 2) return [];
+    const q = searchQuery.toLowerCase();
+    return articles
+      .filter(item => getLocalized(item.title).toLowerCase().includes(q))
+      .slice(0, 5);
+  }, [articles, searchQuery, getLocalized]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -195,7 +216,7 @@ export const Home: React.FC = () => {
                       <button
                         key={item.id}
                         onClick={() => {
-                          navigate(`/article/${item.id}`);
+                          router.push(`/article/${item.id}`);
                           setIsFocused(false);
                           setSearchQuery('');
                         }}
@@ -377,9 +398,10 @@ export const Home: React.FC = () => {
                 >
                   <div className="h-64 overflow-hidden relative">
                     <div className="absolute inset-0 bg-indigo-900/10 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                    <img 
-                      src={item.imageUrl} 
-                      alt={title} 
+                    <img
+                      src={item.imageUrl}
+                      alt={title}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       referrerPolicy="no-referrer"
                     />
@@ -387,8 +409,8 @@ export const Home: React.FC = () => {
                   <div className="p-10 flex flex-col flex-grow">
                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{title}</h3>
                     <p className="text-slate-600 dark:text-slate-400 mb-8 flex-grow leading-relaxed text-lg">{shortDesc}</p>
-                    <Link 
-                      to={`/article/${item.id}`}
+                    <Link
+                      href={`/article/${item.id}`}
                       className="inline-flex items-center justify-center w-full bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-slate-200 dark:shadow-none hover:shadow-indigo-200 dark:hover:shadow-indigo-900/50"
                     >
                       {t('home.readMore')}

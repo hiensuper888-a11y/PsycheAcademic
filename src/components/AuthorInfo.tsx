@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Facebook, Phone, Mail, X, User } from 'lucide-react';

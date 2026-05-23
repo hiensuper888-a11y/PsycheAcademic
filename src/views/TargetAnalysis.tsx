@@ -1,12 +1,12 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Briefcase, Heart, Activity, Target, ShieldAlert, Sparkles, Save, Trash2, Plus, Brain, Key, ExternalLink, Info, Loader2, BookOpen, Copy, Check, Printer, Share2, FileText, Table, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '../components/Tooltip';
 import { syndromes } from '../data/syndromes';
 import { influenceTechniques } from '../data/influenceTechniques';
-import { GoogleGenAI } from "@google/genai";
 import * as docx from 'docx';
 import * as xlsx from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -35,7 +35,7 @@ export const TargetAnalysis: React.FC = () => {
   const [targets, setTargets] = useState<TargetProfile[]>([]);
   const [articles, setArticles] = useState<PsychologyArticle[]>([]);
   const [analysisMode, setAnalysisMode] = useState<'database' | 'ai'>('database');
-  const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') || '' : '');
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
   const [aiResult, setAiResult] = useState<{ 
     vulnerability: string; 
@@ -52,6 +52,7 @@ export const TargetAnalysis: React.FC = () => {
   
   // Quota tracking
   const [dailyCount, setDailyCount] = useState(() => {
+    if (typeof window === 'undefined') return 0;
     const saved = localStorage.getItem('gemini_daily_count');
     const savedDate = localStorage.getItem('gemini_daily_date');
     const today = new Date().toDateString();
@@ -110,7 +111,7 @@ export const TargetAnalysis: React.FC = () => {
     if (!currentTarget.name) return;
     const newTarget = { ...currentTarget, id: Date.now().toString() };
     setTargets([...targets, newTarget]);
-    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '', desires: '', successTime: '' });
+    setCurrentTarget({ id: '', name: '', age: '', gender: '', job: '', religion: '', politicalSystem: '', hobbies: '', desires: '', successTime: '', customContext: '' });
   };
 
   const handleDeleteTarget = (id: string) => {
@@ -127,9 +128,8 @@ export const TargetAnalysis: React.FC = () => {
     if (!apiKey) return;
     setIsAiAnalyzing(true);
     try {
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const prompt = t('targetAnalysis.ai.prompt', {
+      const savedKey = apiKey;
+      const promptText = t('targetAnalysis.ai.prompt', {
         name: target.name || 'N/A',
         age: target.age || 'N/A',
         gender: target.gender || 'N/A',
@@ -142,17 +142,16 @@ export const TargetAnalysis: React.FC = () => {
         lang: i18n.language === 'vi' ? 'Tiếng Việt' : i18n.language === 'zh' ? '中文' : 'English'
       });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json"
-        }
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: savedKey, prompt: promptText }),
       });
-      
-      const text = response.text;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Analysis failed');
+      const text = data.result;
       if (!text) throw new Error("Empty response from AI");
-      
+
       const parsed = JSON.parse(text);
       setAiResult(parsed);
       setDailyCount(prev => prev + 1);
@@ -554,8 +553,8 @@ export const TargetAnalysis: React.FC = () => {
       if (s.targetDemographics) return;
       const targetKeywords = getLocalized(s.target).toLowerCase();
       const profileText = `${job} ${hobbies} ${gender} ${ageNum}`.toLowerCase();
-      const keywords = targetKeywords.split(/[,.;]/).map(k => k.trim()).filter(k => k.length > 3);
-      if (keywords.some(k => profileText.includes(k))) {
+      const keywords = targetKeywords.split(/[,.;]/).map((k: string) => k.trim()).filter((k: string) => k.length > 3);
+      if (keywords.some((k: string) => profileText.includes(k))) {
         const localizedName = getLocalized(s.name);
         if (!strategy.suggestedSyndromes.find(ss => ss.name === localizedName)) {
           strategy.suggestedSyndromes.push({ 
@@ -1463,7 +1462,7 @@ export const TargetAnalysis: React.FC = () => {
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2">{t('common.featuredInsightDesc', { defaultValue: 'Deep dive into the latest neurodevelopmental research and management strategies.' })}</p>
           </div>
-          <Link to="/" className="px-6 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+          <Link href="/" className="px-6 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
             {t('common.viewLibrary', { defaultValue: 'View Full Library' })}
           </Link>
         </div>
@@ -1495,7 +1494,7 @@ export const TargetAnalysis: React.FC = () => {
                   </p>
                   
                   <div className="flex flex-wrap gap-4 mb-10">
-                    {article.keyTakeaways.slice(0, 2).map((takeaway, idx) => (
+                    {(article.keyTakeaways ?? []).slice(0, 2).map((takeaway, idx) => (
                       <div key={idx} className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-100 dark:border-indigo-800/50">
                         <Check size={14} className="text-indigo-600 dark:text-indigo-400" />
                         <span className="text-xs font-medium text-indigo-900 dark:text-indigo-200">{getLocalized(takeaway)}</span>
@@ -1513,8 +1512,8 @@ export const TargetAnalysis: React.FC = () => {
                         <p className="text-xs text-slate-500 dark:text-slate-400">{article.date}</p>
                       </div>
                     </div>
-                    <Link 
-                      to={`/article/${article.id}`}
+                    <Link
+                      href={`/article/${article.id}`}
                       className="px-8 py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-600 dark:hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 dark:shadow-none flex items-center gap-2 group"
                     >
                       {t('common.readFullArticle', { defaultValue: 'Read Full Article' })}

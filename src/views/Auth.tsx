@@ -1,5 +1,7 @@
+'use client';
 import React, { useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { Brain, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
@@ -9,7 +11,8 @@ import { Stepper } from '../components/Stepper';
 export const Auth: React.FC = () => {
   const { user, loading, loginWithGoogle, loginWithX, loginWithEmail, registerWithEmail } = useAuth();
   const { t } = useTranslation();
-  
+  const router = useRouter();
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,8 +28,9 @@ export const Auth: React.FC = () => {
     );
   }
 
-  if (user) {
-    return <Navigate to="/" replace />;
+  if (user && !loading) {
+    router.replace('/');
+    return null;
   }
 
   const handleGoogleLogin = async () => {
@@ -144,9 +148,9 @@ export const Auth: React.FC = () => {
           <div className="flex items-center space-x-4 text-sm text-slate-400">
             <span>© 2026 PsycheAcademic</span>
             <span>•</span>
-            <Link to="/privacy" className="hover:text-white transition-colors">{t('auth.privacyLink')}</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">{t('auth.privacyLink')}</Link>
             <span>•</span>
-            <Link to="/terms" className="hover:text-white transition-colors">{t('auth.termsLink')}</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">{t('auth.termsLink')}</Link>
           </div>
         </div>
       </div>
@@ -311,9 +315,9 @@ export const Auth: React.FC = () => {
 
             <div className="mt-8 text-center text-xs text-slate-500 dark:text-slate-500">
               {t('auth.termsAgreement1')}
-              <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.termsLink')}</Link>
+              <Link href="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.termsLink')}</Link>
               {t('auth.termsAgreement2')}
-              <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.privacyLink')}</Link>
+              <Link href="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline">{t('auth.privacyLink')}</Link>
               {t('auth.termsAgreement3')}
             </div>
           </motion.div>

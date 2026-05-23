@@ -1,3 +1,4 @@
+'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import { User } from '@supabase/supabase-js';
@@ -109,22 +110,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const loginWithEmail = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (!email.includes('@')) throw new Error('Invalid email address');
+    if (password.length < 6) throw new Error('Password must be at least 6 characters');
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     if (error) throw error;
   };
 
   const registerWithEmail = async (email: string, password: string, name: string) => {
+    if (!email.includes('@')) throw new Error('Invalid email address');
+    if (password.length < 6) throw new Error('Password must be at least 6 characters');
+    if (!name.trim()) throw new Error('Name is required');
     const { error } = await supabase.auth.signUp({
-      email,
+      email: email.trim(),
       password,
-      options: {
-        data: {
-          full_name: name,
-        }
-      }
+      options: { data: { full_name: name.trim() } }
     });
     if (error) throw error;
   };

@@ -1,7 +1,9 @@
+'use client';
 import React, { useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { PsychologyArticle, psychologyData } from '../data/psychologyData';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 import { ArrowLeft, BookOpen, Search, ShieldAlert, Sparkles, Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -11,23 +13,42 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { TableOfContents } from '../components/TableOfContents';
 import { CollapsibleList } from '../components/CollapsibleList';
 import { Tooltip } from '../components/Tooltip';
-import { summarizeArticle } from '../services/geminiService';
 
 export const Article: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams();
+  const id = params?.id as string | undefined;
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as 'vi' | 'en' | 'zh';
-  
+
   const article = useMemo(() => {
     if (!id) return null;
     return psychologyData.find(a => a.id.toLowerCase() === id.toLowerCase()) || null;
   }, [id]);
 
+  // ALL hooks BEFORE the early return:
+  const [scrollProgress, setScrollProgress] = React.useState(0);
+  const [contentSearch, setContentSearch] = React.useState('');
+  const [userProfile, setUserProfile] = React.useState({ gender: '', age: '', job: '', hobbies: '' });
+  const [summary, setSummary] = React.useState<string | null>(null);
+  const [isSummarizing, setIsSummarizing] = React.useState(false);
+  const [summaryError, setSummaryError] = React.useState<string | null>(null);
+  const { scrollYProgress, scrollY } = useScroll();
+  const backgroundY = useTransform(scrollY, [0, 1000], ['0%', '25%']);
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    setScrollProgress(Math.round(latest * 100));
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  // NOW safe to return early
   if (!article) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <h1 className="text-2xl font-bold mb-4">Article not found</h1>
-        <p>ID from params: {id}</p>
+        <p>ID: {id}</p>
       </div>
     );
   }
@@ -53,17 +74,7 @@ export const Article: React.FC = () => {
     return { title, id };
   });
 
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-  const [contentSearch, setContentSearch] = React.useState('');
-  const [userProfile, setUserProfile] = React.useState({ gender: '', age: '', job: '', hobbies: '' });
-  const [summary, setSummary] = React.useState<string | null>(null);
-  const [isSummarizing, setIsSummarizing] = React.useState(false);
-  const [summaryError, setSummaryError] = React.useState<string | null>(null);
-
-  const { scrollY } = useScroll();
-  const backgroundY = useTransform(scrollY, [0, 1000], ['0%', '25%']);
-
-  const filteredSections = sections.filter((section: string) => 
+  const filteredSections = sections.filter((section: string) =>
     section.toLowerCase().includes(contentSearch.toLowerCase())
   );
 
@@ -171,10 +182,17 @@ export const Article: React.FC = () => {
     setIsSummarizing(true);
     setSummaryError(null);
     try {
-      const result = await summarizeArticle(content, currentLang);
-      setSummary(result || null);
+      const res = await fetch('/api/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, language: currentLang }),
+      });
+      const data = await res.json();
+      if (data.error === 'GEMINI_API_KEY_MISSING') throw new Error('GEMINI_API_KEY_MISSING');
+      if (!res.ok) throw new Error(data.error || 'Failed');
+      setSummary(data.summary || null);
     } catch (error) {
-      if (error instanceof Error && error.message === "GEMINI_API_KEY_MISSING") {
+      if (error instanceof Error && error.message === 'GEMINI_API_KEY_MISSING') {
         setSummaryError(t('article.apiKeyMissingError'));
       } else {
         setSummaryError(t('article.summaryError'));
@@ -184,15 +202,11 @@ export const Article: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24 transition-colors duration-200">
       {/* Reading Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-slate-200 dark:bg-slate-800">
-        <motion.div 
+        <motion.div
           className="h-full bg-indigo-600"
           style={{ width: `${scrollProgress}%` }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -201,22 +215,22 @@ export const Article: React.FC = () => {
 
       {/* Hero Section */}
       <div className="relative h-[60vh] min-h-[500px] w-full bg-slate-900 overflow-hidden">
-        <motion.img 
-          src={article.imageUrl} 
-          alt={title} 
+        <motion.img
+          src={article.imageUrl}
+          alt={title}
           style={{ y: backgroundY, scale: 1.1 }}
           className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay origin-top"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
-        
+
         <div className="absolute inset-0 flex flex-col justify-between max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-32">
-          <Link to="/" className="inline-flex items-center text-white/90 hover:text-white transition-all font-medium w-fit bg-white/10 hover:bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/20 shadow-lg">
+          <Link href="/" className="inline-flex items-center text-white/90 hover:text-white transition-all font-medium w-fit bg-white/10 hover:bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/20 shadow-lg">
             <ArrowLeft size={18} className="mr-2" />
             {t('article.back')}
           </Link>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -242,7 +256,7 @@ export const Article: React.FC = () => {
 
       {/* Main Content Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
+
         {/* TOC Sidebar */}
         <div className="hidden lg:block lg:col-span-1">
           <TableOfContents items={tocItems} />
@@ -250,9 +264,9 @@ export const Article: React.FC = () => {
 
         {/* Markdown Sections */}
         <div className="lg:col-span-3 space-y-8 lg:space-y-12">
-          
+
           {/* Personalized Analysis Tool */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl shadow-indigo-100 dark:shadow-none border border-indigo-50 dark:border-slate-700 p-8 md:p-10"
@@ -272,7 +286,7 @@ export const Article: React.FC = () => {
                 <Tooltip content={t('article.riskAnalysis.genderTooltip')}>
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.gender')}</label>
                 </Tooltip>
-                <select 
+                <select
                   value={userProfile.gender}
                   onChange={(e) => setUserProfile({ ...userProfile, gender: e.target.value })}
                   className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 transition-all text-slate-900 dark:text-white"
@@ -287,8 +301,8 @@ export const Article: React.FC = () => {
                 <Tooltip content={t('article.riskAnalysis.ageTooltip')}>
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.age')}</label>
                 </Tooltip>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   placeholder={t('article.riskAnalysis.agePlaceholder')}
                   value={userProfile.age}
                   onChange={(e) => setUserProfile({ ...userProfile, age: e.target.value })}
@@ -299,8 +313,8 @@ export const Article: React.FC = () => {
                 <Tooltip content={t('article.riskAnalysis.jobTooltip')}>
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.job')}</label>
                 </Tooltip>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder={t('article.riskAnalysis.jobPlaceholder')}
                   value={userProfile.job}
                   onChange={(e) => setUserProfile({ ...userProfile, job: e.target.value })}
@@ -311,8 +325,8 @@ export const Article: React.FC = () => {
                 <Tooltip content={t('article.riskAnalysis.hobbiesTooltip')}>
                   <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-2 cursor-help">{t('article.riskAnalysis.hobbies')}</label>
                 </Tooltip>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder={t('article.riskAnalysis.hobbiesPlaceholder')}
                   value={userProfile.hobbies}
                   onChange={(e) => setUserProfile({ ...userProfile, hobbies: e.target.value })}
@@ -320,10 +334,10 @@ export const Article: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <AnimatePresence>
               {(userProfile.gender || userProfile.age || userProfile.job || userProfile.hobbies) && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
@@ -402,7 +416,7 @@ export const Article: React.FC = () => {
 
           {/* Key Takeaways */}
           {article.keyTakeaways && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -410,7 +424,7 @@ export const Article: React.FC = () => {
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full -ml-32 -mb-32 blur-3xl" />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20">
@@ -420,13 +434,13 @@ export const Article: React.FC = () => {
                     {t('article.keyTakeaways')}
                   </h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {article.keyTakeaways.map((takeaway, idx) => {
                     const Icon = [Zap, CheckCircle, Lightbulb, Target, Brain, ShieldCheck][idx % 6];
                     return (
-                      <motion.div 
-                        key={idx} 
+                      <motion.div
+                        key={idx}
                         whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.15)" }}
                         className="bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/10 shadow-xl flex flex-col gap-4 group transition-all duration-300"
                       >
@@ -453,9 +467,9 @@ export const Article: React.FC = () => {
             const sectionTitleMatch = section.match(/^##\s+(.*)/m);
             const sectionTitle = sectionTitleMatch ? sectionTitleMatch[1].replace(/(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u, '') : t('article.sectionFallback');
             const id = sectionTitle.toLowerCase().replace(/\s+/g, '-');
-            
+
             return (
-              <motion.div 
+              <motion.div
                 key={`section-${index}`}
                 id={id}
                 initial={{ opacity: 0, y: 30 }}
@@ -524,10 +538,10 @@ export const Article: React.FC = () => {
               </motion.div>
             );
           })}
-          
+
           {/* Chart Section */}
           {article.chartData && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -546,7 +560,7 @@ export const Article: React.FC = () => {
                     <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} className="dark:text-slate-300" />
                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8' }} className="dark:text-slate-500" />
                     <Radar name={title} dataKey="A" stroke="#4f46e5" strokeWidth={3} fill="#4f46e5" fillOpacity={0.4} />
-                    <RechartsTooltip 
+                    <RechartsTooltip
                       contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', padding: '12px 20px', backgroundColor: 'var(--color-bg-card)' }}
                       itemStyle={{ color: 'var(--color-text-main)', fontWeight: 'bold', fontSize: '16px' }}
                     />
@@ -558,7 +572,7 @@ export const Article: React.FC = () => {
 
           {/* Comparison Section */}
           {article.comparison && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -571,14 +585,14 @@ export const Article: React.FC = () => {
                 </h2>
                 <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">{t('article.comparisonDesc')}</p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                 {article.comparison.items.map((item, idx) => (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className={`relative rounded-[2rem] p-8 md:p-10 transition-all duration-500 hover:-translate-y-2 ${
-                      item.isPremium 
-                        ? 'bg-gradient-to-br from-amber-50 via-white to-amber-50/50 dark:from-amber-900/20 dark:via-slate-800 dark:to-amber-900/10 border-2 border-amber-200 dark:border-amber-700/50 shadow-2xl shadow-amber-100/50 dark:shadow-none' 
+                      item.isPremium
+                        ? 'bg-gradient-to-br from-amber-50 via-white to-amber-50/50 dark:from-amber-900/20 dark:via-slate-800 dark:to-amber-900/10 border-2 border-amber-200 dark:border-amber-700/50 shadow-2xl shadow-amber-100/50 dark:shadow-none'
                         : 'bg-slate-50 dark:bg-slate-700/50 border-2 border-slate-100 dark:border-slate-600 hover:border-slate-200 dark:hover:border-slate-500 hover:shadow-xl dark:hover:shadow-none'
                     }`}
                   >
@@ -606,7 +620,7 @@ export const Article: React.FC = () => {
 
           {/* Brands Section */}
           {article.brands && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
@@ -639,7 +653,7 @@ export const Article: React.FC = () => {
                         <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">{getLocalized(brand.description)}</p>
                       </div>
                     </div>
-                    
+
                     <div className="p-8 md:p-10">
                       <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-8">
                         {t('article.products')}
@@ -648,9 +662,9 @@ export const Article: React.FC = () => {
                         {brand.products.map((product, pIdx) => (
                           <div key={pIdx} className="group flex flex-col sm:flex-row gap-6 items-center sm:items-start p-6 rounded-3xl bg-slate-50 dark:bg-slate-700/30 border border-slate-100 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:shadow-xl dark:hover:shadow-none hover:border-slate-200 dark:hover:border-slate-600 transition-all duration-300">
                             <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 flex-shrink-0">
-                              <img 
-                                src={product.imageUrl} 
-                                alt={getLocalized(product.name)} 
+                              <img
+                                src={product.imageUrl}
+                                alt={getLocalized(product.name)}
                                 className="w-32 h-32 object-cover group-hover:scale-105 transition-transform duration-500"
                                 referrerPolicy="no-referrer"
                               />
@@ -658,7 +672,7 @@ export const Article: React.FC = () => {
                             <div className="text-center sm:text-left flex-1 flex flex-col h-full">
                               <h5 className="font-bold text-slate-900 dark:text-white mb-3 text-xl">{getLocalized(product.name)}</h5>
                               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6 flex-grow">{getLocalized(product.description)}</p>
-                              
+
                               <div className="mt-auto space-y-4">
                                 {product.reviews && product.reviews.length > 0 && (
                                   <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -669,7 +683,7 @@ export const Article: React.FC = () => {
                                     ))}
                                   </div>
                                 )}
-                                
+
                                 {product.productUrl && (
                                   <a href={product.productUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors group-hover:translate-x-1 duration-300">
                                     {t('article.productDetail')}
@@ -688,7 +702,7 @@ export const Article: React.FC = () => {
           )}
 
           {/* Research Sources */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}

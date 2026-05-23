@@ -1,13 +1,15 @@
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'motion/react';
 import { User, Mail, Shield, Globe, Edit2, Save, X, Phone, MapPin, Building, Briefcase, Key, Loader2, Camera } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const Profile: React.FC = () => {
-  const { user, updateProfile, updatePassword } = useAuth();
+  const { user, loading, updateProfile, updatePassword } = useAuth();
   const { t } = useTranslation();
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,8 +45,16 @@ export const Profile: React.FC = () => {
     }
   }, [user]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   if (!user) {
-    return <Navigate to="/auth" />;
+    router.replace('/auth');
+    return null;
   }
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
